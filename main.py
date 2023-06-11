@@ -10,5 +10,5 @@ from models.start_gui import *
 from utils.initialize import *
 initialize()
 StartGame()
-
+print(1)
 
