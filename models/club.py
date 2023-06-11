@@ -3,25 +3,28 @@ from utils.constants import *
 
 
 class PlusButton:
-    def __init__(self, strings, color_font):
+    def __init__(self, strings, color_font, y=0):
         self.strings = strings
         self.color_font = color_font
+        self.y = y
         self.list = []
         self.list_outline = []
         self.w_info = utils.constants.statistics_club_window
         self.canvas = utils.constants.statistics_club_canvas
-        self.button = Button(self.w_info, text="+", font=("MiSans Heavy", 30), fg="green", bg=self.color_font,command=self.clicked)
+        self.button = Button(self.w_info, text="+", font=("MiSans Heavy", 30), fg="green", bg=self.color_font, command=self.clicked)
         self.is_closed = True
         self.pos_y = 0
         for element in self.strings:
             if "Владелец" in element:
-                self.stock_y = self.y = 115
+                if self.y == 0: self.stock_y = self.y = 115
+                self.stock_y = self.y
                 self.title_outline = self.canvas.create_text(405, self.y + 5, text="Основные сведения", font=("MiSans Heavy", 40), anchor="center", fill="black")
                 self.title = self.canvas.create_text(400, self.y, text="Основные сведения", font=("MiSans Heavy", 40), anchor="center", fill=self.color_font)
                 self.type = "Основные сведения"
                 self.button.place(x=720, y=self.y - 11, width=35, height=35)
             elif "Футболист" in element:
-                self.stock_y = self.y = 175
+                if self.y == 0: self.stock_y = self.y = 175
+                self.stock_y = self.y
                 self.title_outline = self.canvas.create_text(405, self.y + 5, text="Персонал", font=("MiSans Heavy", 40), anchor="center", fill="black")
                 self.title = self.canvas.create_text(400, self.y, text="Персонал", font=("MiSans Heavy", 40), anchor="center", fill=self.color_font)
                 self.type = "Персонал"
@@ -58,6 +61,11 @@ class PlusButton:
                 self.canvas.delete(self.list_outline[element])
             if self.type == "Основные сведения":
                 utils.constants.plus_personal.change_position(175)
+            else:
+                self.canvas.delete(self.title)
+                self.canvas.delete(self.title_outline)
+                self.button.destroy()
+                self.__init__(self.strings, self.color_font, self.stock_y)
 
 
     def change_position(self, pos_y):
@@ -66,7 +74,10 @@ class PlusButton:
         self.button.place(x=720, y=self.pos_y - 11, width=35, height=35)
         self.canvas.coords(self.title_outline, 405, self.pos_y + 5)
         self.canvas.coords(self.title, 400, self.pos_y)
-        self.canvas.coords(self.image_rectangle, 10, self.pos_y + 35)
+        try:
+            self.canvas.coords(self.image_rectangle, 10, self.pos_y + 35)
+        except:
+            pass
         self.y += 55
         for element in range(len(self.list)):
             self.canvas.coords(self.list_outline[element], 402, self.y + 2)
