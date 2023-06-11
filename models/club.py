@@ -13,7 +13,6 @@ class PlusButton:
         self.canvas = utils.constants.statistics_club_canvas
         self.button = Button(self.w_info, text="+", font=("MiSans Heavy", 30), fg="green", bg=self.color_font, command=self.clicked)
         self.is_closed = True
-        self.pos_y = 0
         for element in self.strings:
             if "Владелец" in element:
                 if self.y == 0: self.stock_y = self.y = 115
@@ -35,23 +34,16 @@ class PlusButton:
             self.y = self.stock_y
             self.button.configure(text="-", fg="red")
             self.is_closed = False
+            self.img_rectangle = PhotoImage(file="assets/rectangle.png")
+            self.image_rectangle = self.canvas.create_image(10, self.y + 35, anchor='nw', image=self.img_rectangle)
+            self.y += 55
+            self.y = self.y + 120 - (30 * (len(self.strings) + 1)) // 2
+            for element in self.strings:
+                self.list_outline.append(self.canvas.create_text(402, self.y + 2, text=element, font=("MiSans Heavy", 20), anchor="center", fill="black"))
+                self.list.append(self.canvas.create_text(400, self.y, text=element, font=("MiSans Heavy", 20), anchor="center", fill=self.color_font))
+                self.y += 32
             if self.type == "Основные сведения":
-                self.img_rectangle = PhotoImage(file="accets/rectangle.png")
-                self.image_rectangle = self.canvas.create_image(10, self.y + 35, anchor='nw', image=self.img_rectangle)
-                self.y += 55
-                for element in self.strings:
-                    self.list_outline.append(self.canvas.create_text(402, self.y + 2, text=element, font=("MiSans Heavy", 20), anchor="center", fill="black"))
-                    self.list.append(self.canvas.create_text(400, self.y, text=element, font=("MiSans Heavy", 20), anchor="center", fill=self.color_font))
-                    self.y += 32
                 utils.constants.plus_personal.change_position(420)
-            elif self.type == "Персонал":
-                self.img_rectangle = PhotoImage(file="accets/rectangle.png")
-                self.image_rectangle = self.canvas.create_image(10, self.y + 35, anchor='nw', image=self.img_rectangle)
-                self.y += 55
-                for element in self.strings:
-                    self.list_outline.append(self.canvas.create_text(402, self.y + 2, text=element, font=("MiSans Heavy", 20), anchor="center", fill="black"))
-                    self.list.append(self.canvas.create_text(400, self.y, text=element, font=("MiSans Heavy", 20), anchor="center", fill=self.color_font))
-                    self.y += 32
         else:
             self.button.configure(text="+", fg="green")
             self.is_closed = True
@@ -59,26 +51,26 @@ class PlusButton:
             for element in range(len(self.list)):
                 self.canvas.delete(self.list[element])
                 self.canvas.delete(self.list_outline[element])
+            self.canvas.delete(self.title)
+            self.canvas.delete(self.title_outline)
+            self.button.destroy()
             if self.type == "Основные сведения":
                 utils.constants.plus_personal.change_position(175)
-            else:
-                self.canvas.delete(self.title)
-                self.canvas.delete(self.title_outline)
-                self.button.destroy()
-                self.__init__(self.strings, self.color_font, self.stock_y)
+            self.__init__(self.strings, self.color_font, self.stock_y)
 
 
-    def change_position(self, pos_y):
-        self.pos_y = pos_y
-        self.stock_y = self.y = self.pos_y
-        self.button.place(x=720, y=self.pos_y - 11, width=35, height=35)
-        self.canvas.coords(self.title_outline, 405, self.pos_y + 5)
-        self.canvas.coords(self.title, 400, self.pos_y)
+    def change_position(self, y):
+        self.y = y
+        self.stock_y = self.y
+        self.button.place(x=720, y=self.y - 11, width=35, height=35)
+        self.canvas.coords(self.title_outline, 405, self.y + 5)
+        self.canvas.coords(self.title, 400, self.y)
         try:
-            self.canvas.coords(self.image_rectangle, 10, self.pos_y + 35)
+            self.canvas.coords(self.image_rectangle, 10, self.y + 35)
         except:
             pass
         self.y += 55
+        self.y = self.y + 120 - (30 * (len(self.strings) + 1)) // 2
         for element in range(len(self.list)):
             self.canvas.coords(self.list_outline[element], 402, self.y + 2)
             self.canvas.coords(self.list[element], 400, self.y)
@@ -101,9 +93,9 @@ class Club:
         self.manager = None
         self.potential_owner = None
         self.owner = None
-        self.img_bg = "accets/" + self.codename + "/background.png"
-        self.img_small = "accets/" + self.codename + "/small.png"
-        self.img_25x25 = "accets/" + self.codename + "/25x25.png"
+        self.img_bg = "assets/clubs/" + self.codename + "/background.png"
+        self.img_small = "assets/clubs/" + self.codename + "/small.png"
+        self.img_25x25 = "assets/clubs/" + self.codename + "/25x25.png"
 
     def buy(self, potential_owner):
         self.potential_owner = potential_owner
@@ -212,32 +204,31 @@ class Club:
         self.strings_stats.append("Цена за победу с игроков: " + str(self.win_footballer))
         self.strings_stats.append("Цена за победу с тренером: " + str(self.win_coach))
         self.strings_stats.append("Цена за победу с менеджером: " + str(self.win_manager))
-        if self.owner is not None:
-            if self.footballer is not None and self.coach is not None and managers is not None:
-                self.strings_stats.append("Футболист: " + str(self.footballer.name) + " (" + str(self.footballer.power) + ")")
-                self.strings_stats.append("Тренер: " + str(self.coach.name) + " (" + str(self.coach.power) + ")")
-                self.strings_stats.append("Менеджер: " + str(self.manager.name))
-                self.strings_stats.append("Тип менеджера: " + str(self.manager.type_manager))
-                if self.manager.type_manager == "Sheikh":
-                    self.strings_stats.append("Бонус менеджера: +" + str(int(sheikh_level[self.manager.level])) + " за победу")
-                elif self.manager.type_manager == "Former Footballer":
-                    self.strings_stats.append("Бонус менеджера: +" + str(int(former_footballer_level[self.manager.level])) + " к победе")
-                elif self.manager.type_manager == "Economist":
-                    self.strings_stats.append("Бонус менеджера: +" + str(int(economist_plus_level[self.manager.level] * 100)) + "% к пополнению")
-                    self.strings_stats.append("Бонус менеджера: -" + str(int(economist_minus_level[self.manager.level] * 100)) + "% к тратам")
-                self.strings_stats.append("Уровень менеджера: " + str(self.manager.level))
-            elif self.footballer is not None and self.coach is not None:
-                self.strings_stats.append("Футболист: " + str(self.footballer.name) + " (" + str(self.footballer.power) + ")")
-                self.strings_stats.append("Тренер: " + str(self.coach.name) + " (" + str(self.coach.power) + ")")
-                self.strings_stats.append("Менеджер: Отсутствует")
-            elif self.footballer is not None:
-                self.strings_stats.append("Футболист: " + str(self.footballer.name) + " (" + str(self.footballer.power) + ")")
-                self.strings_stats.append("Тренер: Отсутствует")
-                self.strings_stats.append("Менеджер: Отсутствует")
-            else:
-                self.strings_stats.append("Футболист: Отсутствует")
-                self.strings_stats.append("Тренер: Отсутствует")
-                self.strings_stats.append("Менеджер: Отсутствует")
+        if self.footballer is not None and self.coach is not None and managers is not None:
+            self.strings_stats.append("Футболист: " + str(self.footballer.name) + " (" + str(self.footballer.power) + ")")
+            self.strings_stats.append("Тренер: " + str(self.coach.name) + " (" + str(self.coach.power) + ")")
+            self.strings_stats.append("Менеджер: " + str(self.manager.name))
+            self.strings_stats.append("Тип менеджера: " + str(self.manager.type_manager))
+            if self.manager.type_manager == "Sheikh":
+                self.strings_stats.append("Бонус менеджера: +" + str(int(sheikh_level[self.manager.level])) + " за победу")
+            elif self.manager.type_manager == "Former Footballer":
+                self.strings_stats.append("Бонус менеджера: +" + str(int(former_footballer_level[self.manager.level])) + " к победе")
+            elif self.manager.type_manager == "Economist":
+                self.strings_stats.append("Бонус менеджера: +" + str(int(economist_plus_level[self.manager.level] * 100)) + "% к пополнению")
+                self.strings_stats.append("Бонус менеджера: -" + str(int(economist_minus_level[self.manager.level] * 100)) + "% к тратам")
+            self.strings_stats.append("Уровень менеджера: " + str(self.manager.level))
+        elif self.footballer is not None and self.coach is not None:
+            self.strings_stats.append("Футболист: " + str(self.footballer.name) + " (" + str(self.footballer.power) + ")")
+            self.strings_stats.append("Тренер: " + str(self.coach.name) + " (" + str(self.coach.power) + ")")
+            self.strings_stats.append("Менеджер: Отсутствует")
+        elif self.footballer is not None:
+            self.strings_stats.append("Футболист: " + str(self.footballer.name) + " (" + str(self.footballer.power) + ")")
+            self.strings_stats.append("Тренер: Отсутствует")
+            self.strings_stats.append("Менеджер: Отсутствует")
+        else:
+            self.strings_stats.append("Футболист: Отсутствует")
+            self.strings_stats.append("Тренер: Отсутствует")
+            self.strings_stats.append("Менеджер: Отсутствует")
         self.canvas.create_text(406, 46, text=self.name, font=("MiSans Heavy", 50), anchor="center", fill="black")
         self.canvas.create_text(400, 40, text=self.name, font=("MiSans Heavy", 50), anchor="center", fill=self.color_font)
         self.y = 170
@@ -255,11 +246,12 @@ class Club:
                 self.list = []
             elif "Уровень менеджера" in element:
                 self.list.append(element)
-                print(2)
+                print(3)
                 utils.constants.plus_personal = PlusButton(self.list, self.color_font)
                 self.list = []
             else:
                 self.list.append(element)
+                print(element)
         self.list_personal = self.stats
         self.list_personal_outline = self.stats_outline
 
