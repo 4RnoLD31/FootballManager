@@ -1,6 +1,5 @@
 import utils.constants
 from utils.constants import *
-import cv2
 from models.play_video import *
 
 class PlusButton:

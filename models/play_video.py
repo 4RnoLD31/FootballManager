@@ -24,3 +24,4 @@ class MainWindow:
             self.window.after(self.speed, self.update_image)
         except:
             MainWindow(utils.constants.statistics_club_window, utils.constants.statistics_club_canvas, self.img_bg)
+
