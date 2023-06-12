@@ -1,6 +1,7 @@
 import utils.constants
 from utils.constants import *
-from tkVideoPlayer import TkinterVideo
+import cv2
+from models.play_video import *
 
 class PlusButton:
     def __init__(self, strings, color_font, y=0):
@@ -94,9 +95,9 @@ class Club:
         self.manager = None
         self.potential_owner = None
         self.owner = None
-        self.img_bg = "assets/clubs/" + self.codename + "/background.png"
-        self.img_small = "assets/clubs/" + self.codename + "/small.png"
-        self.img_25x25 = "assets/clubs/" + self.codename + "/25x25.png"
+        self.img_bg = working_directory + "/assets/clubs/" + self.codename + "/background.mp4"
+        self.img_small = working_directory + "/assets/clubs/" + self.codename + "/small.png"
+        self.img_25x25 = working_directory + "/assets/clubs/" + self.codename + "/25x25.png"
 
     def buy(self, potential_owner):
         self.potential_owner = potential_owner
@@ -183,8 +184,6 @@ class Club:
             self.result = True
         return self.result
 
-    def repeat_video(self, event):
-        self.videoplayer.play()  # Воспроизвести видео снова
 
     def info(self):
         self.w_info = utils.constants.statistics_club_window = Toplevel()
@@ -192,11 +191,8 @@ class Club:
         self.w_info.resizable(width=False, height=False)
         self.w_info.title("FOOTBALL MANAGER | Информация о клубе " + self.name)
         self.canvas = utils.constants.statistics_club_canvas = Canvas(self.w_info, height=800, width=802)
-        self.videoplayer = TkinterVideo(master=self.w_info, scaled=False)
-        self.videoplayer.load(r"assets/1.mp4")
-        self.videoplayer.pack(expand=True, fill="both")
-        self.videoplayer.bind('<<Ended>>', self.repeat_video)
         self.canvas.place(x=-2, y=0)
+        MainWindow(self.w_info, utils.constants.statistics_club_canvas, self.img_bg)
         self.stats = []
         self.stats_outline = []
         self.strings_stats = []
@@ -260,5 +256,4 @@ class Club:
                 print(element)
         self.list_personal = self.stats
         self.list_personal_outline = self.stats_outline
-        self.videoplayer.play()
         self.w_info.mainloop()

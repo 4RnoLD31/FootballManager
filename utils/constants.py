@@ -1,6 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
-
+import os
 main_window = Tk()
 
 
@@ -25,6 +25,8 @@ def text_on_center(text, font, window=main_window):
 PL1 = None
 PL2 = None
 next_player = None
+working_directory = os.path.abspath(os.curdir).replace("utils", "")
+print(working_directory)
 property_window = {"Start": 0, "TV": 0, "Club": 0, "Coach": 0, "Footballer": 0, "Manager": 0}
 statistics_window = 0
 statistics_club_window = 0
