@@ -70,7 +70,7 @@ class StartGame:
         coaches["Tedesko"].buy(utils.constants.PL1, clubs["Барселона"])
         coaches["Malorian"].buy(utils.constants.PL1, clubs["Барселона"])
         managers["Фрэнк Лэмпард"].buy(utils.constants.PL1, clubs["Барселона"])
-        clubs["Барселона"].info()
+        clubs["Манчестер Сити"].info()
         #self.choice = randint(0, 1)
         self.choice = 0
         self.l_first = Label(main_window, text="Первым бросает игрок: ....", font="MiSans 50")

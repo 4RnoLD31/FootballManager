@@ -1,6 +1,6 @@
 import utils.constants
 from utils.constants import *
-
+from tkVideoPlayer import TkinterVideo
 
 class PlusButton:
     def __init__(self, strings, color_font, y=0):
@@ -28,6 +28,7 @@ class PlusButton:
                 self.title = self.canvas.create_text(400, self.y, text="Персонал", font=("MiSans Heavy", 40), anchor="center", fill=self.color_font)
                 self.type = "Персонал"
                 self.button.place(x=720, y=self.y - 11, width=35, height=35)
+
 
     def clicked(self):
         if self.is_closed is True:
@@ -182,14 +183,19 @@ class Club:
             self.result = True
         return self.result
 
+    def repeat_video(self, event):
+        self.videoplayer.play()  # Воспроизвести видео снова
+
     def info(self):
         self.w_info = utils.constants.statistics_club_window = Toplevel()
         self.w_info.geometry("800x800+560+115")
         self.w_info.resizable(width=False, height=False)
         self.w_info.title("FOOTBALL MANAGER | Информация о клубе " + self.name)
         self.canvas = utils.constants.statistics_club_canvas = Canvas(self.w_info, height=800, width=802)
-        self.img = PhotoImage(file=self.img_bg)
-        self.image = self.canvas.create_image(0, 0, anchor='nw', image=self.img)
+        self.videoplayer = TkinterVideo(master=self.w_info, scaled=False)
+        self.videoplayer.load(r"assets/1.mp4")
+        self.videoplayer.pack(expand=True, fill="both")
+        self.videoplayer.bind('<<Ended>>', self.repeat_video)
         self.canvas.place(x=-2, y=0)
         self.stats = []
         self.stats_outline = []
@@ -254,5 +260,5 @@ class Club:
                 print(element)
         self.list_personal = self.stats
         self.list_personal_outline = self.stats_outline
-
+        self.videoplayer.play()
         self.w_info.mainloop()
