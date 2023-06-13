@@ -9,8 +9,8 @@ class PlusButton:
         self.y = y
         self.list = []
         self.list_outline = []
-        self.w_info = utils.constants.statistics_club_window
-        self.canvas = utils.constants.statistics_club_canvas
+        self.w_info = utils.constants.statistics_club["Tkinter"]
+        self.canvas = utils.constants.statistics_club["Canvas"]
         self.button = Button(self.w_info, text="+", font=("MiSans Heavy", 30), fg="green", bg=self.color_font, command=self.clicked)
         self.is_closed = True
         for element in self.strings:
@@ -185,13 +185,13 @@ class Club:
 
 
     def info(self):
-        self.w_info = utils.constants.statistics_club_window = Toplevel()
+        self.w_info = utils.constants.statistics_club["Tkinter"] = Toplevel()
         self.w_info.geometry("800x800+560+115")
         self.w_info.resizable(width=False, height=False)
         self.w_info.title("FOOTBALL MANAGER | Информация о клубе " + self.name)
-        self.canvas = utils.constants.statistics_club_canvas = Canvas(self.w_info, height=800, width=802)
+        self.canvas = utils.constants.statistics_club["Canvas"] = Canvas(self.w_info, height=800, width=802)
         self.canvas.place(x=-2, y=0)
-        MainWindow(self.w_info, utils.constants.statistics_club_canvas, self.img_bg)
+        MainWindow(self.w_info, utils.constants.statistics_club["Canvas"], self.img_bg)
         self.stats = []
         self.stats_outline = []
         self.strings_stats = []

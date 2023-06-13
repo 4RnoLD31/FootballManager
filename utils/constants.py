@@ -27,12 +27,9 @@ PL1 = None
 PL2 = None
 next_player = None
 working_directory = os.path.abspath(os.curdir).replace("utils", "")
-print(working_directory)
-property_window = {"Start": 0, "TV": 0, "Club": 0, "Coach": 0, "Footballer": 0, "Manager": 0}
-statistics_window = 0
-statistics_club_window = 0
-statistics_club_canvas = 0
-personal_y = 0
+property_window = {"Start": None, "TV": None, "Club": None, "Coach": None, "Footballer": None, "Manager": None}
+statistics_main_window = None
+statistics_club = {"Tkinter": None, "Canvas": None}
 plus_basic = None
 plus_personal = None
 sum = 0
@@ -64,7 +61,7 @@ prices_clubs = [5000000, 4600000, 4400000,
                 3800000, 3700000, 3500000]
 colors_clubs = ["#0080ff", "#c1ae67", "#ff0000",
                 "#0060ff", "#ffd700", "#0030ff",
-                "#0060ff", "#0060ff", "#0060ff",
+                "#0048ff", "#ff0000", "#0060ff",
                 "#0060ff", "#0060ff", "#0060ff",
                 "#0060ff", "#0060ff", "#0060ff"]
 

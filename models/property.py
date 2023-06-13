@@ -560,5 +560,5 @@ class Property:
                 element.destroy()
             except:
                 pass
-        utils.constants.property_window = {"Start": 0, "TV": 0, "Club": 0, "Coach": 0, "Footballer": 0, "Manager": 0}
+        utils.constants.property_window = {"Start": None, "TV": None, "Club": None, "Coach": None, "Footballer": None, "Manager": None}
         main_window.after(1000, self.next_step())

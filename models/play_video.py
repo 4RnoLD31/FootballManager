@@ -22,7 +22,7 @@ class MainWindow:
             self.window.after(self.speed, self.update_image)
         except:
             self.clear()
-            MainWindow(utils.constants.statistics_club_window, utils.constants.statistics_club_canvas, self.picture)
+            MainWindow(utils.constants.statistics_club["Tkinter"], utils.constants.statistics_club["Canvas"], self.picture)
             del self
 
     def clear(self):

@@ -13,8 +13,8 @@ class Statistics:
         self.element_y = [125, 175]
         self.element_values_pl1 = [utils.constants.PL1.throws, utils.constants.PL1.numbers_thrown]
         self.element_values_pl2 = [utils.constants.PL2.throws, utils.constants.PL2.numbers_thrown]
-        utils.constants.statistics_window = Toplevel()
-        self.frame = utils.constants.statistics_window
+        utils.constants.statistics_main_window = Toplevel()
+        self.frame = utils.constants.statistics_main_window
         self.frame.geometry("900x900+510+70")
         self.frame.resizable(width=False, height=False)
         self.frame.title("FOOTBALL MANAGER | Статистика")
