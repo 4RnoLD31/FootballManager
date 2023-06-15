@@ -1,7 +1,7 @@
 import utils.constants
 from utils.constants import *
 from tkinter import messagebox
-
+from PIL import Image, ImageTk
 
 class LEnough:
     def __init__(self):
@@ -66,7 +66,7 @@ class SearchManagers:
             print(self.picked)
             self.check_buttons.append(
                 Checkbutton(self.frame, variable=self.picked[element], text=self.found[element].name,
-                            font="MiSans 14"))
+                            font="MiSans 30"))
             self.check_buttons[element].config(command=self.clicked)
             self.check_buttons[element].place(x=10, y=self.y, height=50)
             self.y += 35
@@ -316,8 +316,6 @@ class SearchClubs:
         self.frame.geometry("300x900+150+30")
         self.frame.resizable(width=False, height=False)
         self.frame.title("Клубы игрока " + self.player.name)
-        self.canvas = Canvas(self.frame, height=400, width=400)
-        self.canvas.place(x=-2, y=0)
         if self.player.balance + utils.constants.sum >= self.need_money:
             self.l_enough.switch_on()
         else:
@@ -338,18 +336,22 @@ class SearchClubs:
         self.will_sell = []
         self.picked = []
         self.check_buttons = []
+        self.images = []
         for element in range(0, len(self.found)):
             self.picked.append(BooleanVar())
         for element in range(0, len(self.found)):
             print(self.picked)
             self.check_buttons.append(
                 Checkbutton(self.frame, variable=self.picked[element], text=self.found[element].name,
-                            font="MiSans 25"))
+                            font="MiSans 20"))
             self.check_buttons[element].config(command=self.clicked)
             self.check_buttons[element].place(x=10, y=self.y, height=50)
-            self.img = PhotoImage(file=self.found[element].img_25x25)
-            self.image = self.canvas.create_image(15 + self.check_buttons[element].winfo_reqwidth(), self.y + 17, anchor='nw', image=self.img)
-            self.y += 45
+            print(self.found[element].img_emblem)
+            self.images.append(Image.open(self.found[element].img_emblem).resize((25, 25), Image.LANCZOS))
+            self.images[element] = ImageTk.PhotoImage(self.images[element])
+            self.Label = Label(self.frame, image=self.images[element])
+            self.Label.place(x=270, y=self.y + 14)
+            self.y += 42
         self.frame.mainloop()
 
     def sell(self):

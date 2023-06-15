@@ -96,7 +96,7 @@ class Club:
         self.owner = None
         self.img_bg = working_directory + "/assets/clubs/" + self.codename + "/background.mp4"
         self.img_small = working_directory + "/assets/clubs/" + self.codename + "/small.png"
-        self.img_25x25 = working_directory + "/assets/clubs/" + self.codename + "/25x25.png"
+        self.img_emblem = working_directory + "/assets/clubs/" + self.codename + "/emblem.png"
 
     def buy(self, potential_owner):
         self.potential_owner = potential_owner
