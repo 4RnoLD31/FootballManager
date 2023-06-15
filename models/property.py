@@ -316,12 +316,16 @@ class SearchClubs:
         self.frame.geometry("300x900+150+30")
         self.frame.resizable(width=False, height=False)
         self.frame.title("Клубы игрока " + self.player.name)
+        self.canvas = Canvas(self.frame, width=302, height=900)
+        self.canvas.place(x=-2, y=0)
         if self.player.balance + utils.constants.sum >= self.need_money:
             self.l_enough.switch_on()
         else:
             self.l_enough.switch_off()
-        self.l_logo = Label(self.frame, text="Клубы", font="MiSans 40")
-        self.l_logo.pack(side="top")
+        self.img_bg = Image.open("D:/Development/Programming/Python/Projects/[0 GUI] Football Manager/assets/clubs.png")
+        self.img_bg = ImageTk.PhotoImage(self.img_bg)
+        self.canvas.create_image(0, 0, anchor=NW, image=self.img_bg)
+        self.canvas.create_text(75, 0, text="Клубы", anchor=NW, font="MiSans 40", fill="white")
         self.found = self.player.search_owned_clubs()
         if not self.found:
             self.l_nothing = Label(self.frame, text="Пусто", font="MiSans 50")
@@ -337,20 +341,19 @@ class SearchClubs:
         self.picked = []
         self.check_buttons = []
         self.images = []
+        self.img = Image.open(utils.constants.working_directory + "/assets/nothing.png")
+        self.img = ImageTk.PhotoImage(self.img)
         for element in range(0, len(self.found)):
             self.picked.append(BooleanVar())
         for element in range(0, len(self.found)):
-            print(self.picked)
             self.check_buttons.append(
                 Checkbutton(self.frame, variable=self.picked[element], text=self.found[element].name,
-                            font="MiSans 20"))
+                            font="MiSans 20", fg=self.found[element].color_font, image=self.img))
             self.check_buttons[element].config(command=self.clicked)
             self.check_buttons[element].place(x=10, y=self.y, height=50)
-            print(self.found[element].img_emblem)
             self.images.append(Image.open(self.found[element].img_emblem).resize((25, 25), Image.LANCZOS))
             self.images[element] = ImageTk.PhotoImage(self.images[element])
-            self.Label = Label(self.frame, image=self.images[element])
-            self.Label.place(x=270, y=self.y + 14)
+            self.canvas.create_image(270, self.y + 14, anchor=NW, image=self.images[element])
             self.y += 42
         self.frame.mainloop()
 

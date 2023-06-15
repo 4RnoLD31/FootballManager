@@ -61,8 +61,8 @@ prices_clubs = [5000000, 4600000, 4400000,
                 3800000, 3700000, 3500000]
 colors_clubs = ["#0080ff", "#c1ae67", "#ff0000",
                 "#0060ff", "#ffd700", "#0030ff",
-                "#0048ff", "#ff0000", "#0060ff",
-                "#0060ff", "#0060ff", "#0060ff",
+                "#0048ff", "#ff0000", "#ffffff",
+                "#0080ff", "#0060ff", "#0060ff",
                 "#0060ff", "#0060ff", "#0060ff"]
 
 name_TV = ["Setanta Sports", "Euro Sports", "Rai Uno", "ESPN"]
