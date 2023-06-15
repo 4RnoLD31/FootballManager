@@ -4,7 +4,7 @@ import cv2
 import utils.constants
 
 
-class MainWindow:
+class PlayVideo:
     def __init__(self, window, canvas, picture, speed=20):
         self.window = window
         self.canvas = canvas
@@ -22,7 +22,7 @@ class MainWindow:
             self.window.after(self.speed, self.update_image)
         except:
             self.clear()
-            MainWindow(utils.constants.statistics_club["Tkinter"], utils.constants.statistics_club["Canvas"], self.picture)
+            PlayVideo(self.window, self.canvas, self.picture)
             del self
 
     def clear(self):

@@ -29,9 +29,6 @@ next_player = None
 working_directory = os.path.abspath(os.curdir).replace("utils", "")
 property_window = {"Start": None, "TV": None, "Club": None, "Coach": None, "Footballer": None, "Manager": None}
 statistics_main_window = None
-statistics_club = {"Tkinter": None, "Canvas": None}
-plus_basic = None
-plus_personal = None
 sum = 0
 
 errorcodes = {0: "Значение превышает 20 символов или равно 0",

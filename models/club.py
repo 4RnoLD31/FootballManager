@@ -1,6 +1,6 @@
-import utils.constants
 from utils.constants import *
 from models.play_video import *
+
 
 class PlusButton:
     def __init__(self, strings, color_font, y=0):
@@ -9,26 +9,23 @@ class PlusButton:
         self.y = y
         self.list = []
         self.list_outline = []
-        self.w_info = utils.constants.statistics_club["Tkinter"]
-        self.canvas = utils.constants.statistics_club["Canvas"]
-        self.button = Button(self.w_info, text="+", font=("MiSans Heavy", 30), fg="green", bg=self.color_font, command=self.clicked)
+        self.button = Button(w_info, text="+", font=("MiSans Heavy", 30), fg="green", bg=self.color_font, command=self.clicked)
         self.is_closed = True
         for element in self.strings:
             if "Владелец" in element:
                 if self.y == 0: self.stock_y = self.y = 115
                 self.stock_y = self.y
-                self.title_outline = self.canvas.create_text(405, self.y + 5, text="Основные сведения", font=("MiSans Heavy", 40), anchor="center", fill="black")
-                self.title = self.canvas.create_text(400, self.y, text="Основные сведения", font=("MiSans Heavy", 40), anchor="center", fill=self.color_font)
+                self.title_outline = canvas.create_text(405, self.y + 5, text="Основные сведения", font=("MiSans Heavy", 40), anchor="center", fill="black")
+                self.title = canvas.create_text(400, self.y, text="Основные сведения", font=("MiSans Heavy", 40), anchor="center", fill=self.color_font)
                 self.type = "Основные сведения"
                 self.button.place(x=720, y=self.y - 11, width=35, height=35)
             elif "Футболист" in element:
                 if self.y == 0: self.stock_y = self.y = 175
                 self.stock_y = self.y
-                self.title_outline = self.canvas.create_text(405, self.y + 5, text="Персонал", font=("MiSans Heavy", 40), anchor="center", fill="black")
-                self.title = self.canvas.create_text(400, self.y, text="Персонал", font=("MiSans Heavy", 40), anchor="center", fill=self.color_font)
+                self.title_outline = canvas.create_text(405, self.y + 5, text="Персонал", font=("MiSans Heavy", 40), anchor="center", fill="black")
+                self.title = canvas.create_text(400, self.y, text="Персонал", font=("MiSans Heavy", 40), anchor="center", fill=self.color_font)
                 self.type = "Персонал"
                 self.button.place(x=720, y=self.y - 11, width=35, height=35)
-
 
     def clicked(self):
         if self.is_closed is True:
@@ -36,46 +33,46 @@ class PlusButton:
             self.button.configure(text="-", fg="red")
             self.is_closed = False
             self.img_rectangle = PhotoImage(file="assets/rectangle.png")
-            self.image_rectangle = self.canvas.create_image(10, self.y + 35, anchor='nw', image=self.img_rectangle)
+            self.image_rectangle = canvas.create_image(10, self.y + 35, anchor='nw', image=self.img_rectangle)
             self.y += 55
             self.y = self.y + 120 - (30 * (len(self.strings) + 1)) // 2
             for element in self.strings:
-                self.list_outline.append(self.canvas.create_text(402, self.y + 2, text=element, font=("MiSans Heavy", 20), anchor="center", fill="black"))
-                self.list.append(self.canvas.create_text(400, self.y, text=element, font=("MiSans Heavy", 20), anchor="center", fill=self.color_font))
+                self.list_outline.append(canvas.create_text(402, self.y + 2, text=element, font=("MiSans Heavy", 20), anchor="center", fill="black"))
+                self.list.append(canvas.create_text(400, self.y, text=element, font=("MiSans Heavy", 20), anchor="center", fill=self.color_font))
                 self.y += 32
             if self.type == "Основные сведения":
-                utils.constants.plus_personal.change_position(420)
+                plus_personal.change_position(420)
         else:
             self.button.configure(text="+", fg="green")
             self.is_closed = True
-            self.canvas.delete(self.image_rectangle)
+            canvas.delete(self.image_rectangle)
             for element in range(len(self.list)):
-                self.canvas.delete(self.list[element])
-                self.canvas.delete(self.list_outline[element])
-            self.canvas.delete(self.title)
-            self.canvas.delete(self.title_outline)
+                canvas.delete(self.list[element])
+                canvas.delete(self.list_outline[element])
+            canvas.delete(self.title)
+            canvas.delete(self.title_outline)
             self.button.destroy()
             if self.type == "Основные сведения":
-                utils.constants.plus_personal.change_position(175)
+                plus_personal.change_position(175)
             self.__init__(self.strings, self.color_font, self.stock_y)
-
 
     def change_position(self, y):
         self.y = y
         self.stock_y = self.y
         self.button.place(x=720, y=self.y - 11, width=35, height=35)
-        self.canvas.coords(self.title_outline, 405, self.y + 5)
-        self.canvas.coords(self.title, 400, self.y)
+        canvas.coords(self.title_outline, 405, self.y + 5)
+        canvas.coords(self.title, 400, self.y)
         try:
-            self.canvas.coords(self.image_rectangle, 10, self.y + 35)
+            canvas.coords(self.image_rectangle, 10, self.y + 35)
         except:
             pass
         self.y += 55
         self.y = self.y + 120 - (30 * (len(self.strings) + 1)) // 2
         for element in range(len(self.list)):
-            self.canvas.coords(self.list_outline[element], 402, self.y + 2)
-            self.canvas.coords(self.list[element], 400, self.y)
+            canvas.coords(self.list_outline[element], 402, self.y + 2)
+            canvas.coords(self.list[element], 400, self.y)
             self.y += 32
+
 
 class Club:
     def __init__(self, name, price, league, color_font, codename):
@@ -183,15 +180,15 @@ class Club:
             self.result = True
         return self.result
 
-
     def info(self):
-        self.w_info = utils.constants.statistics_club["Tkinter"] = Toplevel()
-        self.w_info.geometry("800x800+560+115")
-        self.w_info.resizable(width=False, height=False)
-        self.w_info.title("FOOTBALL MANAGER | Информация о клубе " + self.name)
-        self.canvas = utils.constants.statistics_club["Canvas"] = Canvas(self.w_info, height=800, width=802)
-        self.canvas.place(x=-2, y=0)
-        MainWindow(self.w_info, utils.constants.statistics_club["Canvas"], self.img_bg)
+        global w_info, canvas, plus_basic, plus_personal
+        w_info = Toplevel()
+        w_info.geometry("800x800+560+115")
+        w_info.resizable(width=False, height=False)
+        w_info.title("FOOTBALL MANAGER | Информация о клубе " + self.name)
+        canvas = Canvas(w_info, height=800, width=802)
+        canvas.place(x=-2, y=0)
+        PlayVideo(w_info, canvas, self.img_bg)
         self.stats = []
         self.stats_outline = []
         self.strings_stats = []
@@ -230,29 +227,29 @@ class Club:
             self.strings_stats.append("Футболист: Отсутствует")
             self.strings_stats.append("Тренер: Отсутствует")
             self.strings_stats.append("Менеджер: Отсутствует")
-        self.canvas.create_text(406, 46, text=self.name, font=("MiSans Heavy", 50), anchor="center", fill="black")
-        self.canvas.create_text(400, 40, text=self.name, font=("MiSans Heavy", 50), anchor="center", fill=self.color_font)
+        canvas.create_text(406, 46, text=self.name, font=("MiSans Heavy", 50), anchor="center", fill="black")
+        canvas.create_text(400, 40, text=self.name, font=("MiSans Heavy", 50), anchor="center", fill=self.color_font)
         self.y = 170
         self.list = []
         for element in self.strings_stats:
             if "Цена за победу с менеджером" in element:
                 self.list.append(element)
                 print(1)
-                utils.constants.plus_basic = PlusButton(self.list, self.color_font)
+                plus_basic = PlusButton(self.list, self.color_font)
                 self.list = []
             elif "Менеджер: Отсутствует" in element:
                 self.list.append(element)
                 print(2)
-                utils.constants.plus_personal = PlusButton(self.list, self.color_font)
+                plus_personal = PlusButton(self.list, self.color_font)
                 self.list = []
             elif "Уровень менеджера" in element:
                 self.list.append(element)
                 print(3)
-                utils.constants.plus_personal = PlusButton(self.list, self.color_font)
+                plus_personal = PlusButton(self.list, self.color_font)
                 self.list = []
             else:
                 self.list.append(element)
                 print(element)
         self.list_personal = self.stats
         self.list_personal_outline = self.stats_outline
-        self.w_info.mainloop()
+        w_info.mainloop()
