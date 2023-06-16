@@ -28,6 +28,7 @@ PL2 = None
 next_player = None
 working_directory = os.path.abspath(os.curdir).replace("utils", "")
 property_window = {"Start": None, "TV": None, "Club": None, "Coach": None, "Footballer": None, "Manager": None}
+used_in_video = {}
 statistics_main_window = None
 sum = 0
 
@@ -37,7 +38,7 @@ errorcodes = {0: "Значение превышает 20 символов или
               3: "Футболист болеет"}
 
 names_clubs = ["Манчестер Сити", "Арсенал", "Ливерпуль",
-               "Барселона", "Реал Мадрид", "Атлетико Мадрид",
+               "Барселона", "Реал Мадрид", "Атлетико",
                "Интер", "Милан", "Ювентус",
                "Бавария", "Боруссия", "Лейпциг",
                "Спартак", "ЦСКА", "Краснодар"]
@@ -59,8 +60,8 @@ prices_clubs = [5000000, 4600000, 4400000,
 colors_clubs = ["#0080ff", "#c1ae67", "#ff0000",
                 "#0060ff", "#ffd700", "#0030ff",
                 "#0048ff", "#ff0000", "#ffffff",
-                "#0080ff", "#ffc000", "#7b0000",
-                "#860000", "#0000ff", "#007a4d"]
+                "#0080ff", "#fff000", "#ff0000",
+                "#ff0000", "#0030ff", "#007a4d"]
 
 name_TV = ["Setanta Sports", "Euro Sports", "Rai Uno", "ESPN"]
 gradual_income = [300000, 500000, 1000000, 2000000]

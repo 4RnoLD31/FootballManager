@@ -12,6 +12,7 @@ from models.footballer import *
 from models.tv_company import *
 from models.manager import Manager
 from models.error import Error
+from models.info import Info
 from models.property import Property
 from models.statistics import Statistics
 
@@ -64,14 +65,13 @@ class StartGame:
         clubs["Реал Мадрид"].buy(utils.constants.PL1)
         clubs["Барселона"].buy(utils.constants.PL1)
         managers["Пол Кругман"].buy(utils.constants.PL1, clubs["Реал Мадрид"])
-        clubs["Атлетико Мадрид"].buy(utils.constants.PL1)
+        clubs["Атлетико"].buy(utils.constants.PL1)
         TVs["Setanta Sports"].buy(utils.constants.PL1)
         footballers["Messi"].buy(utils.constants.PL1, clubs["Барселона"])
         coaches["Tedesko"].buy(utils.constants.PL1, clubs["Барселона"])
         coaches["Malorian"].buy(utils.constants.PL1, clubs["Барселона"])
         managers["Фрэнк Лэмпард"].buy(utils.constants.PL1, clubs["Барселона"])
-        for element in clubs:
-            element.info()
+        Info(clubs["Реал Мадрид"])
         #self.choice = randint(0, 1)
         self.choice = 0
         self.l_first = Label(main_window, text="Первым бросает игрок: ....", font="MiSans 50")
