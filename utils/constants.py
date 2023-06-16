@@ -11,9 +11,11 @@ def nothing():
 
 def clear():
     for widget in main_window.winfo_children():
-        widget.destroy()
-    l_logo = Label(main_window, text="FOOTBALL MANAGER", font="MiSans 50")
-    l_logo.pack(side="top")
+        try:
+            if widget["text"] != "FOOTBALL MANAGER" or not isinstance(widget, Menu):
+                widget.destroy()
+        except:
+            pass
 
 
 def text_on_center(text, font, window=main_window):

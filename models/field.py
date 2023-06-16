@@ -19,10 +19,8 @@ class NewMove:
         print(self.player)
         if self.player == utils.constants.PL1:
             utils.constants.next_player = utils.constants.PL2
-            print("1", utils.constants.next_player)
         elif self.player == utils.constants.PL2:
             utils.constants.next_player = utils.constants.PL1
-            print("2", utils.constants.next_player)
         clear()
         # self.number = randint(2, 12)
         self.number = 14

@@ -1,7 +1,7 @@
 from tkinter import *
 from time import sleep
 from random import randint
-
+from models.change_avatar import ChangeAvatar
 import utils.constants
 from utils.constants import *
 from models.club import *
@@ -22,11 +22,23 @@ class StartGame:
         main_window.resizable(width=False, height=False)
         main_window.title("FOOTBALL MANAGER")
         main_window.protocol("WM_DELETE_WINDOW", lambda: quit(0))
+        self.l_logo = Label(main_window, text="FOOTBALL MANAGER", font="MiSans 50")
+        self.l_logo.pack(side="top")
+        self.menu = Menu(main_window, tearoff=0)
+        self.file_menu = Menu(main_window, tearoff=0)
+        self.change_menu = Menu(main_window, tearoff=0)
+        self.change_menu_advanced = Menu(main_window, tearoff=0)
+        self.menu.add_cascade(label="Файл", menu=self.file_menu)
+        self.menu.add_cascade(label="Изменить", menu=self.change_menu)
+        main_window.configure(menu=self.menu)
+        self.change_menu.add_cascade(label="Поменять аватарку", menu=self.change_menu_advanced)
+        self.change_menu.add_command(label="Поменять имя")
+        self.file_menu.add_command(label="Сохранить игру")
+        self.file_menu.add_command(label="Выход", command=quit)
         self.__main_menu__()
         main_window.mainloop()
 
     def __main_menu__(self):
-        clear()
         self.l_PL1 = Label(main_window, text="Имя первого игрока:", font="MiSans 40")
         self.l_PL1.place(x=50, y=250)
         self.f_PL1 = Entry(main_window, font="MiSans 30")
@@ -62,6 +74,8 @@ class StartGame:
         clear()
         utils.constants.PL1 = Player(self.PL1_name, 36000000, 12121)
         utils.constants.PL2 = Player(self.PL2_name, 10, 12121)
+        self.change_menu_advanced.add_command(label=f"Игрок 1 - {utils.constants.PL1.name}", command=lambda: ChangeAvatar(utils.constants.PL1))
+        self.change_menu_advanced.add_command(label=f"Игрок 2 - {utils.constants.PL2.name}", command=lambda: ChangeAvatar(utils.constants.PL2))
         clubs["Реал Мадрид"].buy(utils.constants.PL1)
         clubs["Барселона"].buy(utils.constants.PL1)
         managers["Пол Кругман"].buy(utils.constants.PL1, clubs["Реал Мадрид"])
@@ -71,7 +85,7 @@ class StartGame:
         coaches["Tedesko"].buy(utils.constants.PL1, clubs["Барселона"])
         coaches["Malorian"].buy(utils.constants.PL1, clubs["Барселона"])
         managers["Фрэнк Лэмпард"].buy(utils.constants.PL1, clubs["Барселона"])
-        Info(clubs["Реал Мадрид"])
+        Info(clubs["Спартак"])
         #self.choice = randint(0, 1)
         self.choice = 0
         self.l_first = Label(main_window, text="Первым бросает игрок: ....", font="MiSans 50")

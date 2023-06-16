@@ -10,6 +10,7 @@ class Player:
         self.payment_TVs_degree = 0
         self.payment_TVs = 0
         self.position = 0
+        self.avatar = None
         self.bonuses = {"Vaccine": 0, "Resurrection": 0}
         # Statistics
         self.throws = 0

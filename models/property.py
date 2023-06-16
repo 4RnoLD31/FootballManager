@@ -340,21 +340,20 @@ class SearchClubs:
         self.will_sell = []
         self.picked = []
         self.check_buttons = []
-        self.images = []
-        self.img = Image.open(utils.constants.working_directory + "/assets/nothing.png")
-        self.img = ImageTk.PhotoImage(self.img)
+        self.images_emblem = []
+        self.images_title = []
         for element in range(0, len(self.found)):
             self.picked.append(BooleanVar())
         for element in range(0, len(self.found)):
-            self.check_buttons.append(
-                Checkbutton(self.frame, variable=self.picked[element], text=self.found[element].name,
-                            font="MiSans 20", fg=self.found[element].color_font, image=self.img))
+            self.images_title.append(Image.open(utils.constants.working_directory + "/assets/Untitled-1.png"))
+            self.images_title[element] = ImageTk.PhotoImage(self.images_title[element])
+            self.check_buttons.append(Checkbutton(self.frame, variable=self.picked[element], bg="black", image=self.images_title[element]))
             self.check_buttons[element].config(command=self.clicked)
-            self.check_buttons[element].place(x=10, y=self.y, height=50)
-            self.images.append(Image.open(self.found[element].img_emblem).resize((25, 25), Image.LANCZOS))
-            self.images[element] = ImageTk.PhotoImage(self.images[element])
-            self.canvas.create_image(270, self.y + 14, anchor=NW, image=self.images[element])
-            self.y += 42
+            self.check_buttons[element].place(x=23, y=self.y, height=40, width=228)
+            self.images_emblem.append(Image.open(self.found[element].img_emblem).resize((40, 40), Image.LANCZOS))
+            self.images_emblem[element] = ImageTk.PhotoImage(self.images_emblem[element])
+            self.canvas.create_image(256, self.y, anchor=NW, image=self.images_emblem[element])
+            self.y += 50
         self.frame.mainloop()
 
     def sell(self):
