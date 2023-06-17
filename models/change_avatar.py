@@ -54,10 +54,14 @@ class ChangeAvatar:
 
     def __clicked__(self, path):
         self.path = path
-        print(self.path)
-        self.player.avatar = self.path
+        if self.path != "": self.player.avatar = self.path
 
     def __file_clicked__(self):
         messagebox.showinfo(title="Уведомление", message="Соотношение файла должно быть 1 к 1. Пример разрешений: 800x800, 450x450, 2300x2300")
-        self.path = filedialog.askopenfilename(title="Выбери файл .png", defaultextension="png")
+        while True:
+            self.path = filedialog.askopenfilename(title="Выбери файл .png", defaultextension=".png")
+            if self.path[len(self.path) - 4:len(self.path)] != ".png" and self.path != "":
+                messagebox.showerror(title="Ошибка", message="Файл должен иметь расширение .png")
+            else:
+                break
         self.__clicked__(self.path)
