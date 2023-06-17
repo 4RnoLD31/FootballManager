@@ -1,4 +1,4 @@
-from tkinter import Toplevel, Button, Canvas, Scrollbar
+from tkinter import Toplevel, Button, Canvas, Scrollbar, filedialog, messagebox
 from PIL import Image, ImageTk
 from utils.constants import working_directory
 from os import listdir
@@ -9,6 +9,7 @@ class ChangeAvatar:
         self.window = Toplevel()
         self.window.geometry("500x500")
         self.window.title(f"FOOTBALL MANAGER | Смена аватара {self.player.name}")
+        self.window.resizable(width=False, height=False)
         self.canvas = Canvas(self.window)
         self.vsb = Scrollbar(self.window, orient="vertical", command=self.canvas.yview)
         self.window.grid_rowconfigure(0, weight=1)
@@ -17,10 +18,12 @@ class ChangeAvatar:
         self.canvas.grid(row=0, column=0, sticky="nsew")
         self.vsb.grid(row=0, column=1, sticky="ns")
         self.x = 33
-        self.y = 33
+        self.y = 100
         self.images = []
         self.paths = []
         self.buttons = []
+        self.b_upload = Button(self.canvas, text="Загрузить свою", font="MiSans 30", command=self.__file_clicked__)
+        self.canvas.create_window(250 - self.b_upload.winfo_reqwidth() // 2, 0, anchor="nw", window=self.b_upload)
         for element in range(len(listdir(path=working_directory + "/assets/avatars/"))):
             self.path = working_directory + "/assets/avatars/" + str(element) + ".png"
             self.images.append(Image.open(self.path))
@@ -54,3 +57,7 @@ class ChangeAvatar:
         print(self.path)
         self.player.avatar = self.path
 
+    def __file_clicked__(self):
+        messagebox.showinfo(title="Уведомление", message="Соотношение файла должно быть 1 к 1. Пример разрешений: 800x800, 450x450, 2300x2300")
+        self.path = filedialog.askopenfilename(title="Выбери файл .png", defaultextension="png")
+        self.__clicked__(self.path)
