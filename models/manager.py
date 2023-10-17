@@ -43,3 +43,27 @@ class Manager:
         self.club.manager = None
         self.club = None
         self.flu = False
+
+    def __getstate__(self) -> dict:
+        state = {}
+        state["Name"] = self.name
+        state["Type Manager"] = self.type_manager
+        state["Price"] = self.price
+        state["Level"] = self.level
+        state["Type"] = self.type
+        state["Resurrected"] = self.resurrected
+        state["Dead"] = self.dead
+        state["Flu"] = self.flu
+        state["Club"] = self.club
+        return state
+
+    def __setstate__(self, state: dict):
+        self.name = state["Name"]
+        self.type_manager = state["Type Manager"]
+        self.price = state["Price"]
+        self.level = state["Level"]
+        self.type = state["Type"]
+        self.resurrected = state["Resurrected"]
+        self.dead = state["Dead"]
+        self.flu = state["Flu"]
+        self.club = state["Club"]

@@ -32,9 +32,22 @@ class TVCompany:
         self.owner = None
         return self.price_sold
 
-
     def get_fine(self, type_fine):
         self.type_fan = type_fine
 
     def stepped_on(self):
         pass
+
+    def __getstate__(self) -> dict:
+        state = {}
+        state["Name"] = self.name
+        state["Price"] = self.price
+        state["Potential Owner"] = self.potential_owner
+        state["Owner"] = self.owner
+        return state
+
+    def __setstate__(self, state: dict):
+        self.name = state["Name"]
+        self.price = state["Price"]
+        self.potential_owner = state["Potential Owner"]
+        self.owner = state["Owner"]

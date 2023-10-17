@@ -333,8 +333,10 @@ class SearchClubs:
                                  y=400 - (self.l_nothing.winfo_reqheight() / 2))
             print("Нет клубов")
             return
-        self.b_sell = Button(self.frame, text="Продать", font="MiSans 40", command=self.sell)
-        self.b_sell.place(x=150 - (self.b_sell.winfo_reqwidth() / 2), y=800, height=80)
+        self.sell_button = Image.open(working_directory + "/assets/sell_button.png")
+        self.sell_button = ImageTk.PhotoImage(self.sell_button)
+        self.b_sell = Button(self.frame, command=self.sell, image=self.sell_button, bg="black")
+        self.b_sell.place(x=150 - (self.b_sell.winfo_reqwidth() / 2), y=800, height=80, width=260)
         self.x = 10
         self.y = 70
         self.will_sell = []
@@ -345,7 +347,7 @@ class SearchClubs:
         for element in range(0, len(self.found)):
             self.picked.append(BooleanVar())
         for element in range(0, len(self.found)):
-            self.images_title.append(Image.open(utils.constants.working_directory + "/assets/Untitled-1.png"))
+            self.images_title.append(Image.open(self.found[element].img_title).resize((200, 40), Image.LANCZOS))
             self.images_title[element] = ImageTk.PhotoImage(self.images_title[element])
             self.check_buttons.append(Checkbutton(self.frame, variable=self.picked[element], bg="black", image=self.images_title[element]))
             self.check_buttons[element].config(command=self.clicked)
@@ -361,7 +363,8 @@ class SearchClubs:
         if not self.will_sell: return
         self.y = 70
         for widget in self.frame.winfo_children():
-            widget.destroy()
+            if not isinstance(widget, Canvas):
+                widget.destroy()
         self.l_logo = Label(self.frame, text="Клубы", font="MiSans 40")
         self.l_logo.pack(side="top")
         for element in self.will_sell:

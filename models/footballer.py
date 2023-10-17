@@ -1,5 +1,6 @@
 from utils.constants import *
 
+
 class Footballer:
     def __init__(self, name, power, price):
         self.name = name
@@ -8,7 +9,7 @@ class Footballer:
         self.type = "Footballer"
         self.resurrected = False
         self.dead = False
-        self.flu = None
+        self.flu = False
         self.club = None
 
     def buy(self, player, potential_club):
@@ -40,3 +41,25 @@ class Footballer:
         self.club.footballer = None
         self.club = None
         self.flu = False
+
+    def __getstate__(self) -> dict:
+        state = {}
+        state["Name"] = self.name
+        state["Power"] = self.power
+        state["Price"] = self.price
+        state["Type"] = self.type
+        state["Resurrected"] = self.resurrected
+        state["Dead"] = self.dead
+        state["Flu"] = self.flu
+        state["Club"] = self.club
+        return state
+
+    def __setstate__(self, state: dict):
+        self.name = state["Name"]
+        self.power = state["Power"]
+        self.price = state["Price"]
+        self.type = state["Type"]
+        self.resurrected = state["Resurrected"]
+        self.dead = state["Dead"]
+        self.flu = state["Flu"]
+        self.club = state["Club"]

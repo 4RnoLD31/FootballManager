@@ -168,3 +168,33 @@ class Player:
                             variable=self.switch_club[element], command=self.cliched))
             self.available_clubs[element].place(x=self.x, y=self.y)
             self.y += 100
+
+    def __getstate__(self) -> dict:
+        state = {}
+        state["Name"] = self.name
+        state["Balance"] = self.balance
+        state["Income"] = self.income
+        state["Payment TVs Degree"] = self.payment_TVs_degree
+        state["Payment TVs"] = self.payment_TVs
+        state["Position"] = self.position
+        state["Avatar"] = self.avatar
+        state["Bonuses"] = self.bonuses
+        state["Throws"] = self.throws
+        state["Numbers Thrown"] = self.numbers_thrown
+        state["Money Earned"] = self.money_earned
+        state["Money Spent"] = self.money_spent
+        return state
+
+    def __setstate__(self, state: dict):
+        self.name = state["Name"]
+        self.balance = state["Balance"]
+        self.income = state["Income"]
+        self.payment_TVs_degree = state["Payment TVs Degree"]
+        self.payment_TVs = state["Payment TVs"]
+        self.position = state["Position"]
+        self.avatar = state["Avatar"]
+        self.bonuses = state["Bonuses"]
+        self.throws = state["Throws"]
+        self.numbers_thrown = state["Numbers Thrown"]
+        self.money_earned = state["Money Earned"]
+        self.money_spent = state["Money Spent"]

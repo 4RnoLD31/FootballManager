@@ -19,7 +19,7 @@ class Club:
         self.potential_owner = None
         self.owner = None
         self.img_bg = working_directory + "/assets/clubs/" + self.codename + "/background.mp4"
-        self.img_small = working_directory + "/assets/clubs/" + self.codename + "/small.png"
+        self.img_title = working_directory + "/assets/clubs/" + self.codename + "/title.png"
         self.img_emblem = working_directory + "/assets/clubs/" + self.codename + "/emblem.png"
 
     def buy(self, potential_owner):
@@ -106,3 +106,48 @@ class Club:
         if self.cooldown is None and self.footballer is not None and self.footballer.flu is None:
             self.result = True
         return self.result
+
+    def __getstate__(self) -> dict:
+        state = {}
+        state["Name"] = self.name
+        state["Price"] = self.price
+        state["League"] = self.league
+        state["Color Font"] = self.color_font
+        state["Codename"] = self.codename
+        state["Income"] = self.income
+        state["Win Footballer"] = self.win_footballer
+        state["Win Coach"] = self.win_coach
+        state["Win Manager"] = self.win_manager
+        state["Cooldown"] = self.cooldown
+        state["Footballer"] = self.footballer
+        state["Coach"] = self.coach
+        state["Manager"] = self.manager
+        state["Potential Owner"] = self.potential_owner
+        state["Owner"] = self.owner
+        state["Image Background"] = self.img_bg
+        state["Image Title"] = self.img_title
+        state["Image Emblem"] = self.img_emblem
+        return state
+
+    def __setstate__(self, state: dict):
+        self.name = state["Name"]
+        self.price = state["Price"]
+        self.league = state["League"]
+        self.color_font = state["Color Font"]
+        self.codename = state["Codename"]
+        self.income = state["Income"]
+        self.win_footballer = state["Win Footballer"]
+        self.win_coach = state["Win Coach"]
+        self.win_manager = state["Win Manager"]
+        self.cooldown = state["Cooldown"]
+        self.footballer = state["Footballer"]
+        self.coach = state["Coach"]
+        self.manager = state["Manager"]
+        self.potential_owner = state["Potential Owner"]
+        self.owner = state["Owner"]
+        self.img_bg = state["Image Background"]
+        self.img_title = state["Image Title"]
+        self.img_emblem = state["Image Emblem"]
+
+
+

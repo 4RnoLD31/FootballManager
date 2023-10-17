@@ -40,3 +40,16 @@ class Statistics:
     def __value_for_pl1__(self, element):
         self.element = element
         self.element.place(x=45 - self.element.winfo_reqwidth() / 2 + 355, y=150)
+
+class ShowBalance:
+    def __init__(self):
+        self.window = Toplevel()
+        self.window.geometry("600x300")
+        try:
+            self.first_balance = Label(self.window, text="Баланс игрока " + utils.constants.PL1.name + ": " + str(utils.constants.PL1.balance), font="MiSans 25")
+            self.first_balance.place(x=300 - (self.first_balance.winfo_reqwidth() / 2), y=50)
+            self.second_balance = Label(self.window, text="Баланс игрока " + utils.constants.PL2.name + ": " + str(utils.constants.PL2.balance), font="MiSans 25")
+            self.second_balance.place(x=300 - (self.first_balance.winfo_reqwidth() / 2), y=200)
+        except:
+            self.window.destroy()
+            return
