@@ -1,12 +1,11 @@
 from utils.constants import *
 
 class Manager:
-    def __init__(self, name, type_manager):
+    def __init__(self, name, type, price):
         self.name = name
-        self.type_manager = type_manager
-        self.price = 8000000
+        self.type = type
+        self.price = price
         self.level = 1
-        self.type = "Manager"
         self.resurrected = False
         self.dead = False
         self.flu = 20
@@ -47,7 +46,7 @@ class Manager:
     def __getstate__(self) -> dict:
         state = {}
         state["Name"] = self.name
-        state["Type Manager"] = self.type_manager
+        state["Type Manager"] = self.type
         state["Price"] = self.price
         state["Level"] = self.level
         state["Type"] = self.type
@@ -59,7 +58,7 @@ class Manager:
 
     def __setstate__(self, state: dict):
         self.name = state["Name"]
-        self.type_manager = state["Type Manager"]
+        self.type = state["Type Manager"]
         self.price = state["Price"]
         self.level = state["Level"]
         self.type = state["Type"]

@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import messagebox
 import os
 
-main_window = Tk()
+main_window = None
 
 
 def nothing():
@@ -25,13 +25,16 @@ def text_on_center(text, font, window=main_window):
     return label
 
 
+game_loaded = False
 PL1 = None
 PL2 = None
 next_player = None
 working_directory = os.path.abspath(os.curdir).replace("utils", "")
+path_to_settings = working_directory + "\\settings.ini"
+print(path_to_settings)
 property_window = {"Start": None, "TV": None, "Club": None, "Coach": None, "Footballer": None, "Manager": None}
 used_in_video = {}
-statistics_main_window = None
+main_window = None
 sum = 0
 
 errorcodes = {0: "Значение превышает 20 символов или равно 0",
@@ -69,15 +72,10 @@ name_TV = ["Setanta Sports", "Euro Sports", "Rai Uno", "ESPN"]
 gradual_income = [300000, 500000, 1000000, 2000000]
 
 fines = {"Money": 9, "Dead": 2, "Strike": 2, "Coronavirus": 3}
+bonuses = {"Money": 9, "Transfer Window": 2, "Vaccine": 2, "Revive": 1, "Charity Match": 1}
 
 money_fines = {3000000: 2, 1500000: 3, 750000: 4}
-money_fines_chances = [2, 3, 4]
-
-pp_footballers = {2: 1000000, 4: 2000000, 6: 4000000, 8: 6500000, 10: 10000000}
-name_footballers = {"Cristiano Ronaldo": 10, "Messi": 4}
-
-pp_coaches = {1: 1000000, 2: 2200000, 3: 4000000}
-name_coaches = {"Tedesko": 1, "Malorian": 1}
+money_bonuses = {1500000: 2, 1000000: 3, 500000: 4}
 
 managers_price = 1000000
 managers_count = 10
@@ -89,7 +87,4 @@ managers = {}
 
 nt_managers = {"Мансура бен Заида": "Sheikh", "Фрэнк Лэмпард": "Former Footballer",
                "Пол Кругман": "Economist"}
-sheikh_level = {1: 1000000, 2: 2500000, 3: 5000000}
-former_footballer_level = {1: 1, 2: 2, 3: 3}
-economist_plus_level = {1: 0.1, 2: 0.2, 3: 0.4}
-economist_minus_level = {1: 0.15, 2: 0.3, 3: 0.6}
+sheikh_level = former_footballer_level = economist_plus_level = economist_minus_level = {}

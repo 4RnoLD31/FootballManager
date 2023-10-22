@@ -1,4 +1,5 @@
 from utils.constants import *
+import utils.constants
 from tkinter import messagebox
 
 
@@ -35,7 +36,7 @@ class Player:
         self.level = 0
         self.economists = self.search_managers_in_clubs()
         for element in self.economists:
-            if element.type_manager == "Economist" and element.level > self.level:
+            if element.type == "Economist" and element.level > self.level:
                 self.level = element.level
         return self.level
 
@@ -149,9 +150,9 @@ class Player:
         self.y = 150
         self.names = {"Клубы": 50, "Телекомпании": 240, "Менеджеры": 640, "Тренеры": 980, "Футболисты": 1230}
         for element in self.names.keys():
-            self.label = Label(main_window, text=element, font="MiSans 40")
+            self.label = Label(utils.constants.main_window, text=element, font="MiSans 40")
             self.label.place(x=self.names[element], y=200)
-        self.l_property = Label(main_window, text="Имущество игрока " + self.name, font="MiSans 50")
+        self.l_property = Label(utils.constants.main_window, text="Имущество игрока " + self.name, font="MiSans 50")
         self.l_property.place(x=800 - (self.l_property.winfo_reqwidth() / 2), y=100)
         self.list_available_clubs = self.search_owned_clubs()
         self.list_available_TVs = self.search_owned_TVs()
@@ -164,7 +165,7 @@ class Player:
             print(element)
             self.switch_club[element] = IntVar()
             self.available_clubs.append(
-                Checkbutton(main_window, text=self.list_available_clubs[element].name, font="MiSans 50",
+                Checkbutton(utils.constants.main_window, text=self.list_available_clubs[element].name, font="MiSans 50",
                             variable=self.switch_club[element], command=self.cliched))
             self.available_clubs[element].place(x=self.x, y=self.y)
             self.y += 100

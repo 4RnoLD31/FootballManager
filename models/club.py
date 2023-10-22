@@ -41,7 +41,7 @@ class Club:
         self.result = 0
         if self.manager is not None:
             self.result = self.win_manager
-            if self.manager.type_manager == "Sheikh":
+            if self.manager.type == "Sheikh":
                 self.result += sheikh_level[self.manager.level]
         elif self.coach is not None:
             self.result = self.win_coach

@@ -140,12 +140,12 @@ class InfoClub:
             self.strings_stats.append("Футболист: " + str(self.club.footballer.name) + " (" + str(self.club.footballer.power) + ")")
             self.strings_stats.append("Тренер: " + str(self.club.coach.name) + " (" + str(self.club.coach.power) + ")")
             self.strings_stats.append("Менеджер: " + str(self.club.manager.name))
-            self.strings_stats.append("Тип менеджера: " + str(self.club.manager.type_manager))
-            if self.club.manager.type_manager == "Sheikh":
+            self.strings_stats.append("Тип менеджера: " + str(self.club.manager.type))
+            if self.club.manager.type == "Sheikh":
                 self.strings_stats.append("Бонус менеджера: +" + str(int(sheikh_level[self.club.manager.level])) + " за победу")
-            elif self.club.manager.type_manager == "Former Footballer":
+            elif self.club.manager.type == "Former Footballer":
                 self.strings_stats.append("Бонус менеджера: +" + str(int(former_footballer_level[self.club.manager.level])) + " к победе")
-            elif self.club.manager.type_manager == "Economist":
+            elif self.club.manager.type == "Economist":
                 self.strings_stats.append("Бонус менеджера: +" + str(int(economist_plus_level[self.club.manager.level] * 100)) + "% к пополнению")
                 self.strings_stats.append("Бонус менеджера: -" + str(int(economist_minus_level[self.club.manager.level] * 100)) + "% к тратам")
             self.strings_stats.append("Уровень менеджера: " + str(self.club.manager.level))

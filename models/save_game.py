@@ -1,7 +1,9 @@
-import pickle
-import utils.constants
 import os
 from datetime import date
+import utils.constants
+import pickle
+from configparser import ConfigParser
+from utils.constants import path_to_settings
 def save_game(autosave=True):
     if autosave:
         type = "autosave"
@@ -42,25 +44,11 @@ def save_game(autosave=True):
         data["PL2"] = utils.constants.PL2
         data["Next Player"] = utils.constants.next_player
         data["Working Directory"] = utils.constants.working_directory
+        data["Game Loaded"] = True
         pickle.dump(data, save_file)
+        d_path = {"latest_autosave": path}
+        settings_file = ConfigParser()
+        settings_file["Settings"] = d_path
+        with open(path_to_settings, "w") as file:
+            settings_file.write(file)
         print("saved")
-
-
-def load_game():
-    with open("save.dat", "rb") as load_file:
-        data = pickle.load(load_file)
-        print("loaded")
-    for element in utils.constants.clubs:
-        utils.constants.clubs[element] = data[element]
-    for element in utils.constants.footballers:
-        utils.constants.footballers[element] = data[element]
-    for element in utils.constants.managers:
-        utils.constants.managers[element] = data[element]
-    for element in utils.constants.coaches:
-        utils.constants.coaches[element] = data[element]
-    for element in utils.constants.TVs:
-        utils.constants.TVs[element] = data[element]
-    utils.constants.PL1 = data["PL1"]
-    utils.constants.PL2 = data["PL2"]
-    utils.constants.next_player = data["Next Player"]
-    utils.constants.working_directory = data["Working Directory"]

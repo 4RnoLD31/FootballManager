@@ -1,6 +1,7 @@
 import utils.constants
 from utils.constants import *
 
+
 class Coach:
     def __init__(self, name, power, price):
         self.name = name
@@ -12,7 +13,6 @@ class Coach:
         self.flu = False
         self.club = None
         self.strike = False
-
 
     def buy(self, player, potential_club):
         self.player = player
