@@ -2,6 +2,7 @@ from configparser import ConfigParser
 import pickle
 import utils.constants
 from models.field import new_move
+from models.highlighting import *
 
 
 def load_game(auto=True):
@@ -10,7 +11,7 @@ def load_game(auto=True):
         settings_file.read("settings.ini")
         with open(settings_file["Settings"]["latest_autosave"], "rb") as load_file:
             data = pickle.load(load_file)
-            print("loaded")
+            print(c_info("Game loaded"))
     for element in utils.constants.clubs:
         utils.constants.clubs[element] = data[element]
     for element in utils.constants.footballers:

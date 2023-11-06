@@ -1,4 +1,5 @@
-from utils.constants import *
+from models.highlighting import *
+
 
 class Manager:
     def __init__(self, name, type, price):
@@ -6,54 +7,69 @@ class Manager:
         self.type = type
         self.price = price
         self.level = 1
+        self.owner = None
         self.resurrected = False
         self.dead = False
-        self.flu = 20
+        self.flu = None
         self.club = None
 
-    def buy(self, player, potential_club):
+    def buy(self, player, potential_club=None):
         self.player = player
         self.potential_club = potential_club
-        if self.player.balance >= self.player.check_balance(self.price) and self.club is None and self.potential_club.owner == self.player:
-            self.player.withdrawal(self.price)
+        if self.player.balance >= self.player.summary_check(self.price) and self.club is None:
+            self.show_price = self.player.withdrawal(self.price)
             self.club = self.potential_club
-            self.club.manager = self
+            self.owner = self.player
+            if self.club is not None:
+                self.club.manager = self
         else:
-            print("Недостаточно средств")
+            print(c_failed(f"Insufficient funds for purchase {self.name} | {self.price}"))
+            return
+        return self.show_price
 
-    def sell(self, on_the_transfer_market):
-        self.on_the_transfer_market = on_the_transfer_market
-        if self.dead is not False:
-            messagebox.showerror(title="Ошибка 2",
-                                 message="Менеджер " + self.name + " мертв. Вы не можете его продать")
-            return
-        elif self.flu is not False:
-            messagebox.showerror(title="Ошибка 3", message=self.name + " болеет. Он выздоровеет через " + str(
-                self.flu) + " ходов. Вы не можете его продать")
-            return
-        self.price_sold = self.club.owner.deposit((self.price // 100000 // self.on_the_transfer_market) * 100000)
+    def sell(self, transfer_market):
+        self.transfer_market = transfer_market
+        self.price_sold = self.club.owner.deposit((self.price // 100000 // self.transfer_market) * 100000)
+        print(c_successful(f"{self.name} was sold by {self.owner.name}"))
         self.club.manager = None
         self.club = None
-        print("Менеджер продан")
+        self.owner = None
         return self.price_sold
 
     def die(self):
         self.dead = True
         self.club.manager = None
         self.club = None
-        self.flu = False
+        self.flu = None
+
+    def transfer(self, new_club):
+        self.new_club = new_club
+        if self.new_club.manager is not None and self.club is not None:
+            self.club.manager = self.new_club.manager
+            self.club.manager.club = self.club
+            self.old_manager = self.new_club.manager
+            self.new_club.manager = self
+            self.club = self.new_club
+            print(c_successful(f"Double transfer: {self.old_manager.name} to {self.old_manager.club.name} | {self.name} to {self.club.name}"))
+        elif self.new_club.manager is not None and self.club is None:
+            self.new_club.manager.club = None
+            self.old_manager = self.new_club.manager
+            self.new_club.manager = self
+            self.club = self.new_club
+            print(c_successful(f"Double transfer: {self.old_manager.name} to Inventory | {self.name} to {self.club.name}"))
+        elif self.new_club.manager is None and self.club is None:
+            self.new_club.manager = self
+            self.club = self.new_club
+            print(c_successful(f"Transfer: {self.name} from Inventory to {self.club.name}"))
+        elif self.new_club.manager is None and self.club is not None:
+            self.club.manager = None
+            self.new_club.manager = self
+            self.old_club = self.club
+            self.club = self.new_club
+            print(c_successful(f"Transfer: {self.name} from {self.old_club.name} to {self.club.name}"))
 
     def __getstate__(self) -> dict:
-        state = {}
-        state["Name"] = self.name
-        state["Type Manager"] = self.type
-        state["Price"] = self.price
-        state["Level"] = self.level
-        state["Type"] = self.type
-        state["Resurrected"] = self.resurrected
-        state["Dead"] = self.dead
-        state["Flu"] = self.flu
-        state["Club"] = self.club
+        state = {"Name": self.name, "Type Manager": self.type, "Price": self.price, "Level": self.level, "Type": self.type, "Resurrected": self.resurrected, "Dead": self.dead, "Flu": self.flu, "Club": self.club, "Owner": self.owner}
         return state
 
     def __setstate__(self, state: dict):
@@ -66,3 +82,4 @@ class Manager:
         self.dead = state["Dead"]
         self.flu = state["Flu"]
         self.club = state["Club"]
+        self.owner = state["Owner"]

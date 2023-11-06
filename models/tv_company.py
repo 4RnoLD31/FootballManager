@@ -1,4 +1,5 @@
 from utils.constants import *
+from models.highlighting import *
 
 
 class TVCompany:
@@ -10,22 +11,19 @@ class TVCompany:
 
     def buy(self, potential_owner):
         self.potential_owner = potential_owner
-        if self.owner != self.potential_owner and self.owner is not None:
-            print("TV куплен")
-        elif self.potential_owner.balance >= self.potential_owner.check_balance(self.price):
+        if self.potential_owner.balance >= self.potential_owner.summary_check(self.price):
             self.owner = self.potential_owner
             self.owner.payment_TVs_degree += 1
             self.owner.payment_TVs = gradual_income[self.owner.payment_TVs_degree - 1]
-            print(self.owner.payment_TVs)
             self.owner.withdrawal(self.price)
-            print("TV приобретен")
+            print(c_successful(f'{self.name} was bought by "{self.owner.name}"'))
         else:
-            print("Недостаточно средств")
+            print(c_failed(f"Insufficient funds for purchase {self.name} | {self.price}"))
 
     def change_owner(self, owner):
         self.owner = owner
 
-    def sell(self):
+    def sell(self, *args):
         self.price_sold = self.owner.deposit(self.price // 2)
         self.owner.payment_TVs_degree -= 1
         self.owner.payment_TVs = gradual_income[self.owner.payment_TVs_degree - 1]
@@ -39,11 +37,7 @@ class TVCompany:
         pass
 
     def __getstate__(self) -> dict:
-        state = {}
-        state["Name"] = self.name
-        state["Price"] = self.price
-        state["Potential Owner"] = self.potential_owner
-        state["Owner"] = self.owner
+        state = {"Name": self.name, "Price": self.price, "Potential Owner": self.potential_owner, "Owner": self.owner}
         return state
 
     def __setstate__(self, state: dict):

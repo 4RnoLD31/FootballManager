@@ -21,17 +21,16 @@ class PlayVideo:
             if self.picture not in utils.constants.used_in_video.keys() or self.first:
                 self.first = True
                 utils.constants.used_in_video[self.picture] = ImageTk.PhotoImage(Image.fromarray(cv2.cvtColor(self.cap.read()[1], cv2.COLOR_BGR2RGB)))
-            self.frame = self.canvas.create_image(0, 0, anchor=NW, image=utils.constants.used_in_video[self.picture])
-            self.canvas.tag_lower(self.frame)
+            self.window = self.canvas.create_image(0, 0, anchor=NW, image=utils.constants.used_in_video[self.picture])
+            self.canvas.tag_lower(self.window)
             self.window.after(self.speed, self.update_image)
         except:
             self.clear()
             self.__init__(self.window, self.canvas, self.picture, first=self.first)
 
-
     def clear(self):
         try:
-            self.canvas.delete(self.frame)
+            self.canvas.delete(self.window)
         except:
             pass
 

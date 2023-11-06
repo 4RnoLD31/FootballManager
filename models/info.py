@@ -18,14 +18,16 @@ class PlusButton:
         self.is_closed = True
         for element in self.strings:
             if "Владелец" in element:
-                if self.y == 0: self.stock_y = self.y = 115
+                if self.y == 0:
+                    self.stock_y = self.y = 115
                 self.stock_y = self.y
                 self.title_outline = self.canvas.create_text(405, self.y + 5, text="Основные сведения", font=("MiSans Heavy", 40), anchor="center", fill="black")
                 self.title = self.canvas.create_text(400, self.y, text="Основные сведения", font=("MiSans Heavy", 40), anchor="center", fill=self.color_font)
                 self.type = "Основные сведения"
                 self.button.place(x=720, y=self.y - 11, width=35, height=35)
             elif "Футболист" in element:
-                if self.y == 0: self.stock_y = self.y = 175
+                if self.y == 0:
+                    self.stock_y = self.y = 175
                 self.stock_y = self.y
                 self.title_outline = self.canvas.create_text(405, self.y + 5, text="Персонал", font=("MiSans Heavy", 40), anchor="center", fill="black")
                 self.title = self.canvas.create_text(400, self.y, text="Персонал", font=("MiSans Heavy", 40), anchor="center", fill=self.color_font)
@@ -38,7 +40,7 @@ class PlusButton:
             self.button.configure(text="-", fg="red")
             self.is_closed = False
             self.img_rectangle = PhotoImage(file="assets/rectangle.png")
-            self.image_rectangle = self.canvas.create_image(10, self.y + 35, anchor='nw', image=self.img_rectangle)
+            self.image_rectangle = self.canvas.create_image(10, self.y + 35, anchor="nw", image=self.img_rectangle)
             self.y += 55
             self.y = self.y + 120 - (30 * (len(self.strings) + 1)) // 2
             for element in self.strings:
@@ -81,29 +83,29 @@ class PlusButton:
 
 class AllClubs:
     def __init__(self):
-        self.frame = Toplevel()
+        self.window = Toplevel()
         self.buttons = []
         self.i = 0
         for element in utils.constants.clubs.keys():
-            self.buttons.append(Button(self.frame, text=clubs[element].name))
+            self.buttons.append(Button(self.window, text=clubs[element].name))
             self.buttons[self.i].pack()
             self.i += 1
-        self.buttons[0].configure(command=lambda: InfoClub(clubs["Манчестер Сити"]))
-        self.buttons[1].configure(command=lambda: InfoClub(clubs["Арсенал"]))
-        self.buttons[2].configure(command=lambda: InfoClub(clubs["Ливерпуль"]))
-        self.buttons[3].configure(command=lambda: InfoClub(clubs["Барселона"]))
-        self.buttons[4].configure(command=lambda: InfoClub(clubs["Реал Мадрид"]))
-        self.buttons[5].configure(command=lambda: InfoClub(clubs["Атлетико"]))
-        self.buttons[6].configure(command=lambda: InfoClub(clubs["Интер"]))
-        self.buttons[7].configure(command=lambda: InfoClub(clubs["Милан"]))
-        self.buttons[8].configure(command=lambda: InfoClub(clubs["Ювентус"]))
-        self.buttons[9].configure(command=lambda: InfoClub(clubs["Бавария"]))
-        self.buttons[10].configure(command=lambda: InfoClub(clubs["Боруссия"]))
-        self.buttons[11].configure(command=lambda: InfoClub(clubs["Лейпциг"]))
-        self.buttons[12].configure(command=lambda: InfoClub(clubs["Спартак"]))
-        self.buttons[13].configure(command=lambda: InfoClub(clubs["ЦСКА"]))
-        self.buttons[14].configure(command=lambda: InfoClub(clubs["Краснодар"]))
-        self.frame.mainloop()
+        self.buttons[0].configure(command=lambda: InfoClub(clubs["Manchester City"]))
+        self.buttons[1].configure(command=lambda: InfoClub(clubs["Arsenal"]))
+        self.buttons[2].configure(command=lambda: InfoClub(clubs["Liverpool"]))
+        self.buttons[3].configure(command=lambda: InfoClub(clubs["Barcelona"]))
+        self.buttons[4].configure(command=lambda: InfoClub(clubs["Real Madrid"]))
+        self.buttons[5].configure(command=lambda: InfoClub(clubs["Atletico Madrid"]))
+        self.buttons[6].configure(command=lambda: InfoClub(clubs["Inter"]))
+        self.buttons[7].configure(command=lambda: InfoClub(clubs["Milan"]))
+        self.buttons[8].configure(command=lambda: InfoClub(clubs["Juventus"]))
+        self.buttons[9].configure(command=lambda: InfoClub(clubs["Bayern"]))
+        self.buttons[10].configure(command=lambda: InfoClub(clubs["Borussia"]))
+        self.buttons[11].configure(command=lambda: InfoClub(clubs["Leipzig"]))
+        self.buttons[12].configure(command=lambda: InfoClub(clubs["Spartak Moscow"]))
+        self.buttons[13].configure(command=lambda: InfoClub(clubs["CSKA"]))
+        self.buttons[14].configure(command=lambda: InfoClub(clubs["Krasnodar"]))
+        self.window.mainloop()
 
 
 class Info:
@@ -119,7 +121,7 @@ class InfoClub:
         self.w_info = Toplevel()
         self.w_info.geometry("800x800+560+115")
         self.w_info.resizable(width=False, height=False)
-        self.w_info.title("FOOTBALL MANAGER | Информация о клубе " + self.club.name)
+        self.w_info.title(f"FOOTBALL MANAGER | Информация о клубе {self.club.name}")
         self.canvas = Canvas(self.w_info, height=800, width=802)
         self.canvas.place(x=-2, y=0)
         PlayVideo(self.w_info, self.canvas, self.club.img_bg)
@@ -127,34 +129,34 @@ class InfoClub:
         self.stats_outline = []
         self.strings_stats = []
         if self.club.owner is not None:
-            self.strings_stats.append("Владелец: " + str(self.club.owner.name))
+            self.strings_stats.append(f"Владелец: {self.club.owner.name}")
         else:
             self.strings_stats.append("Владелец: Отсутствует")
-        self.strings_stats.append("Стоимость: " + str(self.club.price))
-        self.strings_stats.append("Мощность клуба: " + str(self.club.power()))
-        self.strings_stats.append("Действующая победа: " + str(self.club.current_win()))
-        self.strings_stats.append("Цена за победу с игроков: " + str(self.club.win_footballer))
-        self.strings_stats.append("Цена за победу с тренером: " + str(self.club.win_coach))
-        self.strings_stats.append("Цена за победу с менеджером: " + str(self.club.win_manager))
+        self.strings_stats.append(f"Стоимость: {self.club.price}")
+        self.strings_stats.append(f"Мощность клуба: {self.club.power()}")
+        self.strings_stats.append(f"Действующая победа: {self.club.current_win()}")
+        self.strings_stats.append(f"Цена за победу с игроков: {self.club.win_footballer}")
+        self.strings_stats.append(f"Цена за победу с тренером: {self.club.win_coach}")
+        self.strings_stats.append(f"Цена за победу с менеджером: {self.club.win_manager}")
         if self.club.footballer is not None and self.club.coach is not None and self.club.manager is not None:
-            self.strings_stats.append("Футболист: " + str(self.club.footballer.name) + " (" + str(self.club.footballer.power) + ")")
-            self.strings_stats.append("Тренер: " + str(self.club.coach.name) + " (" + str(self.club.coach.power) + ")")
-            self.strings_stats.append("Менеджер: " + str(self.club.manager.name))
-            self.strings_stats.append("Тип менеджера: " + str(self.club.manager.type))
+            self.strings_stats.append(f"Футболист: {self.club.footballer.name} ({self.club.footballer.power})")
+            self.strings_stats.append(f"Тренер: {self.club.coach.name} + ({self.club.coach.power})")
+            self.strings_stats.append(f"Менеджер: {self.club.manager.name}")
+            self.strings_stats.append(f"Тип менеджера: {self.club.manager.type}")
             if self.club.manager.type == "Sheikh":
-                self.strings_stats.append("Бонус менеджера: +" + str(int(sheikh_level[self.club.manager.level])) + " за победу")
+                self.strings_stats.append(f"Бонус менеджера: +{sheikh_level[self.club.manager.level]} за победу")
             elif self.club.manager.type == "Former Footballer":
-                self.strings_stats.append("Бонус менеджера: +" + str(int(former_footballer_level[self.club.manager.level])) + " к победе")
+                self.strings_stats.append(f"Бонус менеджера: +{former_footballer_level[self.club.manager.level]} к победе")
             elif self.club.manager.type == "Economist":
-                self.strings_stats.append("Бонус менеджера: +" + str(int(economist_plus_level[self.club.manager.level] * 100)) + "% к пополнению")
-                self.strings_stats.append("Бонус менеджера: -" + str(int(economist_minus_level[self.club.manager.level] * 100)) + "% к тратам")
-            self.strings_stats.append("Уровень менеджера: " + str(self.club.manager.level))
+                self.strings_stats.append(f"Бонус менеджера: +{economist_plus_level[self.club.manager.level] * 100}% к пополнению")
+                self.strings_stats.append(f"Бонус менеджера: -{economist_minus_level[self.club.manager.level] * 100}% к тратам")
+            self.strings_stats.append(f"Уровень менеджера: {self.club.manager.level}")
         elif self.club.footballer is not None and self.club.coach is not None:
-            self.strings_stats.append("Футболист: " + str(self.club.footballer.name) + " (" + str(self.club.footballer.power) + ")")
-            self.strings_stats.append("Тренер: " + str(self.club.coach.name) + " (" + str(self.club.coach.power) + ")")
+            self.strings_stats.append(f"Футболист: {self.club.footballer.name} ({self.club.footballer.power})")
+            self.strings_stats.append(f"Тренер: {self.club.coach.name} ({self.club.coach.power})")
             self.strings_stats.append("Менеджер: Отсутствует")
         elif self.club.footballer is not None:
-            self.strings_stats.append("Футболист: " + str(self.club.footballer.name) + " (" + str(self.club.footballer.power) + ")")
+            self.strings_stats.append(f"Футболист: {self.club.footballer.name} ({self.club.footballer.power})")
             self.strings_stats.append("Тренер: Отсутствует")
             self.strings_stats.append("Менеджер: Отсутствует")
         else:
@@ -170,27 +172,22 @@ class InfoClub:
                 self.list = []
             elif "Менеджер: Отсутствует" in element:
                 self.list.append(element)
-                print(2)
                 self.plus_personal = PlusButton(self.list, self.club.color_font, self.w_info, self.canvas)
                 self.list = []
             elif "Уровень менеджера" in element:
                 self.list.append(element)
-                print(3)
                 self.plus_personal = PlusButton(self.list, self.club.color_font, self.w_info, self.canvas)
                 self.list = []
             else:
                 self.list.append(element)
-                print(element)
         for element in self.strings_stats:
             if "Цена за победу с менеджером" in element:
                 self.list.append(element)
-                print(1)
                 PlusButton(self.list, self.club.color_font, self.w_info, self.canvas, personal=self.plus_personal)
                 del self.list
                 break
             else:
                 self.list.append(element)
-                print(element)
         self.list_personal = self.stats
         self.list_personal_outline = self.stats_outline
         self.w_info.mainloop()

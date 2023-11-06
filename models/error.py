@@ -1,9 +1,7 @@
-from utils.constants import errorcodes, main_window, clear
+from utils.constants import errorcodes
 from tkinter import messagebox
 
 
 def error(errorcode):
-        errorcode = errorcode
-        clear()
-        text = "Ошибка " + str(errorcode) + ": " + errorcodes[errorcode]
-        error = messagebox.showerror(title="Ошибка " + str(errorcode), message=text)
+    text = f"Ошибка {errorcode}: {errorcodes[errorcode]}"
+    messagebox.showerror(title=f"Ошибка {errorcode}", message=text)

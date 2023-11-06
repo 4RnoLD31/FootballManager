@@ -1,4 +1,5 @@
 from utils.constants import *
+from models.highlighting import *
 
 
 class Club:
@@ -18,21 +19,19 @@ class Club:
         self.manager = None
         self.potential_owner = None
         self.owner = None
-        self.img_bg = working_directory + "/assets/clubs/" + self.codename + "/background.mp4"
-        self.img_title = working_directory + "/assets/clubs/" + self.codename + "/title.png"
-        self.img_emblem = working_directory + "/assets/clubs/" + self.codename + "/emblem.png"
+        self.img_bg = f"{working_directory}/assets/clubs/{self.codename}/background.mp4"
+        self.img_title = f"{working_directory}/assets/clubs/{self.codename}//title.png"
+        self.img_emblem = f"{working_directory}/assets/clubs/{self.codename}//emblem.png"
 
     def buy(self, potential_owner):
         self.potential_owner = potential_owner
-        if self.owner != self.potential_owner and self.owner is not None:
-            print("Клуб куплен")
-        elif self.potential_owner.balance >= self.potential_owner.check_balance(self.price):
+        if self.potential_owner.balance >= self.potential_owner.summary_check(self.price):
             self.owner = self.potential_owner
             self.owner.withdrawal(self.price)
             self.owner.deposit(self.income, "Income")
-            print("Клуб приобретен")
+            print(c_successful(f'{self.name} was bought by "{self.owner.name}"'))
         else:
-            print("Недостаточно средств")
+            print(c_failed(f"Insufficient funds for purchase {self.name} | {self.price}"))
 
     def change_owner(self, owner):
         self.owner = owner
@@ -55,29 +54,28 @@ class Club:
             self.result += self.footballer.power
             self.result += self.coach.power
             self.result += former_footballer_level[self.manager.level]
-        except:
+        except AttributeError:
             pass
         return self.result
 
-    def sell(self, new_owner, on_the_transfer_market):
-        self.on_the_transfer_market = on_the_transfer_market
-        self.new_owner = new_owner
+    def sell(self, transfer_market):
+        self.transfer_market = transfer_market
         self.reason_error = []
         self.reason_error.append(self.footballer)
         self.reason_error.append(self.coach)
         self.reason_error.append(self.manager)
         if self.reason_error[0] is not None or self.reason_error[1] is not None or self.reason_error[2] is not None:
-            self.text = "Ошибка 1: В клубе " + self.name + " присутствуют: "
+            self.text = f"Ошибка 1: В клубе {self.name} присутствуют: "
             for element in self.reason_error:
                 if element is not None:
-                    self.text += element.name + ", "
+                    self.text += f"{element.name}, "
             self.text = self.text[:-2]
             messagebox.showerror(title="Ошибка 1", message=self.text)
             return
-        self.price_sold = self.owner.deposit(round(self.price // 100000 // self.on_the_transfer_market) * 100000)
+        self.price_sold = self.owner.deposit(round(self.price // 100000 // self.transfer_market) * 100000)
         self.owner.withdrawal(self.income, "Income")
-        self.owner = self.new_owner
-        print("Клуб продан", self.owner)
+        print(c_successful(f"{self.name} was sold by {self.owner.name}"))
+        self.owner = None
         return self.price_sold
 
     def get_fine(self, type_fine):
@@ -90,7 +88,7 @@ class Club:
             self.club.owner.withdrawal(self.summary, economist=False)
             self.owner.deposit(self.summary, economist=False)
         else:
-            print("Не удалось выплатить деньги за поражение")
+            pass
 
     def lose(self, club):
         self.club = club
@@ -99,7 +97,7 @@ class Club:
             self.owner.withdrawal(self.summary, economist=False)
             self.club.owner.deposit(self.summary, economist=False)
         else:
-            print("Не удалось выплатить деньги за поражение")
+            pass
 
     def available(self):
         self.result = False
@@ -108,25 +106,7 @@ class Club:
         return self.result
 
     def __getstate__(self) -> dict:
-        state = {}
-        state["Name"] = self.name
-        state["Price"] = self.price
-        state["League"] = self.league
-        state["Color Font"] = self.color_font
-        state["Codename"] = self.codename
-        state["Income"] = self.income
-        state["Win Footballer"] = self.win_footballer
-        state["Win Coach"] = self.win_coach
-        state["Win Manager"] = self.win_manager
-        state["Cooldown"] = self.cooldown
-        state["Footballer"] = self.footballer
-        state["Coach"] = self.coach
-        state["Manager"] = self.manager
-        state["Potential Owner"] = self.potential_owner
-        state["Owner"] = self.owner
-        state["Image Background"] = self.img_bg
-        state["Image Title"] = self.img_title
-        state["Image Emblem"] = self.img_emblem
+        state = {"Name": self.name, "Price": self.price, "League": self.league, "Color Font": self.color_font, "Codename": self.codename, "Income": self.income, "Win Footballer": self.win_footballer, "Win Coach": self.win_coach, "Win Manager": self.win_manager, "Cooldown": self.cooldown, "Footballer": self.footballer, "Coach": self.coach, "Manager": self.manager, "Potential Owner": self.potential_owner, "Owner": self.owner, "Image Background": self.img_bg, "Image Title": self.img_title, "Image Emblem": self.img_emblem}
         return state
 
     def __setstate__(self, state: dict):
@@ -148,6 +128,3 @@ class Club:
         self.img_bg = state["Image Background"]
         self.img_title = state["Image Title"]
         self.img_emblem = state["Image Emblem"]
-
-
-

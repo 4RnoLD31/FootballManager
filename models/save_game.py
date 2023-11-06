@@ -4,7 +4,13 @@ import utils.constants
 import pickle
 from configparser import ConfigParser
 from utils.constants import path_to_settings
+from models.highlighting import *
+
+
 def save_game(autosave=True):
+    if utils.constants.PL1 is None or utils.constants.PL2 is None:
+        print(c_failed("Saving is impossible"))
+        return
     if autosave:
         type = "autosave"
     else:
@@ -14,19 +20,19 @@ def save_game(autosave=True):
     except:
         pass
     try:
-        os.mkdir("saves/" + type)
+        os.mkdir(f"saves/{type}")
     except:
         pass
     try:
-        os.mkdir("saves/" + type + "/" + date.today().strftime("%d.%m.%Y"))
+        os.mkdir(f"saves/{type}/{date.today().strftime('%d.%m.%Y')}")
     except:
         pass
     index = 0
     while True:
-        if os.path.exists("saves/" + type + "/" + date.today().strftime("%d.%m.%Y") + "/save" + str(index) + ".dat"):
+        if os.path.exists(f"saves/{type}/{date.today().strftime('%d.%m.%Y')}/save{index}.dat"):
             index += 1
         else:
-            path = "saves/" + type + "/" + date.today().strftime("%d.%m.%Y") + "/save" + str(index) + ".dat"
+            path = f"saves/{type}/{date.today().strftime('%d.%m.%Y')}/save{index}.dat"
             break
     with open(path, "wb") as save_file:
         data = {}
@@ -45,10 +51,26 @@ def save_game(autosave=True):
         data["Next Player"] = utils.constants.next_player
         data["Working Directory"] = utils.constants.working_directory
         data["Game Loaded"] = True
+        settings_file = ConfigParser()
+        settings_file.read("settings.ini")
+        with open(f"{utils.constants.working_directory}\\tmp\\save.tmp", "wb") as tmp_file:
+            pickle.dump(data, tmp_file)
+        with open(settings_file["Settings"]["latest_autosave"], "rb") as old_file, open(f"{utils.constants.working_directory}\\tmp\\save.tmp", "rb") as new_file:
+            old = old_file.read()
+            new = new_file.read()
+            if old == new:
+                print(c_failed("Game is not saved. File has already been saved"))
+                leave = True
+            else:
+                leave = False
         pickle.dump(data, save_file)
         d_path = {"latest_autosave": path}
         settings_file = ConfigParser()
         settings_file["Settings"] = d_path
-        with open(path_to_settings, "w") as file:
-            settings_file.write(file)
-        print("saved")
+    if leave:
+        os.remove(f"{utils.constants.working_directory}\\tmp\\save.tmp")
+        os.remove(f"{utils.constants.working_directory}\\{path}")
+        return
+    with open(path_to_settings, "w") as file:
+        settings_file.write(file)
+    print(c_successful("Game saved"))
