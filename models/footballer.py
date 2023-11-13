@@ -1,4 +1,4 @@
-from models.highlighting import *
+import models.highlighting as hg
 
 
 class Footballer:
@@ -20,23 +20,23 @@ class Footballer:
             self.old_footballer = self.new_club.footballer
             self.new_club.footballer = self
             self.club = self.new_club
-            print(c_successful(f"Double transfer: {self.old_footballer.name} to {self.old_footballer.club.name} | {self.name} to {self.club.name}"))
+            print(hg.c_successful(f"Double transfer: {self.old_footballer.name} to {self.old_footballer.club.name} | {self.name} to {self.club.name}"))
         elif self.new_club.footballer is not None and self.club is None:
             self.new_club.footballer.club = None
             self.old_footballer = self.new_club.footballer
             self.new_club.footballer = self
             self.club = self.new_club
-            print(c_successful(f"Double transfer: {self.old_footballer.name} to Inventory | {self.name} to {self.club.name}"))
+            print(hg.c_successful(f"Double transfer: {self.old_footballer.name} to Inventory | {self.name} to {self.club.name}"))
         elif self.new_club.footballer is None and self.club is None:
             self.new_club.footballer = self
             self.club = self.new_club
-            print(c_successful(f"Transfer: {self.name} from Inventory to {self.club.name}"))
+            print(hg.c_successful(f"Transfer: {self.name} from Inventory to {self.club.name}"))
         elif self.new_club.footballer is None and self.club is not None:
             self.club.footballer = None
             self.new_club.footballer = self
             self.old_club = self.club
             self.club = self.new_club
-            print(c_successful(f"Transfer: {self.name} from {self.old_club.name} to {self.club.name}"))
+            print(hg.c_successful(f"Transfer: {self.name} from {self.old_club.name} to {self.club.name}"))
 
     def buy(self, player, potential_club=None):
         self.player = player
@@ -47,18 +47,18 @@ class Footballer:
             self.club = self.potential_club
             if self.club is not None:
                 self.club.footballer = self
-                print(c_successful(f'{self.name} was bought to {self.club.name} by {self.owner.name}'))
+                print(hg.c_successful(f'{self.name} was bought to {self.club.name} by {self.owner.name}'))
             else:
-                print(c_successful(f'{self.name} was bought by {self.owner.name}'))
+                print(hg.c_successful(f'{self.name} was bought by {self.owner.name}'))
         else:
-            print(c_failed(f"Insufficient funds for purchase {self.name} | {self.price}"))
+            print(hg.c_failed(f"Insufficient funds for purchase {self.name} | {self.price}"))
             return
         return self.show_price
 
     def sell(self, transfer_market):
         self.transfer_market = transfer_market
         self.price_sold = self.club.owner.deposit((self.price // 100000 // self.transfer_market) * 100000)
-        print(c_successful(f"{self.name} was sold by {self.owner.name}"))
+        print(hg.c_successful(f"{self.name} was sold by {self.owner.name}"))
         self.club.footballer = None
         self.club = None
         self.owner = None

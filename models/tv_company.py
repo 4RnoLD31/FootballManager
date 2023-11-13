@@ -1,5 +1,5 @@
-from utils.constants import *
-from models.highlighting import *
+import utils.constants as const
+import models.highlighting as hg
 
 
 class TVCompany:
@@ -14,19 +14,19 @@ class TVCompany:
         if self.potential_owner.balance >= self.potential_owner.summary_check(self.price):
             self.owner = self.potential_owner
             self.owner.payment_TVs_degree += 1
-            self.owner.payment_TVs = gradual_income[self.owner.payment_TVs_degree - 1]
+            self.owner.payment_TVs = const.gradual_income[self.owner.payment_TVs_degree - 1]
             self.owner.withdrawal(self.price)
-            print(c_successful(f'{self.name} was bought by "{self.owner.name}"'))
+            print(hg.c_successful(f'{self.name} was bought by "{self.owner.name}"'))
         else:
-            print(c_failed(f"Insufficient funds for purchase {self.name} | {self.price}"))
+            print(hg.c_failed(f"Insufficient funds for purchase {self.name} | {self.price}"))
 
     def change_owner(self, owner):
         self.owner = owner
 
     def sell(self, *args):
         self.price_sold = self.owner.deposit(self.price // 2)
-        self.owner.payment_TVs_degree -= 1
-        self.owner.payment_TVs = gradual_income[self.owner.payment_TVs_degree - 1]
+        self.owner.payment_const.TVs_degree -= 1
+        self.owner.payment_const.TVs = const.gradual_income[self.owner.payment_const.TVs_degree - 1]
         self.owner = None
         return self.price_sold
 

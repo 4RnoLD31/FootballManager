@@ -1,7 +1,7 @@
-from tkinter import *
-from PIL import Image, ImageTk
 import cv2
-import utils.constants
+import tkinter as tk
+import utils.constants as const
+from PIL import Image, ImageTk
 
 
 class PlayVideo:
@@ -18,10 +18,10 @@ class PlayVideo:
     def update_image(self):
         try:
             self.clear()
-            if self.picture not in utils.constants.used_in_video.keys() or self.first:
+            if self.picture not in const.used_in_video.keys() or self.first:
                 self.first = True
-                utils.constants.used_in_video[self.picture] = ImageTk.PhotoImage(Image.fromarray(cv2.cvtColor(self.cap.read()[1], cv2.COLOR_BGR2RGB)))
-            self.window = self.canvas.create_image(0, 0, anchor=NW, image=utils.constants.used_in_video[self.picture])
+                const.used_in_video[self.picture] = ImageTk.PhotoImage(Image.fromarray(cv2.cvtColor(self.cap.read()[1], cv2.COLOR_BGR2RGB)))
+            self.window = self.canvas.create_image(0, 0, anchor=tk.NW, image=const.used_in_video[self.picture])
             self.canvas.tag_lower(self.window)
             self.window.after(self.speed, self.update_image)
         except:
@@ -36,7 +36,7 @@ class PlayVideo:
 
     def __destroy__(self):
         if self.first:
-            del utils.constants.used_in_video[self.picture]
+            del const.used_in_video[self.picture]
         self.canvas.destroy()
         self.window.destroy()
         del self

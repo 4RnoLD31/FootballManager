@@ -1,5 +1,6 @@
-from utils.constants import *
-from models.highlighting import *
+import utils.constants as const
+import models.highlighting as hg
+from tkinter import messagebox
 
 
 class Club:
@@ -19,9 +20,9 @@ class Club:
         self.manager = None
         self.potential_owner = None
         self.owner = None
-        self.img_bg = f"{working_directory}/assets/clubs/{self.codename}/background.mp4"
-        self.img_title = f"{working_directory}/assets/clubs/{self.codename}//title.png"
-        self.img_emblem = f"{working_directory}/assets/clubs/{self.codename}//emblem.png"
+        self.img_bg = f"{const.working_directory}/assets/const.clubs/{self.codename}/background.mp4"
+        self.img_title = f"{const.working_directory}/assets/const.clubs/{self.codename}//title.png"
+        self.img_emblem = f"{const.working_directory}/assets/const.clubs/{self.codename}//emblem.png"
 
     def buy(self, potential_owner):
         self.potential_owner = potential_owner
@@ -29,9 +30,9 @@ class Club:
             self.owner = self.potential_owner
             self.owner.withdrawal(self.price)
             self.owner.deposit(self.income, "Income")
-            print(c_successful(f'{self.name} was bought by "{self.owner.name}"'))
+            print(hg.c_successful(f'{self.name} was bought by "{self.owner.name}"'))
         else:
-            print(c_failed(f"Insufficient funds for purchase {self.name} | {self.price}"))
+            print(hg.c_failed(f"Insufficient funds for purchase {self.name} | {self.price}"))
 
     def change_owner(self, owner):
         self.owner = owner
@@ -41,7 +42,7 @@ class Club:
         if self.manager is not None:
             self.result = self.win_manager
             if self.manager.type == "Sheikh":
-                self.result += sheikh_level[self.manager.level]
+                self.result += const.sheikh_level[self.manager.level]
         elif self.coach is not None:
             self.result = self.win_coach
         elif self.footballer is not None:
@@ -53,7 +54,7 @@ class Club:
         try:
             self.result += self.footballer.power
             self.result += self.coach.power
-            self.result += former_footballer_level[self.manager.level]
+            self.result += const.former_footballer_level[self.manager.level]
         except AttributeError:
             pass
         return self.result
@@ -74,7 +75,7 @@ class Club:
             return
         self.price_sold = self.owner.deposit(round(self.price // 100000 // self.transfer_market) * 100000)
         self.owner.withdrawal(self.income, "Income")
-        print(c_successful(f"{self.name} was sold by {self.owner.name}"))
+        print(hg.c_successful(f"{self.name} was sold by {self.owner.name}"))
         self.owner = None
         return self.price_sold
 

@@ -1,15 +1,14 @@
 import os
-from datetime import date
-import utils.constants
+import datetime
 import pickle
-from configparser import ConfigParser
-from utils.constants import path_to_settings
-from models.highlighting import *
+import configparser
+import utils.constants as const
+import models.highlighting as hg
 
 
 def save_game(autosave=True):
-    if utils.constants.PL1 is None or utils.constants.PL2 is None:
-        print(c_failed("Saving is impossible"))
+    if const.PL1 is None or const.PL2 is None:
+        print(hg.c_failed("Saving is impossible"))
         return
     if autosave:
         type = "autosave"
@@ -24,53 +23,53 @@ def save_game(autosave=True):
     except:
         pass
     try:
-        os.mkdir(f"saves/{type}/{date.today().strftime('%d.%m.%Y')}")
+        os.mkdir(f"saves/{type}/{datetime.date.today().strftime('%d.%m.%Y')}")
     except:
         pass
     index = 0
     while True:
-        if os.path.exists(f"saves/{type}/{date.today().strftime('%d.%m.%Y')}/save{index}.dat"):
+        if os.path.exists(f"saves/{type}/{datetime.date.today().strftime('%d.%m.%Y')}/save{index}.dat"):
             index += 1
         else:
-            path = f"saves/{type}/{date.today().strftime('%d.%m.%Y')}/save{index}.dat"
+            path = f"saves/{type}/{datetime.date.today().strftime('%d.%m.%Y')}/save{index}.dat"
             break
     with open(path, "wb") as save_file:
         data = {}
-        for element in utils.constants.clubs:
-            data[element] = utils.constants.clubs[element]
-        for element in utils.constants.footballers:
-            data[element] = utils.constants.footballers[element]
-        for element in utils.constants.managers:
-            data[element] = utils.constants.managers[element]
-        for element in utils.constants.coaches:
-            data[element] = utils.constants.coaches[element]
-        for element in utils.constants.TVs:
-            data[element] = utils.constants.TVs[element]
-        data["PL1"] = utils.constants.PL1
-        data["PL2"] = utils.constants.PL2
-        data["Next Player"] = utils.constants.next_player
-        data["Working Directory"] = utils.constants.working_directory
+        for element in const.clubs:
+            data[element] = const.clubs[element]
+        for element in const.footballers:
+            data[element] = const.footballers[element]
+        for element in const.managers:
+            data[element] = const.managers[element]
+        for element in const.coaches:
+            data[element] = const.coaches[element]
+        for element in const.TVs:
+            data[element] = const.TVs[element]
+        data["PL1"] = const.PL1
+        data["PL2"] = const.PL2
+        data["Next Player"] = const.next_player
+        data["Working Directory"] = const.working_directory
         data["Game Loaded"] = True
-        settings_file = ConfigParser()
+        settings_file = configparser.ConfigParser()
         settings_file.read("settings.ini")
-        with open(f"{utils.constants.working_directory}\\tmp\\save.tmp", "wb") as tmp_file:
+        with open(f"{const.working_directory}\\tmp\\save.tmp", "wb") as tmp_file:
             pickle.dump(data, tmp_file)
-        with open(settings_file["Settings"]["latest_autosave"], "rb") as old_file, open(f"{utils.constants.working_directory}\\tmp\\save.tmp", "rb") as new_file:
+        with open(settings_file["Settings"]["latest_autosave"], "rb") as old_file, open(f"{const.working_directory}\\tmp\\save.tmp", "rb") as new_file:
             old = old_file.read()
             new = new_file.read()
             if old == new:
-                print(c_failed("Game is not saved. File has already been saved"))
+                print(hg.c_failed("Game is not saved. File has already been saved"))
                 leave = True
             else:
                 leave = False
         pickle.dump(data, save_file)
         d_path = {"latest_autosave": path}
-        settings_file = ConfigParser()
+        settings_file = configparser.ConfigParser()
         settings_file["Settings"] = d_path
     if leave:
-        os.remove(f"{utils.constants.working_directory}\\tmp\\save.tmp")
-        os.remove(f"{utils.constants.working_directory}\\{path}")
+        os.remove(f"{const.working_directory}\\tmp\\save.tmp")
+        os.remove(f"{const.working_directory}\\{path}")
         return
-    with open(path_to_settings, "w") as file:
+    with open(const.path_to_settings, "w") as file:
         settings_file.write(file)
-    print(c_successful("Game saved"))
+    print(hg.c_successful("Game saved"))

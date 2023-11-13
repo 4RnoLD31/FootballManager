@@ -1,5 +1,5 @@
-from tkinter import *
 import os
+import tkinter as tk
 
 main_window = None
 
@@ -11,7 +11,7 @@ def nothing():
 def clear():
     for widget in main_window.winfo_children():
         try:
-            if widget["text"] != "FOOTBALL MANAGER" or not isinstance(widget, Menu):
+            if widget["text"] != "FOOTBALL MANAGER" or not isinstance(widget, tk.Menu):
                 widget.destroy()
         except:
             pass
@@ -19,7 +19,7 @@ def clear():
 
 def text_on_center(text, font, window=main_window):
     clear()
-    label = Label(window, text=text, font=font)
+    label = tk.Label(window, text=text, font=font)
     label.place(x=800 - (label.winfo_reqwidth() / 2), y=400 - (label.winfo_reqheight() / 2))
     return label
 
