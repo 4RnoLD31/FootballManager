@@ -61,7 +61,18 @@ def field(player):
         else:
             const.text_on_center(f"Игрок {player.name} наступил на налоговую. Штраф 1000000\nОн не может выплатить штраф. Ему нехватает {player.summary_check(1000000) - player.balance}", font="MiSans 40")
             const.main_window.after(4000, lambda: property.Sell(player, new_move, need_money=1000000))
-
+    elif player.position == 25:
+        stepped.stepped_on_club(player, const.clubs["Spartak Moscow"])
+    elif player.position == 26:
+        stepped.stepped_on_club(player, const.clubs["CSKA"])
+    elif player.position == 27:
+        stepped.stepped_on_tv_company(player, const.TVs["ESPN"])
+    elif player.position == 28:
+        stepped.stepped_on_club(player, const.clubs["Al-Hassr"])
+    elif player.position == 29:
+        stepped.stepped_on_club(player, const.clubs["Al-Ittihad"])
+    elif player.position == 31:
+        stepped.stepped_on_club(player, const.clubs["Al-Hassr"])
 
 
 def new_move(*args):
