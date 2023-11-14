@@ -8,7 +8,7 @@ import models.highlighting as hg
 
 def save_game(autosave=True):
     if const.PL1 is None or const.PL2 is None:
-        print(hg.c_failed("Saving is impossible"))
+        print(hg.failed("Saving is impossible"))
         return
     if autosave:
         type = "autosave"
@@ -58,7 +58,7 @@ def save_game(autosave=True):
             old = old_file.read()
             new = new_file.read()
             if old == new:
-                print(hg.c_failed("Game is not saved. File has already been saved"))
+                print(hg.failed("Game is not saved. File has already been saved"))
                 leave = True
             else:
                 leave = False
@@ -72,4 +72,4 @@ def save_game(autosave=True):
         return
     with open(const.path_to_settings, "w") as file:
         settings_file.write(file)
-    print(hg.c_successful("Game saved"))
+    print(hg.successful("Game saved"))

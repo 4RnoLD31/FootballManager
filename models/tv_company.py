@@ -16,9 +16,9 @@ class TVCompany:
             self.owner.payment_TVs_degree += 1
             self.owner.payment_TVs = const.gradual_income[self.owner.payment_TVs_degree - 1]
             self.owner.withdrawal(self.price)
-            print(hg.c_successful(f'{self.name} was bought by "{self.owner.name}"'))
+            print(hg.successful(f'{self.name} was bought by "{self.owner.name}"'))
         else:
-            print(hg.c_failed(f"Insufficient funds for purchase {self.name} | {self.price}"))
+            print(hg.failed(f"Insufficient funds for purchase {self.name} | {self.price}"))
 
     def change_owner(self, owner):
         self.owner = owner

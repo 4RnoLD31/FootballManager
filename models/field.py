@@ -20,14 +20,52 @@ def field(player):
     elif player.position == 4:
         stepped.stepped_on_tv_company(player, const.TVs["Setanta Sports"])
     elif player.position == 5:
-        stepped.stepped_on_club(player, const.clubs["Валенсия"])
-    elif player.position == 6:
+        stepped.stepped_on_club(player, const.clubs["Atletico Madrid"])
+    elif player.position == 6 or player.position == 16 or player.position == 22:
         transfer_window.TransferWindow(player)
+    elif player.position == 7:
+        stepped.stepped_on_club(player, const.clubs["Arsenal"])
+    elif player.position == 8:
+        player.disqualified = True
+        print(hg.info(f"Player {player.name} has been disqualified"))
+        const.text_on_center(f"Игрок {player.name} наступил на дисквалификацию. Он пропустит 1 ход", font="MiSans 40")
+        const.main_window.after(4000, new_move)
+    elif player.position == 9:
+        stepped.stepped_on_club(player, const.clubs["Liverpool"])
+    elif player.position == 10:
+        stepped.stepped_on_club(player, const.clubs["Manchester City"])
+    elif player.position == 11:
+        stepped.stepped_on_tv_company(player, const.TVs["Euro Sports"])
+    elif player.position == 12:
+        stepped.stepped_on_club(player, const.clubs["Bayern"])
+    elif player.position == 13:
+        stepped.stepped_on_club(player, const.clubs["Borussia"])
     elif player.position == 14 or player.position == 30:
         random_fine(player)
+    elif player.position == 15:
+        stepped.stepped_on_club(player, const.clubs["Leipzig"])
+    elif player.position == 17:
+        stepped.stepped_on_club(player, const.clubs["Juventus"])
+    elif player.position == 18:
+        stepped.stepped_on_tv_company(player, const.TVs["Rai Uno"])
+    elif player.position == 19:
+        stepped.stepped_on_club(player, const.clubs["Inter"])
+    elif player.position == 21:
+        stepped.stepped_on_club(player, const.clubs["Milan"])
+    elif player.position == 23:
+        stepped.stepped_on_club(player, const.clubs["Krasnodar"])
+    elif player.position == 24:
+        if player.balance >= player.summary_check(1000000):
+            const.text_on_center(f"Игрок {player.name} наступил на налоговую. Штраф 1000000", font="MiSans 40")
+            const.main_window.after(4000, new_move)
+        else:
+            const.text_on_center(f"Игрок {player.name} наступил на налоговую. Штраф 1000000\nОн не может выплатить штраф. Ему нехватает {player.summary_check(1000000) - player.balance}", font="MiSans 40")
+            const.main_window.after(4000, lambda: property.Sell(player, new_move, need_money=1000000))
+
 
 
 def new_move(*args):
+    player = None
     save_game.save_game()
     if const.next_player == const.PL1:
         player = const.next_player
@@ -35,9 +73,16 @@ def new_move(*args):
     elif const.next_player == const.PL2:
         player = const.next_player
         const.next_player = const.PL1
+    if player.disqualified and const.next_player.disqualified:
+        print(hg.info("Both players have disqualified already. Canceling disqualifications"))
+        player.disqualified = False
+        const.next_player.disqualified = False
+    elif player.disqualified:
+        player.disqualified = False
+        player = const.next_player
     const.clear()
     # number = randint(2, 12)
-    number = 6
+    number = 24
     player.numbers_thrown += number
     player.throws += 1
     if player.position + number > 31:
@@ -46,13 +91,13 @@ def new_move(*args):
         player.position += number
     const.text_on_center("Бросаю куб...", font="MiSans 50")
     const.main_window.after(2000, const.nothing)
-    const.text_on_center(f"Игрок {player.name} выбил {number} и наступил на клетку {player.position}", "MiSans 40")
+    const.text_on_center(f"Игрок {player.name} выбил {number} и наступил на клетку {player.position}", "MiSans 35")
     const.main_window.after(4000, field, player)
 
 
 def start_pos(player):
     const.text_on_center(f"Игрок {player.name} наступил на стартовую позицию", "MiSans 40")
-    const.main_window.after(3000, new_move, const.next_player)
+    const.main_window.after(4000, new_move, const.next_player)
 
 
 def random_bonus(player):
@@ -169,14 +214,14 @@ class Money:
             self.player.deposit(self.money, economist=False)
             const.text_on_center(f"Пополнение баланса. Баланс составляет {self.player.balance}", font="MiSans 40")
             const.main_window.after(4000, new_move, self.player)
-            print(hg.c_info(f"Cash bonus processed +{self.money}"))
+            print(hg.info(f"Cash bonus processed +{self.money}"))
         else:
             if self.player.balance >= self.money:
                 self.player.withdrawal(self.money, economist=False)
                 const.text_on_center(f"{self.player.name} оплатил штраф. Его баланс составляет {self.player.balance}", "MiSans 40")
-                print(hg.c_successful(f"Cash fine processed -{self.money}"))
+                print(hg.successful(f"Cash fine processed -{self.money}"))
                 const.main_window.after(4000, new_move, self.player)
             else:
                 const.text_on_center(f"{self.player.name} НЕ смог оплатить штраф. Ему не хватает {self.money - self.player.balance}", "MiSans 40")
-                print(hg.c_failed(f"The cash bonus has not been processed -{self.money}"))
+                print(hg.failed(f"The cash bonus has not been processed -{self.money}"))
                 const.main_window.after(2000, property.Sell(self.player, False, False, self.__apply__, self.money))

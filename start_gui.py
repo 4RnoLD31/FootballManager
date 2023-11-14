@@ -54,8 +54,8 @@ def process(*args):
         const.clear()
         const.PL1 = player.Player(PL1_name, 3600000000000000000000000000000000000000, 12121)
         const.PL2 = player.Player(PL2_name, 10, 12121)
-        print(hg.c_info(f"Player 1: Name {const.PL1.name} | Balance {const.PL1.balance} | Income {const.PL1.income}"))
-        print(hg.c_info(f"Player 2: Name {const.PL2.name} | Balance {const.PL2.balance} | Income {const.PL2.income}"))
+        print(hg.info(f"Player 1: Name {const.PL1.name} | Balance {const.PL1.balance} | Income {const.PL1.income}"))
+        print(hg.info(f"Player 2: Name {const.PL2.name} | Balance {const.PL2.balance} | Income {const.PL2.income}"))
         const.clubs["Real Madrid"].buy(const.PL1)
         const.clubs["Barcelona"].buy(const.PL1)
         const.clubs["Atletico Madrid"].buy(const.PL1)
@@ -73,13 +73,13 @@ def process(*args):
         l_first.place(x=800 - (l_first.winfo_reqwidth() / 2), y=400 - (l_first.winfo_reqheight() / 2))
         choice = 0
         if choice == 0:
-            first = const.PL1
-            l_first.config(text=f"Первым бросает игрок: {const.PL1.name}")
-            const.next_player = const.PL2
-        else:
             first = const.PL2
-            l_first.config(text=f"Первым бросает игрок: {const.PL2.name}")
+            l_first.config(text=f"Первым бросает игрок: {const.PL1.name}")
             const.next_player = const.PL1
+        else:
+            first = const.PL1
+            l_first.config(text=f"Первым бросает игрок: {const.PL2.name}")
+            const.next_player = const.PL2
         l_first.place(x=800 - (l_first.winfo_reqwidth() / 2), y=400 - (l_first.winfo_reqheight() / 2))
         """Statistics()
         return"""

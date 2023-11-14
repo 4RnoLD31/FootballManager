@@ -11,7 +11,7 @@ def load_game(auto=True):
         settings_file.read("settings.ini")
         with open(settings_file["Settings"]["latest_autosave"], "rb") as load_file:
             data = pickle.load(load_file)
-            print(hg.c_info("Game loaded"))
+            print(hg.info("Game loaded"))
     for element in const.clubs:
         const.clubs[element] = data[element]
     for element in const.footballers:

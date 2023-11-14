@@ -30,9 +30,9 @@ class Club:
             self.owner = self.potential_owner
             self.owner.withdrawal(self.price)
             self.owner.deposit(self.income, "Income")
-            print(hg.c_successful(f'{self.name} was bought by "{self.owner.name}"'))
+            print(hg.successful(f'{self.name} was bought by "{self.owner.name}"'))
         else:
-            print(hg.c_failed(f"Insufficient funds for purchase {self.name} | {self.price}"))
+            print(hg.failed(f"Insufficient funds for purchase {self.name} | {self.price}"))
 
     def change_owner(self, owner):
         self.owner = owner
@@ -75,7 +75,7 @@ class Club:
             return
         self.price_sold = self.owner.deposit(round(self.price // 100000 // self.transfer_market) * 100000)
         self.owner.withdrawal(self.income, "Income")
-        print(hg.c_successful(f"{self.name} was sold by {self.owner.name}"))
+        print(hg.successful(f"{self.name} was sold by {self.owner.name}"))
         self.owner = None
         return self.price_sold
 

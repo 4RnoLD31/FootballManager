@@ -23,14 +23,14 @@ class Manager:
             if self.club is not None:
                 self.club.manager = self
         else:
-            print(hg.c_failed(f"Insufficient funds for purchase {self.name} | {self.price}"))
+            print(hg.failed(f"Insufficient funds for purchase {self.name} | {self.price}"))
             return
         return self.show_price
 
     def sell(self, transfer_market):
         self.transfer_market = transfer_market
         self.price_sold = self.club.owner.deposit((self.price // 100000 // self.transfer_market) * 100000)
-        print(hg.c_successful(f"{self.name} was sold by {self.owner.name}"))
+        print(hg.successful(f"{self.name} was sold by {self.owner.name}"))
         self.club.manager = None
         self.club = None
         self.owner = None
@@ -50,23 +50,23 @@ class Manager:
             self.old_manager = self.new_club.manager
             self.new_club.manager = self
             self.club = self.new_club
-            print(hg.c_successful(f"Double transfer: {self.old_manager.name} to {self.old_manager.club.name} | {self.name} to {self.club.name}"))
+            print(hg.successful(f"Double transfer: {self.old_manager.name} to {self.old_manager.club.name} | {self.name} to {self.club.name}"))
         elif self.new_club.manager is not None and self.club is None:
             self.new_club.manager.club = None
             self.old_manager = self.new_club.manager
             self.new_club.manager = self
             self.club = self.new_club
-            print(hg.c_successful(f"Double transfer: {self.old_manager.name} to Inventory | {self.name} to {self.club.name}"))
+            print(hg.successful(f"Double transfer: {self.old_manager.name} to Inventory | {self.name} to {self.club.name}"))
         elif self.new_club.manager is None and self.club is None:
             self.new_club.manager = self
             self.club = self.new_club
-            print(hg.c_successful(f"Transfer: {self.name} from Inventory to {self.club.name}"))
+            print(hg.successful(f"Transfer: {self.name} from Inventory to {self.club.name}"))
         elif self.new_club.manager is None and self.club is not None:
             self.club.manager = None
             self.new_club.manager = self
             self.old_club = self.club
             self.club = self.new_club
-            print(hg.c_successful(f"Transfer: {self.name} from {self.old_club.name} to {self.club.name}"))
+            print(hg.successful(f"Transfer: {self.name} from {self.old_club.name} to {self.club.name}"))
 
     def __getstate__(self) -> dict:
         state = {"Name": self.name, "Type Manager": self.type, "Price": self.price, "Level": self.level, "Type": self.type, "Resurrected": self.resurrected, "Dead": self.dead, "Flu": self.flu, "Club": self.club, "Owner": self.owner}

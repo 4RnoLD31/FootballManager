@@ -50,7 +50,7 @@ class LEnough:
     def switch_off(self):
         self.window.geometry("360x60+780+940")
         self.window.title("НЕДОСТАТОЧНО")
-        self.l_enough.configure(text="Недостаточно", bg="hg.c_failed")
+        self.l_enough.configure(text="Недостаточно", bg="red")
         self.l_enough.pack()
 
     def __close__(self):
@@ -492,6 +492,7 @@ class SellItems:
         self.l_enough = l_enough
         self.window = tk.Toplevel()
         self.window.resizable(width=False, height=False)
+        self.window.protocol("WM_DELETE_WINDOW", self.__destroy__)
         if self.type == "Footballer":
             self.window.geometry("300x900+1470+30")
             self.window.title("Футболисты игрока " + self.player.name)
@@ -604,14 +605,25 @@ class SellItems:
                     const.sum += self.player.summary_check(self.found[element].price, type="Plus") // self.transfer_market
         for element in range(0, len(self.found)):
             if self.picked[element].get() is False and self.found[element] in self.will_sell:
-                const.sum -= self.player.summary_check(
-                    self.found[element].price, type="Plus") // self.transfer_market
+                const.sum -= self.player.summary_check(self.found[element].price, type="Plus") // self.transfer_market
                 self.will_sell.remove(self.found[element])
         if self.l_enough is not None and self.player.balance + const.sum >= self.need_money:
             self.l_enough.switch_on()
         elif self.l_enough is not None:
             self.l_enough.switch_off()
         # messagebox.showinfo(message=str(self.will_sell))
+
+    def __destroy__(self):
+        for element in range(0, len(self.found)):
+            if self.found[element] in self.will_sell:
+                const.sum -= self.player.summary_check(self.found[element].price, type="Plus") // self.transfer_market
+                self.will_sell.remove(self.found[element])
+            if self.l_enough is not None and self.player.balance + const.sum >= self.need_money:
+                self.l_enough.switch_on()
+            elif self.l_enough is not None:
+                self.l_enough.switch_off()
+        self.window.destroy()
+
 
 
 class Sell:

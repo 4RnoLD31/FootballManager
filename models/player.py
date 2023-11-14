@@ -14,6 +14,7 @@ class Player:
         self.position = 0
         self.avatar = None
         self.bonuses = {"Vaccine": 0, "Resurrection": 0}
+        self.disqualified = False
         # Statistics
         self.throws = 0
         self.numbers_thrown = 0
@@ -61,7 +62,7 @@ class Player:
             self.summary = round(self.summary_old + self.summary_old * const.economist_plus_level[self.economist_level()]) // 10000 * 10000
         else:
             self.summary = round(self.summary_old // 10000 * 10000)
-        # print(hg.c_info(f"Check for {self.name}: before {self.summary_old} after {self.summary}"))
+        # print(hg.info(f"Check for {self.name}: before {self.summary_old} after {self.summary}"))
         return self.summary
 
     def withdrawal(self, summary, type="Balance", economist=True):
@@ -72,12 +73,12 @@ class Player:
             self.summary -= round(self.summary * const.economist_minus_level[self.economist_level()] // 10000 * 10000)
         if self.type == "Balance":
             if self.summary > self.balance:
-                print(hg.c_failed(f"{self.name} was unable to withdraw {self.summary} from {self.type}"))
+                print(hg.failed(f"{self.name} was unable to withdraw {self.summary} from {self.type}"))
                 return False
             self.balance -= self.summary
         elif self.type == "Income":
             self.income -= self.summary
-        # print(hg.c_successful(f"{self.name} withdrew {self.summary} from {self.type}"))
+        # print(hg.successful(f"{self.name} withdrew {self.summary} from {self.type}"))
         self.money_spent += self.summary
         return self.summary
 
@@ -91,7 +92,7 @@ class Player:
             self.balance += self.summary
         elif self.type == "Income":
             self.income += self.summary
-        # print(hg.c_info(f"{self.name}'s balance has been deposited by {self.summary} to {self.type}"))
+        # print(hg.info(f"{self.name}'s balance has been deposited by {self.summary} to {self.type}"))
         self.money_earned += self.summary
         return self.summary
 
@@ -142,26 +143,22 @@ class Player:
                 pass
         return self.found_TVs
 
-    def search_bought_footballers(self, type="Sell"):
+    def search_bought_footballers(self):
         self.found_footballers = []
         for element in const.footballers.values():
             try:
                 if element.owner == self:
                     self.found_footballers.append(element)
-                if type == "Sell" and element.club.coach is not None or element.club.manager is not None:
-                    self.found_footballers.remove(element)
             except:
                 pass
         return self.found_footballers
 
-    def search_bought_coaches(self, type="Sell"):
+    def search_bought_coaches(self):
         self.found_coaches = []
         for element in const.coaches.values():
             try:
                 if element.owner == self:
                     self.found_coaches.append(element)
-                if type == "Sell" and element.club.manager is not None:
-                    self.found_coaches.remove(element)
             except:
                 pass
         return self.found_coaches
@@ -293,18 +290,19 @@ class Player:
             return self.clubs
 
     def __getstate__(self) -> dict:
-        state = {"Name": self.name, "Balance": self.balance, "Income": self.income, "Payment const.TVs Degree": self.payment_TVs_degree, "Payment const.TVs": self.payment_TVs, "Position": self.position, "Avatar": self.avatar, "Bonuses": self.bonuses, "Throws": self.throws, "Numbers Thrown": self.numbers_thrown, "Money Earned": self.money_earned, "Money Spent": self.money_spent}
+        state = {"Name": self.name, "Balance": self.balance, "Income": self.income, "Payment TVs Degree": self.payment_TVs_degree, "Payment TVs": self.payment_TVs, "Position": self.position, "Avatar": self.avatar, "Bonuses": self.bonuses, "Disqualification": self.disqualified, "Throws": self.throws, "Numbers Thrown": self.numbers_thrown, "Money Earned": self.money_earned, "Money Spent": self.money_spent}
         return state
 
     def __setstate__(self, state: dict):
         self.name = state["Name"]
         self.balance = state["Balance"]
         self.income = state["Income"]
-        self.payment_TVs_degree = state["Payment const.TVs Degree"]
-        self.payment_TVs = state["Payment const.TVs"]
+        self.payment_TVs_degree = state["Payment TVs Degree"]
+        self.payment_TVs = state["Payment TVs"]
         self.position = state["Position"]
         self.avatar = state["Avatar"]
         self.bonuses = state["Bonuses"]
+        self.disqualified = state["Disqualification"]
         self.throws = state["Throws"]
         self.numbers_thrown = state["Numbers Thrown"]
         self.money_earned = state["Money Earned"]

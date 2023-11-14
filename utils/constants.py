@@ -19,7 +19,7 @@ def clear():
 
 def text_on_center(text, font, window=main_window):
     clear()
-    label = tk.Label(window, text=text, font=font)
+    label = tk.Label(window, text=text, font=font, wraplength=1600)
     label.place(x=800 - (label.winfo_reqwidth() / 2), y=400 - (label.winfo_reqheight() / 2))
     return label
 
