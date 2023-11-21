@@ -1,7 +1,6 @@
 import utils.constants as const
 import models.highlighting as hg
-import models.field as field
-import models.property as property
+
 
 class TVCompany:
     def __init__(self, name):
@@ -34,19 +33,8 @@ class TVCompany:
     def get_fine(self, type_fine):
         self.type_fan = type_fine
 
-    def get_gain(self, stepped_player):
-        const.text_on_center(f"Игрок {stepped_player.name} должен выплатить {self.owner.payment_TVs} игроку {self.owner.name}", "MiSans 40")
-        const.main_window.after(4000, self.__gg_first__, stepped_player)
-
-    def __gg_first__(self, stepped_player):
-        if stepped_player.balance >= stepped_player.check_withdrawal(self.owner.payment_TVs):
-            stepped_player.withdrawal(self.owner.payment_TVs)
-            self.owner.deposit(self.owner.payment_TVs)
-            const.text_on_center(f"{stepped_player.name} успешно перевел {self.owner.payment_TVs}", "MiSans 40")
-            const.main_window.after(4000, field.Field.new_move)
-        else:
-            const.text_on_center(f"{stepped_player.name} не смог перевести {self.owner.payment_TVs}. Ему не хватает {stepped_player.balance - stepped_player.check_withdrawal(self.owner.payment_TVs)}", "MiSans 40")
-            const.main_window.after(4000, lambda: property.Sell(stepped_player, lambda: self.__gg_first__(stepped_player), need_money=stepped_player.check_withdrawal(self.owner.payment_TVs)))
+    def stepped_on(self):
+        pass
 
     def __getstate__(self) -> dict:
         state = {"Name": self.name, "Price": self.price, "Potential Owner": self.potential_owner, "Owner": self.owner}

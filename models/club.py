@@ -38,26 +38,26 @@ class Club:
         self.owner = owner
 
     def current_win(self):
-        result = 0
+        self.result = 0
         if self.manager is not None:
-            result = self.win_manager
+            self.result = self.win_manager
             if self.manager.type == "Sheikh":
-                result += const.sheikh_level[self.manager.level]
+                self.result += const.sheikh_level[self.manager.level]
         elif self.coach is not None:
-            result = self.win_coach
+            self.result = self.win_coach
         elif self.footballer is not None:
-            result = self.win_footballer
-        return result
+            self.result = self.win_footballer
+        return self.result
 
     def power(self):
-        result = 0
+        self.result = 0
         try:
-            result += self.footballer.power
-            result += self.coach.power
-            result += const.former_footballer_level[self.manager.level]
+            self.result += self.footballer.power
+            self.result += self.coach.power
+            self.result += const.former_footballer_level[self.manager.level]
         except AttributeError:
             pass
-        return result
+        return self.result
 
     def sell(self, transfer_market):
         self.transfer_market = transfer_market
@@ -101,10 +101,10 @@ class Club:
             pass
 
     def available(self):
+        self.result = False
         if self.cooldown is None and self.footballer is not None and self.footballer.flu is None:
-            return True
-        else:
-            return False
+            self.result = True
+        return self.result
 
     def __getstate__(self) -> dict:
         state = {"Name": self.name, "Price": self.price, "League": self.league, "Color Font": self.color_font, "Codename": self.codename, "Income": self.income, "Win Footballer": self.win_footballer, "Win Coach": self.win_coach, "Win Manager": self.win_manager, "Cooldown": self.cooldown, "Footballer": self.footballer, "Coach": self.coach, "Manager": self.manager, "Potential Owner": self.potential_owner, "Owner": self.owner, "Image Background": self.img_bg, "Image Title": self.img_title, "Image Emblem": self.img_emblem}

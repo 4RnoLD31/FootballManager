@@ -24,8 +24,7 @@ def load_game(auto=True):
         const.TVs[element] = data[element]
     const.PL1 = data["PL1"]
     const.PL2 = data["PL2"]
-    const.queue = data["Queue"]
     const.next_player = data["Next Player"]
     const.working_directory = data["Working Directory"]
     const.game_loaded = data["Game Loaded"]
-    field.Field.new_move()
+    field.new_move()

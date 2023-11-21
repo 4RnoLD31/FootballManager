@@ -49,24 +49,26 @@ def process(*args):
             return
         if len(PL1_name) > 20 or len(PL1_name) == 0 or len(PL2_name) > 20 or len(PL2_name) == 0:
             error.error(0)
-            cascade()
+            process()
             return
         const.clear()
-        const.PL1 = player.Player(PL1_name, 10000000)
-        const.PL2 = player.Player(PL2_name, 10000000)
+        const.PL1 = player.Player(PL1_name, 3600000000000000000000000000000000000000, 12121)
+        const.PL2 = player.Player(PL2_name, 10, 12121)
         print(hg.info(f"Player 1: Name {const.PL1.name} | Balance {const.PL1.balance} | Income {const.PL1.income}"))
         print(hg.info(f"Player 2: Name {const.PL2.name} | Balance {const.PL2.balance} | Income {const.PL2.income}"))
         const.clubs["Real Madrid"].buy(const.PL1)
-        const.clubs["Barcelona"].buy(const.PL2)
+        const.clubs["Barcelona"].buy(const.PL1)
         const.clubs["Atletico Madrid"].buy(const.PL1)
-        const.footballers["Лионель Месси"].buy(const.PL2, const.clubs["Barcelona"])
+        const.footballers["Лионель Месси"].buy(const.PL1, const.clubs["Barcelona"])
         const.footballers["Криштиану Роналду"].buy(const.PL1, const.clubs["Real Madrid"])
         const.footballers["Эрлинг Холанд"].buy(const.PL1, const.clubs["Atletico Madrid"])
-        const.coaches["Тони Моубрэй"].buy(const.PL2, const.clubs["Barcelona"])
+        const.coaches["Тони Моубрэй"].buy(const.PL1, const.clubs["Barcelona"])
         const.coaches["Дейв Джонс"].buy(const.PL1, const.clubs["Real Madrid"])
-        const.coaches["Дейв Джонс"].die()
+        const.coaches["Нил Уорнок"].buy(const.PL1, const.clubs["Atletico Madrid"])
+        const.managers["Роналдо"].buy(const.PL1, const.clubs["Barcelona"])
+        const.managers["Дидье Дрогба"].buy(const.PL1, const.clubs["Atletico Madrid"])
         const.TVs["Setanta Sports"].buy(const.PL1)
-        const.PL1.balance = 1000000000000
+        const.PL1.balance = 0
         l_first = tk.Label(const.main_window, text="Первым бросает игрок: ....", font="MiSans 50")
         l_first.place(x=800 - (l_first.winfo_reqwidth() / 2), y=400 - (l_first.winfo_reqheight() / 2))
         choice = 0
@@ -81,7 +83,7 @@ def process(*args):
         l_first.place(x=800 - (l_first.winfo_reqwidth() / 2), y=400 - (l_first.winfo_reqheight() / 2))
         """Statistics()
         return"""
-        const.main_window.after(2000, field.Field.new_move, first)
+        const.main_window.after(2000, field.new_move, first)
     panels.panels_initialize()
 
 

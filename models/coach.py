@@ -54,11 +54,7 @@ class Coach:
         self.club.coach = None
         self.club = None
         self.flu = None
-        self.strike = None
-
-    def revive(self):
-        self.dead = False
-        self.resurrected = True
+        self.strike = False
 
     def transfer(self, new_club):
         self.new_club = new_club

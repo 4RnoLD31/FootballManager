@@ -47,7 +47,6 @@ def save_game(autosave=True):
             data[element] = const.TVs[element]
         data["PL1"] = const.PL1
         data["PL2"] = const.PL2
-        data["Queue"] = const.queue
         data["Next Player"] = const.next_player
         data["Working Directory"] = const.working_directory
         data["Game Loaded"] = True

@@ -45,7 +45,7 @@ class Statistics:
     def __update__(self):
         while self.refresh_bool:
             self.__reshow__()
-            self.window.after(2000, const.nothing)
+            time.sleep(2)
 
 
 class ShowBalance:
@@ -86,7 +86,7 @@ class ShowBalance:
     def __update__(self):
         while self.refresh_bool:
             self.__reshow__()
-            self.window.after(2000, const.nothing)
+            time.sleep(2)
 
     def __destroy__(self):
         self.window.destroy()

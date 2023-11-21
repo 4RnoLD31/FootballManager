@@ -12,17 +12,17 @@ class AllObjects:
         if self.type == "Footballers":
             for element in const.footballers:
                 self.text += f"{const.footballers[element].name} - {const.footballers[element].power}\n"
-            self.l_label = tk.Label(self.window, text=self.text, font="MiSans 14", wraplength=600)
+            self.l_label = tk.Label(self.window, text=self.text, font="MiSans 14")
         elif self.type == "Coaches":
             self.window.geometry("600x800")
             for element in const.coaches:
                 self.text += f"{const.coaches[element].name} - {const.coaches[element].power}\n"
-            self.l_label = tk.Label(self.window, text=self.text, font="MiSans 26", wraplength=600)
+            self.l_label = tk.Label(self.window, text=self.text, font="MiSans 26")
         elif self.type == "Managers":
             self.window.geometry("600x430")
             for element in const.managers:
                 self.text += f"{const.managers[element].name} - {const.managers[element].type}\n"
-            self.l_label = tk.Label(self.window, text=self.text, font="MiSans 25", wraplength=600)
+            self.l_label = tk.Label(self.window, text=self.text, font="MiSans 25")
         self.l_label.pack()
 
 

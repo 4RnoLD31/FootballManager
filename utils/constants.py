@@ -1,13 +1,8 @@
 import os
 import tkinter as tk
-import time
 
 main_window = None
 
-
-def sleep():
-    for element in range(120):
-        time.sleep(1)
 
 def nothing():
     return f"\033[1m\033[37m[FAILED]\033[0m   \033[37mNothing\033[0m"
@@ -38,7 +33,6 @@ path_to_settings = f"{working_directory}\\settings.ini"
 property_window = {"Start": None, "TV": None, "Club": None, "Coach": None, "Footballer": None, "Manager": None}
 used_in_video = {}
 main_window = None
-queue = []
 sum = 0
 
 errorcodes = {0: "Значение превышает 20 символов или равно 0",
@@ -64,7 +58,4 @@ footballers = {}
 coaches = {}
 managers = {}
 
-sheikh_level = {}
-former_footballer_level = {}
-economist_plus_level = {}
-economist_minus_level = {}
+sheikh_level = former_footballer_level = economist_plus_level = economist_minus_level = {}
