@@ -42,6 +42,10 @@ class Manager:
         self.club = None
         self.flu = None
 
+    def revive(self):
+        self.dead = False
+        self.resurrected = True
+
     def transfer(self, new_club):
         self.new_club = new_club
         if self.new_club.manager is not None and self.club is not None:

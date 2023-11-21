@@ -1,11 +1,11 @@
 import tkinter as tk
 import utils.constants as const
-import models.play_video as play_video
+import models.coach as coach
+import models.footballer as footballer
 import models.club as club
+import models.manager as manager
 
-
-
-class PlusButton:
+"""class PlusButton:
     def __init__(self, strings, color_font, w_info, canvas, y=0, personal=None):
         self.strings = strings
         self.color_font = color_font
@@ -79,7 +79,7 @@ class PlusButton:
         for element in range(len(self.list)):
             self.canvas.coords(self.list_outline[element], 402, self.y + 2)
             self.canvas.coords(self.list[element], 400, self.y)
-            self.y += 32
+            self.y += 32"""
 
 
 class AllClubs:
@@ -114,20 +114,19 @@ class Info:
         self.object = object
         if isinstance(self.object, club.Club):
             InfoClub(self.object)
+        elif isinstance(self.object, coach.Coach) or isinstance(self.object, footballer.Footballer) or isinstance(self.object, manager):
+            InfoPersonal(self.object)
 
 
 class InfoClub:
     def __init__(self, club):
         self.club = club
+        self.y = 20
         self.w_info = tk.Toplevel()
         self.w_info.geometry("800x800+560+115")
         self.w_info.resizable(width=False, height=False)
         self.w_info.title(f"FOOTBALL MANAGER | Информация о клубе {self.club.name}")
-        self.canvas = tk.Canvas(self.w_info, height=800, width=802)
-        self.canvas.place(x=-2, y=0)
-        play_video.PlayVideo(self.w_info, self.canvas, self.club.img_bg)
         self.stats = []
-        self.stats_outline = []
         self.strings_stats = []
         if self.club.owner is not None:
             self.strings_stats.append(f"Владелец: {self.club.owner.name}")
@@ -164,31 +163,56 @@ class InfoClub:
             self.strings_stats.append("Футболист: Отсутствует")
             self.strings_stats.append("Тренер: Отсутствует")
             self.strings_stats.append("Менеджер: Отсутствует")
-        self.canvas.create_text(406, 46, text=self.club.name, font=("MiSans Heavy", 50), anchor="center", fill="black")
-        self.canvas.create_text(400, 40, text=self.club.name, font=("MiSans Heavy", 50), anchor="center", fill=self.club.color_font)
-        self.y = 170
-        self.list = []
-        for element in self.strings_stats:
-            if "Цена за победу с менеджером" in element:
-                self.list = []
-            elif "Менеджер: Отсутствует" in element:
-                self.list.append(element)
-                self.plus_personal = PlusButton(self.list, self.club.color_font, self.w_info, self.canvas)
-                self.list = []
-            elif "Уровень менеджера" in element:
-                self.list.append(element)
-                self.plus_personal = PlusButton(self.list, self.club.color_font, self.w_info, self.canvas)
-                self.list = []
-            else:
-                self.list.append(element)
-        for element in self.strings_stats:
-            if "Цена за победу с менеджером" in element:
-                self.list.append(element)
-                PlusButton(self.list, self.club.color_font, self.w_info, self.canvas, personal=self.plus_personal)
-                del self.list
-                break
-            else:
-                self.list.append(element)
-        self.list_personal = self.stats
-        self.list_personal_outline = self.stats_outline
-        self.w_info.mainloop()
+        for element in range(0, len(self.strings_stats)):
+            self.stats.append(tk.Label(self.w_info, text=self.strings_stats[element], font="MiSans 20"))
+            self.stats[element].place(x=20, y=self.y)
+            self.y += 40
+
+
+class InfoPersonal:
+    def __init__(self, object):
+        self.object = object
+        self.y = 20
+        self.w_info = tk.Toplevel()
+        self.w_info.geometry("800x800+560+115")
+        self.w_info.resizable(width=False, height=False)
+        self.w_info.title(f"FOOTBALL MANAGER | Информация о персонале {self.object.name}")
+        self.stats = []
+        self.strings_stats = []
+        self.strings_stats.append(f"Имя: {self.object.name}")
+        if self.object.owner is not None:
+            self.strings_stats.append(f"Владелец: {self.object.owner.name}")
+        else:
+            self.strings_stats.append("Владелец: Отсутствует")
+        self.strings_stats.append(f"Стоимость: {self.object.price}")
+        self.strings_stats.append(f"Мощность: {self.object.power}")
+        if self.object.club is None:
+            self.strings_stats.append("Клуб: Отсутствует")
+        else:
+            self.strings_stats.append(f"Клуб: {self.object.club.name}")
+        try:
+            self.strings_stats.append(f"Тип: {self.object.type}")
+            if self.object.type == "Sheikh":
+                self.strings_stats.append(f"Бонус менеджера: +{const.sheikh_level[self.object.level]} за победу")
+            elif self.object.type == "Former Footballer":
+                self.strings_stats.append(f"Бонус менеджера: +{const.former_footballer_level[self.object.level]} к победе")
+            elif self.object.type == "Economist":
+                self.strings_stats.append(f"Бонус менеджера: +{const.economist_plus_level[self.object.level] * 100}% к пополнению")
+                self.strings_stats.append(f"Бонус менеджера: -{const.economist_minus_level[self.object.level] * 100}% к тратам")
+            self.strings_stats.append(f"Уровень менеджера: {self.object.level}")
+        except:
+            pass
+        if self.object.flu is None:
+            self.strings_stats.append("Не болеет")
+        else:
+            self.strings_stats.append(f"Более еще {self.object.flu} ходов")
+        if isinstance(self.object, coach.Coach) and self.object.strike is False:
+            self.strings_stats.append("Нет забастовки")
+        elif isinstance(self.object, coach.Coach):
+            self.strings_stats.append(f"Забастовка еще {self.object.strike} ходов")
+        if self.object.dead:
+            self.strings_stats.append("Мертв")
+        for element in range(0, len(self.strings_stats)):
+            self.stats.append(tk.Label(self.w_info, text=self.strings_stats[element], font="MiSans 20"))
+            self.stats[element].place(x=20, y=self.y)
+            self.y += 40

@@ -1,9 +1,12 @@
+import threading
+import time
 import tkinter as tk
 import utils.constants as const
 import models.error as error
 import models.coach as coach
 import models.footballer as footballer
 import models.manager as manager
+import models.field as field
 from tkinter import messagebox, ttk
 
 
@@ -31,15 +34,48 @@ def search_available_managers(type):
     return output
 
 
+class OtherBuy:
+    def __init__(self, player, object, back):
+        self.player = player
+        self.object = object
+        self.back = back
+        if self.player.summary_check(self.object.price) <= self.player.balance:
+            const.clear()
+            const.text_on_center(f"Вы уверены? Ваш баланс составляет {self.player.balance}, цена покупки {self.player.summary_check(self.object.price)}\nПосле приобретения баланс составит {self.player.balance - self.player.summary_check(self.object.price)}", "MiSans 30")
+            self.b_confirm = tk.Button(const.main_window, text="Подтвердить", font="MiSans 40", command=self.__confirm__)
+            self.b_confirm.place(x=200, y=600, width=360, height=100)
+            self.b_cancel = tk.Button(const.main_window, text="Отменить", font="MiSans 40", command=self.back)
+            self.b_cancel.place(x=1040, y=600, width=360, height=100)
+
+    def __confirm__(self):
+        self.object.buy(self.player)
+        const.text_on_center(f"Успешно куплено: {self.object.name}", font="MiSans 50")
+        const.main_window.after(4000, field.Field.new_move)
+
+
 class LEnough:
-    def __init__(self):
+    def __init__(self, player, need_money):
+        self.player = player
+        self.need_money = need_money
         self.window = tk.Toplevel()
         self.window.geometry("360x60+780+940")
         self.window.title("НЕДОСТАТОЧНО")
         self.window.resizable(width=False, height=False)
         self.l_enough = tk.Label(self.window, font="MiSans 40")
-        self.window.protocol("WM_DELETE_WINDOW", self.__close__)
+        self.window.protocol("WM_DELETE_WINDOW", const.nothing)
         self.switch_off()
+        threading.Thread(target=self.__upper__).start()
+
+    def __upper__(self):
+        while True:
+            self.window.lift()
+            if self.player.balance >= self.need_money:
+                self.window.protocol("WM_DELETE_WINDOW", self.window.destroy)
+                self.window.after(5000, self.window.destroy)
+                break
+            else:
+                self.window.protocol("WM_DELETE_WINDOW", const.nothing)
+            self.window.after(1000, const.nothing)
 
     def switch_on(self):
         self.window.geometry("300x60+810+940")
@@ -53,9 +89,6 @@ class LEnough:
         self.l_enough.configure(text="Недостаточно", bg="red")
         self.l_enough.pack()
 
-    def __close__(self):
-        pass
-
 
 class Transfer:
     def __init__(self, player, back):
@@ -63,7 +96,7 @@ class Transfer:
         self.player = player
         const.clear()
         self.l_logo = tk.Label(const.main_window, text=f"Трансфер для игрока {self.player.name}", font="MiSans 40")
-        self.l_logo.place(x=800 - self.l_logo.winfo_reqwidth() // 2, y=0)
+        self.l_logo.place(x=800 - self.l_logo.winfo_reqwidth() / 2, y=0)
         self.b_manager = tk.Button(const.main_window, text="Менеджеры", font="MiSans 35", command=lambda: self.__window__("Manager"))
         self.b_coach = tk.Button(const.main_window, text="Тренеры", font="MiSans 35", command=lambda: self.__window__("Coach"))
         self.b_footballer = tk.Button(const.main_window, text="Футболисты", font="MiSans 35", command=lambda: self.__window__("Footballer"))
@@ -111,21 +144,21 @@ class Transfer:
             self.name_found.append(element.name)
         if not self.found:
             self.l_nothing = tk.Label(self.window, text="Ничего не найдено", font="MiSans 40")
-            self.l_nothing.place(x=250 - self.l_nothing.winfo_reqwidth() // 2, y=400 - self.l_nothing.winfo_reqheight() // 2)
+            self.l_nothing.place(x=250 - self.l_nothing.winfo_reqwidth() / 2, y=400 - self.l_nothing.winfo_reqheight() // 2)
             self.window.after(3000, self.window.destroy)
             return
-        self.l_logo.place(x=250 - self.l_logo.winfo_reqwidth() // 2, y=0)
+        self.l_logo.place(x=250 - self.l_logo.winfo_reqwidth() / 2, y=0)
         self.cb_found = ttk.Combobox(self.window, values=self.name_found, font="MiSans 20", state="readonly")
         self.cb_found.bind("<<ComboboxSelected>>", lambda event, source="found": self.__show__(source))
         self.cb_found.place(x=50, y=640, height=50, width=400)
         self.b_confirm = tk.Button(self.window, text="Подтвердить", font="MiSans 30", command=self.__to__)
-        self.b_confirm.place(x=250 - (self.b_confirm.winfo_reqwidth() // 2), y=700)
+        self.b_confirm.place(x=250 - (self.b_confirm.winfo_reqwidth() / 2), y=700)
 
     def __show__(self, event):
         if event == "found":
             self.picked_item = self.cb_found.get()
             self.__cb_found__()
-        elif event == "const.clubs":
+        elif event == "clubs":
             self.picked_club = self.cb_clubs.get()
             self.__cb_clubs__()
 
@@ -150,7 +183,7 @@ class Transfer:
             except:
                 self.text = "Клуб: Отсутствует"
         self.l_club = tk.Label(self.window, text=self.text, font="MiSans 20")
-        self.l_club.place(x=250 - self.l_club.winfo_reqwidth() // 2, y=590)
+        self.l_club.place(x=250 - self.l_club.winfo_reqwidth() / 2, y=590)
 
     def __cb_clubs__(self):
         try:
@@ -173,7 +206,7 @@ class Transfer:
             except:
                 self.text = "Футболист: Отсутствует"
         self.l_club = tk.Label(self.window, text=self.text, font="MiSans 20")
-        self.l_club.place(x=250 - self.l_club.winfo_reqwidth() // 2, y=590)
+        self.l_club.place(x=250 - self.l_club.winfo_reqwidth() / 2, y=590)
 
     def __to__(self):
         try:
@@ -216,16 +249,16 @@ class Transfer:
             self.name_clubs.append(element.name)
         if not self.clubs:
             self.l_nothing = tk.Label(self.window, text="Нет доступных клубов", font="MiSans 30")
-            self.l_nothing.place(x=250 - self.l_nothing.winfo_reqwidth() // 2, h=400 - self.l_nothing.winfo_reqheight() // 2)
+            self.l_nothing.place(x=250 - self.l_nothing.winfo_reqwidth() / 2, h=400 - self.l_nothing.winfo_reqheight() // 2)
             self.window.after(2000, self.window.destroy)
             return
         self.l_logo.configure(text="Выберите клуб", font="MiSans 30")
-        self.l_logo.place(x=250 - self.l_logo.winfo_reqwidth() // 2, y=0)
+        self.l_logo.place(x=250 - self.l_logo.winfo_reqwidth() / 2, y=0)
         self.cb_clubs = ttk.Combobox(self.window, values=self.name_clubs, font="MiSans 20", state="readonly")
         self.cb_clubs.bind("<<ComboboxSelected>>", lambda event, type="const.clubs": self.__show__(type))
         self.cb_clubs.place(x=50, y=640, height=50, width=400)
         self.b_confirm = tk.Button(self.window, text="Подтвердить", font="MiSans 30", command=self.__are_you_sure__)
-        self.b_confirm.place(x=250 - (self.b_confirm.winfo_reqwidth() // 2), y=700)
+        self.b_confirm.place(x=250 - (self.b_confirm.winfo_reqwidth() / 2), y=700)
         self.b_back = tk.Button(self.window, text="Назад", font="MiSans 18", command=self.__menu__)
         self.b_back.place(x=7, y=730, height=50)
 
@@ -240,7 +273,7 @@ class Transfer:
             if element != self.l_logo:
                 element.destroy()
         self.l_logo.configure(text="Вы уверены?")
-        self.l_logo.place(x=250 - self.l_logo.winfo_reqwidth() // 2, y=0)
+        self.l_logo.place(x=250 - self.l_logo.winfo_reqwidth() / 2, y=0)
         if self.type == "Manager":
             self.text = "Менеджер " + self.picked_item + " переходит в клуб " + self.picked_club
             if const.clubs[self.picked_club].manager is not None:
@@ -254,7 +287,7 @@ class Transfer:
             if const.clubs[self.picked_club].footballer is not None:
                 self.text += " вместо " + const.clubs[self.picked_club].footballer.name
         self.l_text = tk.Label(self.window, text=self.text, font="MiSans 20", wraplength=500)
-        self.l_text.place(x=250 - self.l_text.winfo_reqwidth() // 2, y=(400 - self.l_text.winfo_reqheight() // 2) - 50)
+        self.l_text.place(x=250 - self.l_text.winfo_reqwidth() / 2, y=(400 - self.l_text.winfo_reqheight() // 2) - 50)
         self.b_back = tk.Button(self.window, text="Назад", font="MiSans 20", command=self.__to__)
         self.b_back.place(x=50, y=680, width=190, height=100)
         self.b_confirm = tk.Button(self.window, text="Подтвердить", font="MiSans 20", command=self.__confirm__)
@@ -270,7 +303,7 @@ class Transfer:
         for element in self.window.winfo_children():
             element.destroy()
         self.l_logo = tk.Label(self.window, text="Успешно", font="MiSans 40")
-        self.l_logo.place(x=250 - self.l_logo.winfo_reqwidth() // 2, y=400 - self.l_logo.winfo_reqheight() // 2)
+        self.l_logo.place(x=250 - self.l_logo.winfo_reqwidth() / 2, y=400 - self.l_logo.winfo_reqheight() // 2)
         self.window.after(2000, self.window.destroy)
 
 
@@ -293,7 +326,7 @@ class BuyItems:
             self.window.geometry("500x800+1260+115")
             self.window.title("Покупка футболистов")
             self.l_logo = tk.Label(self.window, text="Выберите уровень футболиста", font="MiSans 25")
-            self.l_logo.place(x=250 - (self.l_logo.winfo_reqwidth() // 2), y=0)
+            self.l_logo.place(x=250 - (self.l_logo.winfo_reqwidth() / 2), y=0)
             self.available_clubs = self.player.where_can_i_have_a_footballer()
             if self.available_clubs is None:
                 error.error(5)
@@ -313,7 +346,7 @@ class BuyItems:
             self.window.geometry("500x800+710+115")
             self.window.title("Покупка тренеров")
             self.l_logo = tk.Label(self.window, text="Выберите уровень тренера", font="MiSans 25")
-            self.l_logo.place(x=250 - (self.l_logo.winfo_reqwidth() // 2), y=0)
+            self.l_logo.place(x=250 - (self.l_logo.winfo_reqwidth() / 2), y=0)
             self.available_clubs = self.player.where_can_i_have_a_coach()
             if self.available_clubs is None:
                 error.error(5)
@@ -329,7 +362,7 @@ class BuyItems:
             self.window.geometry("500x800+160+115")
             self.window.title("Покупка менеджеров")
             self.l_logo = tk.Label(self.window, text="Выберите тип менеджера", font="MiSans 25")
-            self.l_logo.place(x=250 - (self.l_logo.winfo_reqwidth() // 2), y=0)
+            self.l_logo.place(x=250 - (self.l_logo.winfo_reqwidth() / 2), y=0)
             self.available_clubs = self.player.where_can_i_have_a_manager()
             if not self.available_clubs:
                 error.error(5)
@@ -347,23 +380,23 @@ class BuyItems:
         if type == "Footballer":
             self.found = search_available_footballers(power)
             self.l_logo = tk.Label(self.window, text="Футболисты " + str(power) + " уровня", font="MiSans 25")
-            self.l_logo.place(x=250 - (self.l_logo.winfo_reqwidth() // 2), y=0)
+            self.l_logo.place(x=250 - (self.l_logo.winfo_reqwidth() / 2), y=0)
         elif type == "Coach":
             self.found = search_available_coaches(power)
             self.l_logo = tk.Label(self.window, text="Тренеры " + str(power) + " уровня", font="MiSans 25")
-            self.l_logo.place(x=250 - (self.l_logo.winfo_reqwidth() // 2), y=0)
+            self.l_logo.place(x=250 - (self.l_logo.winfo_reqwidth() / 2), y=0)
         elif type == "Former Footballer":
             self.found = search_available_managers(type)
             self.l_logo = tk.Label(self.window, text="Бывшие футболисты", font="MiSans 30")
-            self.l_logo.place(x=250 - (self.l_logo.winfo_reqwidth() // 2), y=0)
+            self.l_logo.place(x=250 - (self.l_logo.winfo_reqwidth() / 2), y=0)
         elif type == "Economist":
             self.found = search_available_managers(type)
             self.l_logo = tk.Label(self.window, text="Экономисты", font="MiSans 30")
-            self.l_logo.place(x=250 - (self.l_logo.winfo_reqwidth() // 2), y=0)
+            self.l_logo.place(x=250 - (self.l_logo.winfo_reqwidth() / 2), y=0)
         elif type == "Sheikh":
             self.found = search_available_managers(type)
             self.l_logo = tk.Label(self.window, text="Шейхи", font="MiSans 30")
-            self.l_logo.place(x=250 - (self.l_logo.winfo_reqwidth() // 2), y=0)
+            self.l_logo.place(x=250 - (self.l_logo.winfo_reqwidth() / 2), y=0)
         self.y = 55
         self.already_picked_bool = False
         self.picked = None
@@ -379,7 +412,7 @@ class BuyItems:
         for element in range(0, len(self.found)):
             self.check_buttons.append(
                 tk.Checkbutton(self.window, variable=self.picked_bool[element], text=self.found[element].name,
-                            font="MiSans 25"))
+                               font="MiSans 25"))
             self.check_buttons[element].config(command=self.clicked)
             self.check_buttons[element].place(x=10, y=self.y, height=50)
             self.y += 50
@@ -423,15 +456,15 @@ class BuyItems:
         for widget in self.window.winfo_children():
             widget.destroy()
         self.l_logo = tk.Label(self.window, text="В какой клуб?", font="MiSans 40")
-        self.l_logo.place(x=250 - (self.l_logo.winfo_reqwidth() // 2), y=0)
+        self.l_logo.place(x=250 - (self.l_logo.winfo_reqwidth() / 2), y=0)
         self.text = ""
         self.club_names = []
         for element in self.available_clubs:
             self.club_names.append(element.name)
         self.list = ttk.Combobox(self.window, values=self.club_names, font="MiSans 20", state="readonly")
-        self.list.place(x=250 - (self.list.winfo_reqwidth() // 2), y=640)
+        self.list.place(x=250 - (self.list.winfo_reqwidth() / 2), y=640)
         self.b_confirm = tk.Button(self.window, text="Подтвердить", font="MiSans 30", command=self.transfer)
-        self.b_confirm.place(x=250 - (self.b_confirm.winfo_reqwidth() // 2), y=700)
+        self.b_confirm.place(x=250 - (self.b_confirm.winfo_reqwidth() / 2), y=700)
 
     def transfer(self):
         self.selected = self.list.get()
@@ -439,7 +472,7 @@ class BuyItems:
         for widget in self.window.winfo_children():
             widget.destroy()
         self.l_logo = tk.Label(self.window, text="Успешно", font="MiSans 40")
-        self.l_logo.place(x=250 - (self.l_logo.winfo_reqwidth() // 2), y=0)
+        self.l_logo.place(x=250 - (self.l_logo.winfo_reqwidth() / 2), y=0)
         if isinstance(self.picked, footballer.Footballer):
             self.l_successfully = tk.Label(self.window, text="Футболист " + self.picked.name + " успешно перешел в клуб " + self.picked.club.name, font="MiSans 20", wraplength=500)
             self.available_clubs = self.player.where_can_i_have_a_footballer()
@@ -449,7 +482,7 @@ class BuyItems:
         elif isinstance(self.picked, manager.Manager):
             self.l_successfully = tk.Label(self.window, text="Менеджер " + self.picked.name + " успешно перешел в клуб " + self.picked.club.name, font="MiSans 20", wraplength=500)
             self.available_clubs = self.player.where_can_i_have_a_manager()
-        self.l_successfully.place(x=250 - self.l_successfully.winfo_reqwidth() // 2, y=80)
+        self.l_successfully.place(x=250 - self.l_successfully.winfo_reqwidth() / 2, y=80)
         self.available_clubs = []
         self.window.after(3000, self.window.destroy)
 
@@ -518,10 +551,13 @@ class SellItems:
             self.window.title("Клубы игрока " + self.player.name)
             self.l_logo = tk.Label(self.window, text="Клубы", font="MiSans 30")
             self.found = self.player.search_owned_clubs()
-        if self.l_enough is not None and self.player.balance + const.sum >= self.need_money:
-            self.l_enough.switch_on()
-        elif self.l_enough is not None:
-            self.l_enough.switch_off()
+        try:
+            if self.player.balance + const.sum >= self.need_money:
+                self.l_enough.switch_on()
+            else:
+                self.l_enough.switch_off()
+        except:
+            pass
         self.l_logo.pack(side="top")
         if not self.found:
             self.l_nothing = tk.Label(self.window, text="Пусто", font="MiSans 50")
@@ -540,7 +576,7 @@ class SellItems:
         for element in range(0, len(self.found)):
             self.check_buttons.append(
                 tk.Checkbutton(self.window, variable=self.picked[element], text=self.found[element].name,
-                            font="MiSans 20"))
+                               font="MiSans 20"))
             self.check_buttons[element].config(command=self.clicked)
             self.check_buttons[element].place(x=10, y=self.y, height=50)
             self.y += 35
@@ -607,10 +643,13 @@ class SellItems:
             if self.picked[element].get() is False and self.found[element] in self.will_sell:
                 const.sum -= self.player.summary_check(self.found[element].price, type="Plus") // self.transfer_market
                 self.will_sell.remove(self.found[element])
-        if self.l_enough is not None and self.player.balance + const.sum >= self.need_money:
-            self.l_enough.switch_on()
-        elif self.l_enough is not None:
-            self.l_enough.switch_off()
+        try:
+            if self.player.balance + const.sum >= self.need_money:
+                self.l_enough.switch_on()
+            else:
+                self.l_enough.switch_off()
+        except:
+            pass
         # messagebox.showinfo(message=str(self.will_sell))
 
     def __destroy__(self):
@@ -618,12 +657,14 @@ class SellItems:
             if self.found[element] in self.will_sell:
                 const.sum -= self.player.summary_check(self.found[element].price, type="Plus") // self.transfer_market
                 self.will_sell.remove(self.found[element])
-            if self.l_enough is not None and self.player.balance + const.sum >= self.need_money:
-                self.l_enough.switch_on()
-            elif self.l_enough is not None:
-                self.l_enough.switch_off()
+            try:
+                if self.player.balance + const.sum >= self.need_money:
+                    self.l_enough.switch_on()
+                else:
+                    self.l_enough.switch_off()
+            except:
+                pass
         self.window.destroy()
-
 
 
 class Sell:
@@ -653,19 +694,21 @@ class Sell:
             self.window.title(
                 "FOOTBALL MANAGER | Продажа имущества игрока " + self.player.name + " во время трансферного окна")
             self.l_logo = tk.Label(self.window,
-                                text="Продажа имущества игрока " + self.player.name + " во время трансферного окна",
-                                font="MiSans 35")
+                                   text="Продажа имущества игрока " + self.player.name + " во время трансферного окна",
+                                   font="MiSans 35")
             self.b_back = tk.Button(self.window, text="Назад", font="MiSans 20", command=next_step)
             self.b_back.place(x=20, y=730, height=50)
         else:
             self.window.title(
                 "FOOTBALL MANAGER | Продажа имущества игрока " + self.player.name)
             self.l_logo = tk.Label(self.window,
-                                text="Продажа имущества игрока " + self.player.name,
-                                font="MiSans 50")
+                                   text="Продажа имущества игрока " + self.player.name,
+                                   font="MiSans 50")
         self.l_logo.pack(side="top")
         if self.need_money is not None:
-            self.l_enough = LEnough()
+            self.l_enough = LEnough(self.player, self.need_money)
+            self.window.protocol("WM_DELETE_WINDOW", const.nothing)
+            threading.Thread(target=self.__update__).start()
         else:
             self.l_enough = None
         self.buttons = []
@@ -680,6 +723,14 @@ class Sell:
         self.buttons[2].configure(command=lambda: SellItems("Manager", self.player, self.transfer_market, self.need_money, self.l_enough))
         self.buttons[3].configure(command=lambda: SellItems("Coach", self.player, self.transfer_market, self.need_money, self.l_enough))
         self.buttons[4].configure(command=lambda: SellItems("Footballer", self.player, self.transfer_market, self.need_money, self.l_enough))
+
+    def __update__(self):
+        while True:
+            if self.player.balance >= self.need_money:
+                self.window.protocol("WM_DELETE_WINDOW", self.next_step)
+                self.window.after(5000, self.next_step)
+                break
+            self.window.after(1000, const.nothing)
 
     def __close__(self):
         if self.need_money is not None:
