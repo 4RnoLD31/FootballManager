@@ -70,6 +70,10 @@ class Footballer:
         self.club = None
         self.flu = None
 
+    def revive(self):
+        self.dead = False
+        self.resurrected = True
+
     def __getstate__(self) -> dict:
         state = {"Name": self.name, "Power": self.power, "Price": self.price, "Resurrected": self.resurrected, "Dead": self.dead, "Flu": self.flu, "Club": self.club, "Owner": self.owner}
         return state

@@ -1,19 +1,21 @@
-import tkinter as tk
 import utils.constants as const
 import models.highlighting as hg
-from tkinter import messagebox
+import random
 
 
 class Player:
-    def __init__(self, name, balance, income):
-        self.name = str(name)
+    def __init__(self, name, balance, income=None):
+        self.name = name
         self.balance = balance
-        self.income = income
+        if self.income is None:
+            self.income = self.balance / 10
+        else:
+            self.income = income
         self.payment_TVs_degree = 0
         self.payment_TVs = 0
         self.position = 0
         self.avatar = None
-        self.bonuses = {"Vaccine": 0, "Resurrection": 0}
+        self.bonuses = {"Transfer Window": 0, "Vaccine": 0, "Revive": 0, "Charity Match": 0}
         self.disqualified = False
         # Statistics
         self.throws = 0
@@ -21,12 +23,26 @@ class Player:
         self.money_earned = 0
         self.money_spent = 0
 
+    def personal_flu(self):
+        self.result = []
+        for element in self.search_bought_footballers() + self.search_bought_coaches() + self.search_bought_managers():
+            if element.flu is not None:
+                self.result.append(element)
+        return self.result
+
+    def personal_revive(self):
+        self.result = []
+        for element in self.search_bought_footballers() + self.search_bought_coaches() + self.search_bought_managers():
+            if element.dead:
+                self.result.append(element)
+        return self.result
+
     def available_clubs(self, for_what="Match"):
         self.for_what = for_what
         self.result = []
         if self.for_what == "Match":
             for element in self.search_owned_clubs():
-                if element.cooldown is None and element.footballer is not None and element.footballer.flu is None:
+                if element.available():
                     self.result.append(element)
         elif self.for_what == "Dead":
             for element in self.search_owned_clubs():
@@ -98,7 +114,7 @@ class Player:
 
     def full_leagues(self):
         self.leagues = []
-        self.apl = self.la_liga = self.seria_a = self.bundesleague = self.rpl = 0
+        self.apl = self.la_liga = self.seria_a = self.bundesleague = self.pro_league = self.rpl = 0
         for element in const.clubs.keys():
             if const.clubs[element].owner == self:
                 if const.clubs[element].league == "EPL":
@@ -109,6 +125,8 @@ class Player:
                     self.seria_a += 1
                 elif const.clubs[element].league == "Bundesliga":
                     self.bundesleague += 1
+                elif const.clubs[element].league == "Pro League":
+                    self.pro_league += 1
                 elif const.clubs[element].league == "RPL":
                     self.rpl += 1
         if self.apl == 3:
@@ -119,6 +137,8 @@ class Player:
             self.leagues.append("Seria A")
         if self.bundesleague == 3:
             self.leagues.append("Bundesliga")
+        if self.pro_league == 3:
+            self.leagues.append("Pro League")
         if self.rpl == 3:
             self.leagues.append("RPL")
         return self.leagues
@@ -173,39 +193,6 @@ class Player:
                 pass
         return self.found_managers
 
-    def clicked(self):
-        self.text = ""
-        for element in range(0, len(self.switch_club)):
-            if self.switch_club[element].get() == 1:
-                self.text += self.list_available_clubs[element].name
-        messagebox.showinfo(message=self.text)
-
-    def need_money(self, need):
-        const.clear()
-        self.need = need
-        self.available_clubs = []
-        self.switch_club = []
-        self.x = 50
-        self.y = 150
-        self.names = {"Клубы": 50, "Телекомпании": 240, "Менеджеры": 640, "Тренеры": 980, "Футболисты": 1230}
-        for element in self.names.keys():
-            self.label = tk.Label(const.main_window, text=element, font="MiSans 40")
-            self.label.place(x=self.names[element], y=200)
-        self.l_property = tk.Label(const.main_window, text=f"Имущество игрока {self.name}", font="MiSans 50")
-        self.l_property.place(x=800 - (self.l_property.winfo_reqwidth() / 2), y=100)
-        self.list_available_clubs = self.search_owned_clubs()
-        self.list_available_TVs = self.search_owned_TVs()
-        self.list_available_managers = self.search_bought_managers()
-        self.list_available_coaches = self.search_bought_coaches()
-        self.list_available_footballers = self.search_bought_footballers()
-        for element in self.list_available_clubs:
-            self.switch_club.append(0)
-        for element in range(0, len(self.list_available_clubs)):
-            self.switch_club[element] = tk.IntVar()
-            self.available_clubs.append(tk.Checkbutton(const.main_window, text=self.list_available_clubs[element].name, font="MiSans 50", variable=self.switch_club[element], command=self.clicked))
-            self.available_clubs[element].place(x=self.x, y=self.y)
-            self.y += 100
-
     def where_can_i_have_a_footballer(self, without=True):
         self.clubs = []
         self.to_delete = []
@@ -219,7 +206,7 @@ class Player:
             for element in self.to_delete:
                 self.clubs.remove(element)
         if not self.clubs:
-            return None
+            return []
         else:
             return self.clubs
 
@@ -252,7 +239,7 @@ class Player:
             for element in self.to_delete:
                 self.clubs.remove(element)
         if not self.clubs:
-            return None
+            return []
         else:
             return self.clubs
 
@@ -285,9 +272,66 @@ class Player:
             for element in self.to_delete:
                 self.clubs.remove(element)
         if not self.clubs:
-            return None
+            return []
         else:
             return self.clubs
+
+    def most_powerful_club(self):
+        powers = []
+        clubs = []
+        for element in self.search_owned_clubs():
+            if element.available():
+                powers.append(element.power())
+        try:
+            max_power = max(powers)
+        except ValueError:
+            return False
+        for element in self.search_owned_clubs():
+            if element.power() == max_power and element.available():
+                clubs.append(element)
+        if len(clubs) == 1:
+            return clubs[0]
+        else:
+            payment = []
+            for element in clubs:
+                payment.append(element.current_win())
+            max_payment = max(payment)
+            for element in clubs:
+                if max_payment == element.current_win():
+                    return element
+
+    def most_powerless_club(self):
+        def random_unavailable_club():
+            clubs = []
+            for element in self.search_owned_clubs():
+                if not element.available():
+                    clubs.append(element)
+            if not clubs:
+                return False
+            else:
+                return random.choice(self.clubs)
+        powers = []
+        clubs = []
+        for element in self.search_owned_clubs():
+            if element.available():
+                powers.append(element.power())
+        try:
+            min_power = min(powers)
+        except ValueError:
+            return random_unavailable_club()
+        for element in self.search_owned_clubs():
+            if element.power() == min_power:
+                clubs.append(element)
+        if len(clubs) == 1:
+            return clubs[0]
+        else:
+            payment = []
+            for element in clubs:
+                payment.append(element.current_win())
+            min_payment = min(payment)
+            for element in clubs:
+                if min_payment == element.current_win():
+                    return element
 
     def __getstate__(self) -> dict:
         state = {"Name": self.name, "Balance": self.balance, "Income": self.income, "Payment TVs Degree": self.payment_TVs_degree, "Payment TVs": self.payment_TVs, "Position": self.position, "Avatar": self.avatar, "Bonuses": self.bonuses, "Disqualification": self.disqualified, "Throws": self.throws, "Numbers Thrown": self.numbers_thrown, "Money Earned": self.money_earned, "Money Spent": self.money_spent}

@@ -1,4 +1,5 @@
 import os
+import functools
 import tkinter as tk
 import models.property as property
 import utils.constants as const
@@ -6,6 +7,10 @@ import models.save_game as save_game
 import models.load_game as load_game
 import models.statistics as statistics
 import models.debug as debug
+import models.transfer_window as ts
+import models.vaccine as vaccine
+import models.revive as revive
+import models.charity_match as cm
 from PIL import Image, ImageTk
 from tkinter import messagebox, filedialog
 
@@ -30,7 +35,7 @@ class ChangeAvatar:
         self.paths = []
         self.buttons = []
         self.b_upload = tk.Button(self.canvas, text="Загрузить свою", font="MiSans 30", command=self.__file_clicked__)
-        self.canvas.create_window(250 - self.b_upload.winfo_reqwidth() // 2, 0, anchor="nw", window=self.b_upload)
+        self.canvas.create_window(250 - self.b_upload.winfo_reqwidth() / 2, 0, anchor="nw", window=self.b_upload)
         for element in range(len(os.listdir(path=f"{const.working_directory}\\assets\\avatars\\"))):
             self.path = f"{const.working_directory}\\assets\\avatars\\{element}.png"
             self.images.append(Image.open(self.path))
@@ -80,7 +85,7 @@ class ChangeName:
         self.player = player
         self.window = tk.Toplevel()
         self.window.geometry("600x300")
-        self.l_name = tk.Label(self.window, text=f"Старое имя: {self.player.name}", font="MiSans 25")
+        self.l_name = tk.Label(self.window, text=f"Старое имя: {self.player.name}", font="MiSans 25", wraplength=600)
         self.l_name.place(x=300 - (self.l_name.winfo_reqwidth() / 2), y=0)
         self.l_new_name = tk.Label(self.window, text="Новое имя", font="MiSans 30")
         self.l_new_name.place(x=30, y=100)
@@ -120,9 +125,13 @@ def panels_initialize():
     debug_menu = tk.Menu(const.main_window, tearoff=0)
     property_menu = tk.Menu(const.main_window, tearoff=0)
     objects_menu = tk.Menu(const.main_window, tearoff=0)
+    bonus_menu = tk.Menu(const.main_window, tearoff=0)
     sell = tk.Menu(const.main_window, tearoff=0)
+    p1_bonus_menu = tk.Menu(const.main_window, tearoff=0)
+    p2_bonus_menu = tk.Menu(const.main_window, tearoff=0)
     menu.add_cascade(label="Файл", menu=file_menu)
     menu.add_cascade(label="Изменить", menu=change_menu)
+    menu.add_cascade(label="Бонусы", menu=bonus_menu)
     menu.add_cascade(label="Имущество", menu=property_menu)
     menu.add_cascade(label="Статистика", menu=statistic_menu)
     menu.add_cascade(label="Дебаг-Меню", menu=debug_menu)
@@ -146,5 +155,48 @@ def panels_initialize():
         sell.add_command(label=f"Игрок 2 - {const.PL2.name}", command=lambda: property.Sell(const.PL2, None, None, None, None))
         change_avatar.add_command(label=f"Игрок 1 - {const.PL1.name}", command=lambda: ChangeAvatar(const.PL1))
         change_avatar.add_command(label=f"Игрок 2 - {const.PL2.name}", command=lambda: ChangeAvatar(const.PL2))
+        bonus_menu.add_cascade(label=f"Игрок 1 - {const.PL1.name}", menu=p1_bonus_menu)
+        bonus_menu.add_cascade(label=f"Игрок 2 - {const.PL2.name}", menu=p2_bonus_menu)
+        for element in const.PL1.bonuses:
+            if element == "Transfer Window":
+                if const.PL1.bonuses[element] != 0:
+                    p1_bonus_menu.add_command(label=f"Трансферное окно ({const.PL1.bonuses[element]})", command=lambda: f_transfer_window(const.PL1))
+                else:
+                    p1_bonus_menu.add_command(label=f"Трансферное окно ({const.PL1.bonuses[element]})")
+            elif element == "Vaccine":
+                if const.PL1.bonuses[element] != 0:
+                    p1_bonus_menu.add_command(label=f"Вакцина ({const.PL1.bonuses[element]})", command=lambda: f_vaccine(const.PL1))
+                else:
+                    p1_bonus_menu.add_command(label=f"Вакцина ({const.PL1.bonuses[element]})")
+            elif element == "Revive":
+                if const.PL1.bonuses[element] != 0:
+                    p1_bonus_menu.add_command(label=f"Воскрешение ({const.PL1.bonuses[element]})", command=lambda: f_revive(const.PL1))
+                else:
+                    p1_bonus_menu.add_command(label=f"Воскрешение ({const.PL1.bonuses[element]})")
+            elif element == "Charity Match":
+                if const.PL1.bonuses[element] != 0:
+                    p1_bonus_menu.add_command(label=f"Благотворительный матч ({const.PL1.bonuses[element]})", command=lambda: f_charity_match(const.PL1))
+                else:
+                    p1_bonus_menu.add_command(label=f"Благотворительный матч ({const.PL1.bonuses[element]})")
         change_name.add_command(label=f"Игрок 1 - {const.PL1.name}", command=lambda: ChangeName(const.PL1))
         change_name.add_command(label=f"Игрок 2 - {const.PL2.name}", command=lambda: ChangeName(const.PL2))
+
+
+def f_transfer_window(player):
+    const.queue.append(functools.partial(ts.TransferWindow, player, True, True))
+    tk.messagebox.showinfo(title="Очередь", message="Задание трансферное окно добавлено в очередь")
+
+
+def f_vaccine(player):
+    const.queue.append(functools.partial(vaccine.Vaccine, player))
+    tk.messagebox.showinfo(title="Очередь", message="Задание вакцина добавлено в очередь")
+
+
+def f_revive(player):
+    const.queue.append(functools.partial(revive.Revive, player))
+    tk.messagebox.showinfo(title="Очередь", message="Задание возрождение добавлено в очередь")
+
+
+def f_charity_match(player):
+    const.queue.append(functools.partial(cm.CharityMatch, player))
+    tk.messagebox.showinfo(title="Очередь", message="Задание благотворительный матч добавлено в очередь")
