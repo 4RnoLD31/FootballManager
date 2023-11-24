@@ -1,9 +1,9 @@
 import os
+import sys
 import functools
 import tkinter as tk
 import models.property as property
 import utils.constants as const
-import models.save_game as save_game
 import models.load_game as load_game
 import models.statistics as statistics
 import models.debug as debug
@@ -143,9 +143,8 @@ def panels_initialize():
     objects_menu.add_command(label="Футболисты", command=lambda: debug.AllObjects("Footballers"))
     objects_menu.add_command(label="Тренеры", command=lambda: debug.AllObjects("Coaches"))
     objects_menu.add_command(label="Менеджеры", command=lambda: debug.AllObjects("Managers"))
-    file_menu.add_command(label="Сохранить игру", command=save_game.save_game)
     file_menu.add_cascade(label="Загрузить игру", menu=load_menu)
-    file_menu.add_command(label="Выход", command=quit)
+    file_menu.add_command(label="Выход", command=sys.exit)
     load_menu.add_command(label="Последнее сохранение", command=pre_load_game)
     if const.PL1 is not None:
         debug_menu.add_command(label="Изменить баланс", command=debug.ChangeBalance)
@@ -178,6 +177,27 @@ def panels_initialize():
                     p1_bonus_menu.add_command(label=f"Благотворительный матч ({const.PL1.bonuses[element]})", command=lambda: f_charity_match(const.PL1))
                 else:
                     p1_bonus_menu.add_command(label=f"Благотворительный матч ({const.PL1.bonuses[element]})")
+        for element in const.PL2.bonuses:
+            if element == "Transfer Window":
+                if const.PL2.bonuses[element] != 0:
+                    p2_bonus_menu.add_command(label=f"Трансферное окно ({const.PL2.bonuses[element]})", command=lambda: f_transfer_window(const.PL2))
+                else:
+                    p2_bonus_menu.add_command(label=f"Трансферное окно ({const.PL2.bonuses[element]})")
+            elif element == "Vaccine":
+                if const.PL2.bonuses[element] != 0:
+                    p2_bonus_menu.add_command(label=f"Вакцина ({const.PL2.bonuses[element]})", command=lambda: f_vaccine(const.PL2))
+                else:
+                    p2_bonus_menu.add_command(label=f"Вакцина ({const.PL2.bonuses[element]})")
+            elif element == "Revive":
+                if const.PL2.bonuses[element] != 0:
+                    p2_bonus_menu.add_command(label=f"Воскрешение ({const.PL2.bonuses[element]})", command=lambda: f_revive(const.PL2))
+                else:
+                    p2_bonus_menu.add_command(label=f"Воскрешение ({const.PL2.bonuses[element]})")
+            elif element == "Charity Match":
+                if const.PL2.bonuses[element] != 0:
+                    p2_bonus_menu.add_command(label=f"Благотворительный матч ({const.PL2.bonuses[element]})", command=lambda: f_charity_match(const.PL2))
+                else:
+                    p2_bonus_menu.add_command(label=f"Благотворительный матч ({const.PL2.bonuses[element]})")
         change_name.add_command(label=f"Игрок 1 - {const.PL1.name}", command=lambda: ChangeName(const.PL1))
         change_name.add_command(label=f"Игрок 2 - {const.PL2.name}", command=lambda: ChangeName(const.PL2))
 

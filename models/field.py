@@ -11,75 +11,54 @@ import models.info as info
 import models.panels as panels
 
 
-def stepped_on(player, object):
-    if object.owner == player:
-        const.text_on_center(f"{player.name} наступил на свой объект {object.name}", "MiSans 40")
-        const.main_window.after(4000, Field.new_move)
-    elif object.owner is None:
-        const.text_on_center(f"{player.name} наступил на свободный объект {object.name}. Хочешь купить его?", "MiSans 30")
-        b_info = tk.Button(const.main_window, text="Информация о объекте", font="MiSans 30", command=lambda: info.Info(object))
-        b_info.place(x=50, y=700)
-        b_buy = tk.Button(const.main_window, text="Купить", font="MiSans 30", command=lambda: property.OtherBuy(player, object, lambda: stepped_on(player, object)))
-        b_buy.place(x=800 - (b_buy.winfo_reqwidth() / 2), y=700)
-        b_next_step = tk.Button(const.main_window, text="Следующий ход", font="MiSans 30", command=lambda: Field.new_move())
-        b_next_step.place(x=1200, y=700)
-    else:
-        if isinstance(object, club.Club):
-            const.text_on_center(f"{player.name} наступил на клуб {object.name}. Им владеет {object.owner.name}", "MiSans 40")
-            const.main_window.after(4000, match.Match, object)
-        else:
-            const.text_on_center(f"{player.name} наступил на телекомпанию {object.name}. Им владеет {object.owner.name}", "MiSans 40")
-            const.main_window.after(4000, object.get_gain, player)
-
-
 class Field:
     @staticmethod
     def field(player):
         if player.position == 0:
             Field.start_pos(player)
         elif player.position == 1:
-            stepped_on(player, const.clubs["Barcelona"])
+            Field.stepped_on(player, const.clubs["Barcelona"])
         elif player.position == 2 or player.position == 20:
             Field.random_bonus(player)
         elif player.position == 3:
-            stepped_on(player, const.clubs["Real Madrid"])
+            Field.stepped_on(player, const.clubs["Real Madrid"])
         elif player.position == 4:
-            stepped_on(player, const.TVs["Setanta Sports"])
+            Field.stepped_on(player, const.TVs["Setanta Sports"])
         elif player.position == 5:
-            stepped_on(player, const.clubs["Atletico Madrid"])
+            Field.stepped_on(player, const.clubs["Atletico Madrid"])
         elif player.position == 6 or player.position == 16 or player.position == 22:
             transfer_window.TransferWindow(player)
         elif player.position == 7:
-            stepped_on(player, const.clubs["Arsenal"])
+            Field.stepped_on(player, const.clubs["Arsenal"])
         elif player.position == 8:
             player.disqualified = True
             print(hg.info(f"Player {player.name} has been disqualified"))
             const.text_on_center(f"Игрок {player.name} наступил на дисквалификацию. Он пропустит 1 ход", font="MiSans 40")
             const.main_window.after(4000, Field.new_move)
         elif player.position == 9:
-            stepped_on(player, const.clubs["Liverpool"])
+            Field.stepped_on(player, const.clubs["Liverpool"])
         elif player.position == 10:
-            stepped_on(player, const.clubs["Manchester City"])
+            Field.stepped_on(player, const.clubs["Manchester City"])
         elif player.position == 11:
-            stepped_on(player, const.TVs["Euro Sports"])
+            Field.stepped_on(player, const.TVs["Euro Sports"])
         elif player.position == 12:
-            stepped_on(player, const.clubs["Bayern"])
+            Field.stepped_on(player, const.clubs["Bayern"])
         elif player.position == 13:
-            stepped_on(player, const.clubs["Borussia"])
+            Field.stepped_on(player, const.clubs["Borussia"])
         elif player.position == 14 or player.position == 30:
             Field.random_fine(player)
         elif player.position == 15:
-            stepped_on(player, const.clubs["Leipzig"])
+            Field.stepped_on(player, const.clubs["Leipzig"])
         elif player.position == 17:
-            stepped_on(player, const.clubs["Juventus"])
+            Field.stepped_on(player, const.clubs["Juventus"])
         elif player.position == 18:
-            stepped_on(player, const.TVs["Rai Uno"])
+            Field.stepped_on(player, const.TVs["Rai Uno"])
         elif player.position == 19:
-            stepped_on(player, const.clubs["Inter"])
+            Field.stepped_on(player, const.clubs["Inter"])
         elif player.position == 21:
-            stepped_on(player, const.clubs["Milan"])
+            Field.stepped_on(player, const.clubs["Milan"])
         elif player.position == 23:
-            stepped_on(player, const.clubs["Krasnodar"])
+            Field.stepped_on(player, const.clubs["Krasnodar"])
         elif player.position == 24:
             if player.balance >= player.summary_check(1000000):
                 const.text_on_center(f"Игрок {player.name} наступил на налоговую. Штраф 1000000", font="MiSans 40")
@@ -88,17 +67,38 @@ class Field:
                 const.text_on_center(f"Игрок {player.name} наступил на налоговую. Штраф 1000000\nОн не может выплатить штраф. Ему нехватает {player.summary_check(1000000) - player.balance}", font="MiSans 40")
                 const.main_window.after(4000, lambda: property.Sell(player, Field.new_move, need_money=1000000))
         elif player.position == 25:
-            stepped_on(player, const.clubs["Spartak Moscow"])
+            Field.stepped_on(player, const.clubs["Spartak Moscow"])
         elif player.position == 26:
-            stepped_on(player, const.clubs["CSKA"])
+            Field.stepped_on(player, const.clubs["CSKA"])
         elif player.position == 27:
-            stepped_on(player, const.TVs["ESPN"])
+            Field.stepped_on(player, const.TVs["ESPN"])
         elif player.position == 28:
-            stepped_on(player, const.clubs["Al-Nassr"])
+            Field.stepped_on(player, const.clubs["Al-Nassr"])
         elif player.position == 29:
-            stepped_on(player, const.clubs["Al-Ittihad"])
+            Field.stepped_on(player, const.clubs["Al-Ittihad"])
         elif player.position == 31:
-            stepped_on(player, const.clubs["Al-Hilal"])
+            Field.stepped_on(player, const.clubs["Al-Hilal"])
+
+    @staticmethod
+    def stepped_on(player, object):
+        if object.owner == player:
+            const.text_on_center(f"{player.name} наступил на свой объект {object.name}", "MiSans 40")
+            const.main_window.after(4000, Field.new_move)
+        elif object.owner is None:
+            const.text_on_center(f"{player.name} наступил на свободный объект {object.name}. Хочешь купить его?", "MiSans 30")
+            b_info = tk.Button(const.main_window, text="Информация о объекте", font="MiSans 30", command=lambda: info.Info(object))
+            b_info.place(x=50, y=700)
+            b_buy = tk.Button(const.main_window, text="Купить", font="MiSans 30", command=lambda: property.OtherBuy(player, object, lambda: Field.stepped_on(player, object)))
+            b_buy.place(x=800 - (b_buy.winfo_reqwidth() / 2), y=700)
+            b_next_step = tk.Button(const.main_window, text="Следующий ход", font="MiSans 30", command=lambda: Field.new_move())
+            b_next_step.place(x=1200, y=700)
+        else:
+            if isinstance(object, club.Club):
+                const.text_on_center(f"{player.name} наступил на клуб {object.name}. Им владеет {object.owner.name}", "MiSans 40")
+                const.main_window.after(4000, match.Match, object)
+            else:
+                const.text_on_center(f"{player.name} наступил на телекомпанию {object.name}. Им владеет {object.owner.name}", "MiSans 40")
+                const.main_window.after(4000, object.get_gain, player)
 
     @staticmethod
     def clubs_with_cooldown():
@@ -191,8 +191,8 @@ class Field:
                 elif element.owner == player:
                     element.flu -= 1
         const.clear()
-        # number = randint(2, 12)
-        number = 2
+        number = random.randint(2, 12)
+        # number = 2
         player.numbers_thrown += number
         player.throws += 1
         if player.position + number > 31:
@@ -222,8 +222,7 @@ class Field:
             const.bonuses["Vaccine"] = 2
             const.bonuses["Revive"] = 1
             const.bonuses["Charity Match"] = 1
-        # chosen = choices(list(const.fines.keys()), weights=list(const.fines.values()))[0]
-        chosen = "Charity Match"
+        chosen = random.choices(list(const.fines.keys()), weights=list(const.fines.values()))[0]
         const.bonuses[chosen] -= 1
         if chosen == "Money":
             Money(player, type="Bonus")
@@ -249,7 +248,6 @@ class Field:
             const.fines["Strike"] = 2
             const.fines["Coronavirus"] = 3
         chosen = random.choices(list(const.fines.keys()), weights=list(const.fines.values()))[0]
-        chosen = "Dead"
         const.fines[chosen] -= 1
         if chosen == "Money":
             Money(player, type="Fine")
@@ -259,7 +257,6 @@ class Field:
             Strike(player)
         elif chosen == "Coronavirus":
             Coronavirus(player)
-
 
 
 class CharityMatch:

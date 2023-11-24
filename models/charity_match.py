@@ -14,7 +14,7 @@ class CharityMatch:
         self.first_club = self.first_player.most_powerful_club()
         if self.first_club is False:
             const.text_on_center(f"У игрока {self.first_player.name} нет доступных клубов. Пропуск", "MiSans 40")
-            const.main_window.after(4000, field.Field.new_move())
+            const.main_window.after(4000, field.Field.new_move)
         self.second_club = self.second_player.most_powerless_club()
         del const.queue[0]
         match.Match(self.first_club, self.second_club)

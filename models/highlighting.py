@@ -1,10 +1,15 @@
+import colorama
+
+colorama.init()
+
+
 def failed(string):
-    return f"\033[1m\033[31m[FAILED]\033[0m   \033[31m{string}\033[0m"
+    return f"{colorama.Fore.RED}{colorama.Style.BRIGHT}[FAILED]   {colorama.Style.NORMAL}{string}{colorama.Style.RESET_ALL}"
 
 
 def successful(string):
-    return f"\033[1m\033[32m[SUCCESSFUL]\033[0m   \033[32m{string}\033[0m"
+    return f"{colorama.Fore.GREEN}{colorama.Style.BRIGHT}[SUCCESSFUL]   {colorama.Style.NORMAL}{string}{colorama.Style.RESET_ALL}"
 
 
 def info(string):
-    return f"\033[1m\033[33m[INFO]\033[0m   \033[33m{string}\033[0m"
+    return f"{colorama.Fore.YELLOW}{colorama.Style.BRIGHT}[INFO]   {colorama.Style.NORMAL}{string}{colorama.Style.RESET_ALL}"

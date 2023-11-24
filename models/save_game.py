@@ -52,17 +52,20 @@ def save_game(autosave=True):
         data["Working Directory"] = const.working_directory
         data["Game Loaded"] = True
         settings_file = configparser.ConfigParser()
-        settings_file.read("settings.ini")
+        settings_file.read(f"{const.working_directory}/settings.ini")
         with open(f"{const.working_directory}\\tmp\\save.tmp", "wb") as tmp_file:
             pickle.dump(data, tmp_file)
-        with open(settings_file["Settings"]["latest_autosave"], "rb") as old_file, open(f"{const.working_directory}\\tmp\\save.tmp", "rb") as new_file:
-            old = old_file.read()
-            new = new_file.read()
-            if old == new:
-                print(hg.failed("Game is not saved. File has already been saved"))
-                leave = True
-            else:
-                leave = False
+        try:
+            with open(settings_file["Settings"]["latest_autosave"], "rb") as old_file, open(f"{const.working_directory}\\tmp\\save.tmp", "rb") as new_file:
+                old = old_file.read()
+                new = new_file.read()
+                if old == new:
+                    print(hg.failed("Game is not saved. File has already been saved"))
+                    leave = True
+                else:
+                    leave = False
+        except:
+            leave = False
         pickle.dump(data, save_file)
         d_path = {"latest_autosave": path}
         settings_file = configparser.ConfigParser()

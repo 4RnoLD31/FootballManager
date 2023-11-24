@@ -68,8 +68,6 @@ def process(*args):
             l_first.config(text=f"Первым бросает игрок: {const.PL2.name}")
             const.next_player = const.PL2
         l_first.place(x=800 - (l_first.winfo_reqwidth() / 2), y=400 - (l_first.winfo_reqheight() / 2))
-        """Statistics()
-        return"""
         const.main_window.after(2000, field.Field.new_move, first)
     panels.panels_initialize()
 

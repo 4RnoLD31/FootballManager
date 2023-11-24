@@ -39,13 +39,13 @@ class Match:
             const.main_window.after(4000, field.Field.new_move)
         elif len(self.second_player.available_clubs()) == 1:
             self.second_club = self.second_player.available_clubs()[0]
-            const.text_on_center(f"У игрока  {self.second_player.name} есть только один клуб для игры - {self.second_club.name}", "MiSans 40")
+            const.text_on_center(f"У игрока {self.second_player.name} есть только один клуб для игры - {self.second_club.name}", "MiSans 40")
             const.main_window.after(4000, self.__match__)
         elif len(self.second_player.available_clubs()) > 1:
-            const.text_on_center(f"У игрока  {self.second_player.name} есть несколько клубов для игры", "MiSans 40")
+            const.text_on_center(f"У игрока {self.second_player.name} есть несколько клубов для игры", "MiSans 40")
             const.main_window.after(4000, self.__cc_first__)
         else:
-            const.text_on_center(f"У игрока  {self.second_player.name} нет доступных клубов для игры", "MiSans 40")
+            const.text_on_center(f"У игрока {self.second_player.name} нет доступных клубов для игры", "MiSans 40")
             self.lost_player = self.second_player
             self.lost_club = self.second_club
             self.won_player = self.first_player
@@ -180,26 +180,26 @@ class Match:
 
     def __lose__(self):
         try:
-            self.l_thrown.configure(text=f"Игрок {self.won_player.name} должен выплатить {self.won_club.current_win()}")
+            self.l_thrown.configure(text=f"Игрок {self.lost_player.name} должен выплатить {self.won_club.current_win()}")
             self.l_thrown.place(x=800 - self.l_thrown.winfo_reqwidth() / 2, y=400)
         except:
-            const.text_on_center(f"Игрок {self.won_player.name} должен выплатить {self.won_club.current_win()}", "MiSans 40")
+            const.text_on_center(f"Игрок {self.lost_player.name} должен выплатить {self.won_club.current_win()}", "MiSans 40")
         const.main_window.after(3000, self.__l_first__)
 
     def __l_first__(self):
-        if self.lost_player.summary_check(self.won_club.current_win()) <= self.lost_player.balance:
-            self.lost_player.withdrawal(self.first_club.current_win())
-            self.won_player.deposit(self.first_club.current_win())
+        if self.won_club.current_win() <= self.lost_player.balance:
+            self.lost_player.withdrawal(self.first_club.current_win(), False)
+            self.won_player.deposit(self.first_club.current_win(), False)
             try:
-                self.l_thrown.configure(text=f"Игрок {self.lost_player.name} перевел {self.lost_player.summary_check(self.won_club.current_win())} {self.won_player.name}")
+                self.l_thrown.configure(text=f"Игрок {self.lost_player.name} перевел {self.won_club.current_win()} {self.won_player.name}")
                 self.l_thrown.place(x=800 - self.l_thrown.winfo_reqwidth() / 2, y=400)
             except:
-                const.text_on_center(f"Игрок {self.lost_player.name} перевел {self.lost_player.summary_check(self.won_club.current_win())} {self.won_player.name}", "MiSans 40")
+                const.text_on_center(f"Игрок {self.lost_player.name} перевел {self.won_club.current_win()} {self.won_player.name}", "MiSans 40")
             const.main_window.after(4000, field.Field.new_move)
         else:
             try:
-                self.l_thrown.configure(text=f"Игроку {self.lost_player.name} не хватает денег. Необходимо еще {self.lost_player.summary_check(self.won_club.current_win()) - self.lost_player.balance}")
+                self.l_thrown.configure(text=f"Игроку {self.lost_player.name} не хватает денег. Необходимо еще {self.won_club.current_win() - self.lost_player.balance}")
                 self.l_thrown.place(x=800 - self.l_thrown.winfo_reqwidth() / 2, y=400)
             except:
-                const.text_on_center(f"Игроку {self.lost_player.name} не хватает денег. Необходимо еще {self.lost_player.summary_check(self.won_club.current_win()) - self.lost_player.balance}", "MiSans 40`")
-            const.main_window.after(4000, lambda: property.Sell(self.lost_player, self.__lose__, need_money=self.lost_player.summary_check(self.won_club.current_win()) - self.lost_player.balance))
+                const.text_on_center(f"Игроку {self.lost_player.name} не хватает денег. Необходимо еще {self.won_club.current_win() - self.lost_player.balance}", "MiSans 40")
+            const.main_window.after(4000, lambda: property.Sell(self.lost_player, self.__lose__, need_money=self.won_club.current_win() - self.lost_player.balance))

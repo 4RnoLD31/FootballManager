@@ -12,6 +12,12 @@ class Footballer:
         self.flu = None
         self.club = None
 
+    def available(self):
+        if self.flu is None and self.dead is False:
+            return True
+        else:
+            return False
+
     def transfer(self, new_club):
         self.new_club = new_club
         if self.new_club.footballer is not None and self.club is not None:
@@ -47,9 +53,9 @@ class Footballer:
             self.club = self.potential_club
             if self.club is not None:
                 self.club.footballer = self
-                print(hg.successful(f'{self.name} was bought to {self.club.name} by {self.owner.name}'))
+                print(hg.successful(f'{self.name} was bought to {self.club.name} by {self.owner.name} | {self.show_price}'))
             else:
-                print(hg.successful(f'{self.name} was bought by {self.owner.name}'))
+                print(hg.successful(f'{self.name} was bought by {self.owner.name} | {self.show_price}'))
         else:
             print(hg.failed(f"Insufficient funds for purchase {self.name} | {self.price}"))
             return
@@ -58,7 +64,7 @@ class Footballer:
     def sell(self, transfer_market):
         self.transfer_market = transfer_market
         self.price_sold = self.club.owner.deposit((self.price // 100000 // self.transfer_market) * 100000)
-        print(hg.successful(f"{self.name} was sold by {self.owner.name}"))
+        print(hg.successful(f"{self.name} was sold by {self.owner.name} | {self.price_sold}"))
         self.club.footballer = None
         self.club = None
         self.owner = None

@@ -29,13 +29,10 @@ class Club:
         if self.potential_owner.balance >= self.potential_owner.summary_check(self.price):
             self.owner = self.potential_owner
             self.owner.withdrawal(self.price)
-            self.owner.deposit(self.income, "Income")
-            print(hg.successful(f'{self.name} was bought by "{self.owner.name}"'))
+            self.price_bought = self.owner.deposit(self.income, "Income")
+            print(hg.successful(f'{self.name} was bought by "{self.owner.name}" | {self.price_bought}'))
         else:
             print(hg.failed(f"Insufficient funds for purchase {self.name} | {self.price}"))
-
-    def change_owner(self, owner):
-        self.owner = owner
 
     def current_win(self):
         result = 0
@@ -75,33 +72,12 @@ class Club:
             return
         self.price_sold = self.owner.deposit(round(self.price // 100000 // self.transfer_market) * 100000)
         self.owner.withdrawal(self.income, "Income")
-        print(hg.successful(f"{self.name} was sold by {self.owner.name}"))
+        print(hg.successful(f"{self.name} was sold by {self.owner.name} | {self.price_sold}"))
         self.owner = None
         return self.price_sold
 
-    def get_fine(self, type_fine):
-        self.type_fan = type_fine
-
-    def win(self, club):
-        self.club = club
-        self.summary = self.current_win()
-        if self.club.owner.balance >= self.summary:
-            self.club.owner.withdrawal(self.summary, economist=False)
-            self.owner.deposit(self.summary, economist=False)
-        else:
-            pass
-
-    def lose(self, club):
-        self.club = club
-        self.summary = self.club.current_win()
-        if self.owner.balance >= self.summary:
-            self.owner.withdrawal(self.summary, economist=False)
-            self.club.owner.deposit(self.summary, economist=False)
-        else:
-            pass
-
     def available(self):
-        if self.cooldown is None and self.footballer is not None and self.footballer.flu is None:
+        if self.cooldown is None and self.footballer is not None and self.footballer.available():
             return True
         else:
             return False

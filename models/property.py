@@ -46,6 +46,9 @@ class OtherBuy:
             self.b_confirm.place(x=200, y=600, width=360, height=100)
             self.b_cancel = tk.Button(const.main_window, text="Отменить", font="MiSans 40", command=self.back)
             self.b_cancel.place(x=1040, y=600, width=360, height=100)
+        else:
+            error.error(4)
+            return
 
     def __confirm__(self):
         self.object.buy(self.player)
@@ -75,7 +78,7 @@ class LEnough:
                 break
             else:
                 self.window.protocol("WM_DELETE_WINDOW", const.nothing)
-            self.window.after(1000, const.nothing)
+            time.sleep(1)
 
     def switch_on(self):
         self.window.geometry("300x60+810+940")
@@ -328,7 +331,7 @@ class BuyItems:
             self.l_logo = tk.Label(self.window, text="Выберите уровень футболиста", font="MiSans 25")
             self.l_logo.place(x=250 - (self.l_logo.winfo_reqwidth() / 2), y=0)
             self.available_clubs = self.player.where_can_i_have_a_footballer()
-            if self.available_clubs is None:
+            if not self.available_clubs:
                 error.error(5)
                 self.window.destroy()
                 return
@@ -348,7 +351,7 @@ class BuyItems:
             self.l_logo = tk.Label(self.window, text="Выберите уровень тренера", font="MiSans 25")
             self.l_logo.place(x=250 - (self.l_logo.winfo_reqwidth() / 2), y=0)
             self.available_clubs = self.player.where_can_i_have_a_coach()
-            if self.available_clubs is None:
+            if not self.available_clubs:
                 error.error(5)
                 self.window.destroy()
                 return

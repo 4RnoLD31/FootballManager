@@ -13,6 +13,12 @@ class Manager:
         self.flu = None
         self.club = None
 
+    def available(self):
+        if self.flu is None and self.dead is False:
+            return True
+        else:
+            return False
+
     def buy(self, player, potential_club=None):
         self.player = player
         self.potential_club = potential_club
@@ -30,7 +36,7 @@ class Manager:
     def sell(self, transfer_market):
         self.transfer_market = transfer_market
         self.price_sold = self.club.owner.deposit((self.price // 100000 // self.transfer_market) * 100000)
-        print(hg.successful(f"{self.name} was sold by {self.owner.name}"))
+        print(hg.successful(f"{self.name} was sold by {self.owner.name} | {self.price_sold}"))
         self.club.manager = None
         self.club = None
         self.owner = None

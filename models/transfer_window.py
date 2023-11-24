@@ -10,10 +10,10 @@ class TransferWindow:
         self.bonus = bonus
         self.player = player
         self.queue = queue
-        self.player.bonuses["Transfer Window"] -= 1
         self.first_player = self.player
         self.first_time = True
         if self.bonus:
+            self.player.bonuses["Transfer Window"] -= 1
             const.text_on_center(f"Специальное трансферное окно для игрока {self.player.name}", "MiSans 40")
         else:
             const.text_on_center(f"Игрок {self.player.name} наступил на трансферное окно", "MiSans 40")

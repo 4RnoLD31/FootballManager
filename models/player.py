@@ -7,10 +7,11 @@ class Player:
     def __init__(self, name, balance, income=None):
         self.name = name
         self.balance = balance
+        self.income = income
         if self.income is None:
-            self.income = self.balance / 10
+            self.income = int(self.balance / 10)
         else:
-            self.income = income
+            self.income = int(income)
         self.payment_TVs_degree = 0
         self.payment_TVs = 0
         self.position = 0
@@ -309,7 +310,7 @@ class Player:
             if not clubs:
                 return False
             else:
-                return random.choice(self.clubs)
+                return random.choice(clubs)
         powers = []
         clubs = []
         for element in self.search_owned_clubs():

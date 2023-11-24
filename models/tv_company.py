@@ -16,23 +16,18 @@ class TVCompany:
             self.owner = self.potential_owner
             self.owner.payment_TVs_degree += 1
             self.owner.payment_TVs = const.gradual_income[self.owner.payment_TVs_degree - 1]
-            self.owner.withdrawal(self.price)
-            print(hg.successful(f'{self.name} was bought by "{self.owner.name}"'))
+            self.price_bought = self.owner.withdrawal(self.price)
+            print(hg.successful(f'{self.name} was bought by "{self.owner.name}" | {self.price_bought}'))
         else:
             print(hg.failed(f"Insufficient funds for purchase {self.name} | {self.price}"))
 
-    def change_owner(self, owner):
-        self.owner = owner
 
     def sell(self, *args):
         self.price_sold = self.owner.deposit(self.price // 2)
-        self.owner.payment_const.TVs_degree -= 1
-        self.owner.payment_const.TVs = const.gradual_income[self.owner.payment_const.TVs_degree - 1]
+        self.owner.payment_TVs_degree -= 1
+        self.owner.payment_TVs = const.gradual_income[self.owner.payment_const.TVs_degree - 1]
         self.owner = None
         return self.price_sold
-
-    def get_fine(self, type_fine):
-        self.type_fan = type_fine
 
     def get_gain(self, stepped_player):
         const.text_on_center(f"Игрок {stepped_player.name} должен выплатить {self.owner.payment_TVs} игроку {self.owner.name}", "MiSans 40")

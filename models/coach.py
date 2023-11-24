@@ -14,6 +14,12 @@ class Coach:
         self.club = None
         self.strike = None
 
+    def available(self):
+        if self.flu is None and self.strike is None and self.dead is False:
+            return True
+        else:
+            return False
+
     def buy(self, player, potential_club=None):
         self.player = player
         self.potential_club = potential_club
@@ -23,9 +29,9 @@ class Coach:
             self.club = self.potential_club
             if self.club is not None:
                 self.club.coach = self
-                print(hg.successful(f'{self.name} was bought to {self.club.name} by {self.owner.name}'))
+                print(hg.successful(f'{self.name} was bought to {self.club.name} by {self.owner.name} | {self.show_price}'))
             else:
-                print(hg.successful(f'{self.name} was bought by {self.owner.name}'))
+                print(hg.successful(f'{self.name} was bought by {self.owner.name} | {self.show_price}'))
         else:
             print(hg.failed(f"Insufficient funds for purchase {self.name} | {self.price}"))
             return
@@ -43,7 +49,7 @@ class Coach:
             messagebox.showerror(title="Ошибка 2", message=self.text)
             return
         self.price_sold = self.club.owner.deposit(round(self.price // 100000 // self.transfer_market) * 100000)
-        print(hg.successful(f"{self.name} was sold by {self.owner.name}"))
+        print(hg.successful(f"{self.name} was sold by {self.owner.name} | {self.price_sold}"))
         self.club.coach = None
         self.club = None
         self.owner = None
