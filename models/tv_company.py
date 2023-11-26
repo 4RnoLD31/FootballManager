@@ -3,6 +3,7 @@ import models.highlighting as hg
 import models.field as field
 import models.property as property
 
+
 class TVCompany:
     def __init__(self, name):
         self.name = name
@@ -21,11 +22,10 @@ class TVCompany:
         else:
             print(hg.failed(f"Insufficient funds for purchase {self.name} | {self.price}"))
 
-
     def sell(self, *args):
         self.price_sold = self.owner.deposit(self.price // 2)
         self.owner.payment_TVs_degree -= 1
-        self.owner.payment_TVs = const.gradual_income[self.owner.payment_const.TVs_degree - 1]
+        self.owner.payment_TVs = const.gradual_income[self.owner.payment_TVs_degree - 1]
         self.owner = None
         return self.price_sold
 

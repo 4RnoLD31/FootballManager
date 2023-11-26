@@ -28,8 +28,8 @@ class Club:
         self.potential_owner = potential_owner
         if self.potential_owner.balance >= self.potential_owner.summary_check(self.price):
             self.owner = self.potential_owner
-            self.owner.withdrawal(self.price)
-            self.price_bought = self.owner.deposit(self.income, "Income")
+            self.price_bought = self.owner.withdrawal(self.price)
+            self.owner.deposit(self.income, "Income")
             print(hg.successful(f'{self.name} was bought by "{self.owner.name}" | {self.price_bought}'))
         else:
             print(hg.failed(f"Insufficient funds for purchase {self.name} | {self.price}"))

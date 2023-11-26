@@ -8,11 +8,14 @@ def nothing():
     return f"\033[1m\033[37m[FAILED]\033[0m   \033[37mNothing\033[0m"
 
 
-def clear():
+def clear(list=None):
     for widget in main_window.winfo_children():
         try:
             if widget["text"] != "FOOTBALL MANAGER" or not isinstance(widget, tk.Menu):
-                widget.destroy()
+                if list is None:
+                    widget.destroy()
+                elif widget not in list:
+                    widget.destroy()
         except:
             pass
 
@@ -23,14 +26,14 @@ def text_on_center(text, font, window=main_window):
     label.place(x=800 - (label.winfo_reqwidth() / 2), y=400 - (label.winfo_reqheight() / 2))
     return label
 
+
 game_loaded = False
 PL1 = None
 PL2 = None
 next_player = None
+number = None
 working_directory = os.path.abspath(os.curdir).replace("utils", "")
 path_to_settings = f"{working_directory}\\settings.ini"
-property_window = {"Start": None, "TV": None, "Club": None, "Coach": None, "Footballer": None, "Manager": None}
-font_path = "C:/font.ttf"
 used_in_video = {}
 main_window = None
 queue = []

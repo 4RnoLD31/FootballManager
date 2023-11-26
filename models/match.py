@@ -107,10 +107,7 @@ class Match:
         self.summary = 0
         self.picked = random.randint(1, 6)
         self.summary += self.picked
-        for element in const.main_window.winfo_children():
-            if element not in self.statistic_list:
-                element.destroy()
-        panels.panels_initialize()
+        const.clear(self.statistic_list)
         self.l_thrown = tk.Label(const.main_window, text=f"{self.player.name} бросает первый куб.....", font="MiSans 40")
         self.l_thrown.place(x=800 - self.l_thrown.winfo_reqwidth() / 2, y=400)
         const.main_window.after(2000, self.__t_first__)
@@ -153,10 +150,11 @@ class Match:
             const.main_window.after(4000, self.__t_fifth__)
 
     def __t_fifth__(self):
+        const.clear([self.l_thrown])
         self.second_club.cooldown = 10
         if self.first_player_all > self.second_player_all:
             self.l_thrown.configure(text=f"Победил игрок {self.first_player.name} с разницей в {self.first_player_all - self.second_player_all}")
-            self.l_thrown.place(x=800 - self.l_thrown.winfo_reqwidth() / 2, y=400)
+            self.l_thrown.place(x=800 - self.l_thrown.winfo_reqwidth() / 2, y=400 - self.l_thrown.winfo_reqheight() / 2)
             self.lost_player = self.second_player
             self.lost_club = self.second_club
             self.won_player = self.first_player
@@ -165,7 +163,7 @@ class Match:
         elif self.second_player_all > self.first_player_all:
             if self.first_club.available:
                 self.l_thrown.configure(text=f"Победил игрок {self.second_player.name} с разницей в {self.second_player_all - self.first_player_all}")
-                self.l_thrown.place(x=800 - self.l_thrown.winfo_reqwidth() / 2, y=400)
+                self.l_thrown.place(x=800 - self.l_thrown.winfo_reqwidth() / 2, y=400 - self.l_thrown.winfo_reqheight() / 2)
             else:
                 const.text_on_center(f"Победил игрок {self.second_player.name}, так как клуб {self.first_club.name} недоступен", "MiSans 40")
             self.lost_player = self.first_player
@@ -175,13 +173,13 @@ class Match:
             const.main_window.after(4000, self.__lose__)
         else:
             self.l_thrown.configure(text=f"Ничья. Оба игрока набрали {self.first_player_all}")
-            self.l_thrown.place(x=800 - self.l_thrown.winfo_reqwidth() / 2, y=400)
+            self.l_thrown.place(x=800 - self.l_thrown.winfo_reqwidth() / 2, y=400 - self.l_thrown.winfo_reqheight() / 2)
             const.main_window.after(4000, field.Field.new_move)
 
     def __lose__(self):
         try:
             self.l_thrown.configure(text=f"Игрок {self.lost_player.name} должен выплатить {self.won_club.current_win()}")
-            self.l_thrown.place(x=800 - self.l_thrown.winfo_reqwidth() / 2, y=400)
+            self.l_thrown.place(x=800 - self.l_thrown.winfo_reqwidth() / 2, y=400 - self.l_thrown.winfo_reqheight() / 2)
         except:
             const.text_on_center(f"Игрок {self.lost_player.name} должен выплатить {self.won_club.current_win()}", "MiSans 40")
         const.main_window.after(3000, self.__l_first__)
@@ -192,14 +190,14 @@ class Match:
             self.won_player.deposit(self.first_club.current_win(), False)
             try:
                 self.l_thrown.configure(text=f"Игрок {self.lost_player.name} перевел {self.won_club.current_win()} {self.won_player.name}")
-                self.l_thrown.place(x=800 - self.l_thrown.winfo_reqwidth() / 2, y=400)
+                self.l_thrown.place(x=800 - self.l_thrown.winfo_reqwidth() / 2, y=400 - self.l_thrown.winfo_reqheight() / 2)
             except:
                 const.text_on_center(f"Игрок {self.lost_player.name} перевел {self.won_club.current_win()} {self.won_player.name}", "MiSans 40")
             const.main_window.after(4000, field.Field.new_move)
         else:
             try:
                 self.l_thrown.configure(text=f"Игроку {self.lost_player.name} не хватает денег. Необходимо еще {self.won_club.current_win() - self.lost_player.balance}")
-                self.l_thrown.place(x=800 - self.l_thrown.winfo_reqwidth() / 2, y=400)
+                self.l_thrown.place(x=800 - self.l_thrown.winfo_reqwidth() / 2, y=400 - self.l_thrown.winfo_reqheight() / 2)
             except:
                 const.text_on_center(f"Игроку {self.lost_player.name} не хватает денег. Необходимо еще {self.won_club.current_win() - self.lost_player.balance}", "MiSans 40")
-            const.main_window.after(4000, lambda: property.Sell(self.lost_player, self.__lose__, need_money=self.won_club.current_win() - self.lost_player.balance))
+            const.main_window.after(4000, lambda: property.Sell(self.lost_player, self.__lose__, need_money=self.won_club.current_win()))

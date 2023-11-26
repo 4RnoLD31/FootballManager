@@ -27,5 +27,6 @@ def load_game(auto=True):
     const.queue = data["Queue"]
     const.next_player = data["Next Player"]
     const.working_directory = data["Working Directory"]
+    const.number = data["Number"]
     const.game_loaded = data["Game Loaded"]
     field.Field.new_move()

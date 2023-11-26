@@ -4,6 +4,7 @@ import models.tv_company as tv
 import models.coach as coach
 import models.manager as manager
 import utils.constants as const
+import models.highlighting as hg
 import configparser
 import os
 
@@ -71,7 +72,6 @@ def initialize():
         key = int(key)
         value = float(value)
         const.economist_plus_level[key] = value
-    print(database_file["Managers"]["sheikh"].split(", "))
     for element in database_file["Managers"]["economist_minus"].split(", "):
         key, value = element.split(": ")
         key = int(key)
@@ -79,4 +79,4 @@ def initialize():
         const.economist_minus_level[key] = value
     for index in range(len(manager_name)):
         const.managers[manager_name[index]] = manager.Manager(manager_name[index], manager_type[index], manager_price)
-    print(const.former_footballer_level)
+    print(hg.successful("Initialized"))

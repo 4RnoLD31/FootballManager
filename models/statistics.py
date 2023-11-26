@@ -39,7 +39,7 @@ class Statistics:
 
     def __thread__(self):
         self.refresh_bool = True
-        self.refresh = threading.Thread(target=self.__update__)
+        self.refresh = threading.Thread(target=self.__update__, daemon=True)
         self.refresh.start()
 
     def __update__(self):
@@ -66,7 +66,8 @@ class ShowBalance:
         except:
             self.window.destroy()
             return
-        self.__thread__()
+        self.refresh = True
+        threading.Thread(target=self.__update__, daemon=True).start()
 
     def __reshow__(self):
         try:
@@ -78,16 +79,11 @@ class ShowBalance:
         except:
             pass
 
-    def __thread__(self):
-        self.refresh_bool = True
-        self.refresh = threading.Thread(target=self.__update__)
-        self.refresh.start()
-
     def __update__(self):
-        while self.refresh_bool:
+        while self.refresh:
             self.__reshow__()
-            self.window.after(2000, const.nothing)
+            time.sleep(1)
 
     def __destroy__(self):
         self.window.destroy()
-        self.refresh_bool = False
+        self.refresh = False

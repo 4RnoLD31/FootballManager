@@ -5,6 +5,8 @@
       <excludeFolder url="file://$MODULE_DIR$/build" />
       <excludeFolder url="file://$MODULE_DIR$/dist" />
       <excludeFolder url="file://$MODULE_DIR$/venv" />
+      <excludeFolder url="file://$MODULE_DIR$/old" />
+      <excludeFolder url="file://$MODULE_DIR$/saves" />
     </content>
     <orderEntry type="jdk" jdkName="Football Manager" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

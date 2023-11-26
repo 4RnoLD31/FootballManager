@@ -6,7 +6,7 @@ import random
 class Player:
     def __init__(self, name, balance, income=None):
         self.name = name
-        self.balance = balance
+        self.balance = int(balance)
         self.income = income
         if self.income is None:
             self.income = int(self.balance / 10)
@@ -23,6 +23,10 @@ class Player:
         self.numbers_thrown = 0
         self.money_earned = 0
         self.money_spent = 0
+
+    def circle(self):
+        summary = self.deposit(2000000) + self.deposit(self.income, economist=False)
+        print(hg.successful(f"{self.name} has completed a round. Credited {summary}"))
 
     def personal_flu(self):
         self.result = []
@@ -93,8 +97,10 @@ class Player:
                 print(hg.failed(f"{self.name} was unable to withdraw {self.summary} from {self.type}"))
                 return False
             self.balance -= self.summary
+            self.balance = int(self.balance)
         elif self.type == "Income":
             self.income -= self.summary
+            self.income = int(self.income)
         # print(hg.successful(f"{self.name} withdrew {self.summary} from {self.type}"))
         self.money_spent += self.summary
         return self.summary
@@ -107,8 +113,10 @@ class Player:
             self.summary += round(self.summary * const.economist_plus_level[self.economist_level()] // 10000 * 10000)
         if self.type == "Balance":
             self.balance += self.summary
+            self.balance = int(self.balance)
         elif self.type == "Income":
             self.income += self.summary
+            self.income = int(self.income)
         # print(hg.info(f"{self.name}'s balance has been deposited by {self.summary} to {self.type}"))
         self.money_earned += self.summary
         return self.summary

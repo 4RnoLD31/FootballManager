@@ -40,15 +40,17 @@ class OtherBuy:
         self.object = object
         self.back = back
         if self.player.summary_check(self.object.price) <= self.player.balance:
-            const.clear()
-            const.text_on_center(f"Вы уверены? Ваш баланс составляет {self.player.balance}, цена покупки {self.player.summary_check(self.object.price)}\nПосле приобретения баланс составит {self.player.balance - self.player.summary_check(self.object.price)}", "MiSans 30")
-            self.b_confirm = tk.Button(const.main_window, text="Подтвердить", font="MiSans 40", command=self.__confirm__)
-            self.b_confirm.place(x=200, y=600, width=360, height=100)
-            self.b_cancel = tk.Button(const.main_window, text="Отменить", font="MiSans 40", command=self.back)
-            self.b_cancel.place(x=1040, y=600, width=360, height=100)
+            self.__buy__()
         else:
-            error.error(4)
-            return
+            Sell(self.player, self.__buy__, need_money=self.player.summary_check(self.object.price))
+
+    def __buy__(self):
+        const.clear()
+        const.text_on_center(f"Вы уверены? Ваш баланс составляет {self.player.balance}, цена покупки {self.player.summary_check(self.object.price)}\nПосле приобретения баланс составит {self.player.balance - self.player.summary_check(self.object.price)}", "MiSans 30")
+        self.b_confirm = tk.Button(const.main_window, text="Подтвердить", font="MiSans 40", command=self.__confirm__)
+        self.b_confirm.place(x=200, y=600, width=360, height=100)
+        self.b_cancel = tk.Button(const.main_window, text="Отменить", font="MiSans 40", command=self.back)
+        self.b_cancel.place(x=1040, y=600, width=360, height=100)
 
     def __confirm__(self):
         self.object.buy(self.player)
@@ -60,6 +62,7 @@ class LEnough:
     def __init__(self, player, need_money):
         self.player = player
         self.need_money = need_money
+        self.running = True
         self.window = tk.Toplevel()
         self.window.geometry("360x60+780+940")
         self.window.title("НЕДОСТАТОЧНО")
@@ -67,15 +70,15 @@ class LEnough:
         self.l_enough = tk.Label(self.window, font="MiSans 40")
         self.window.protocol("WM_DELETE_WINDOW", const.nothing)
         self.switch_off()
-        threading.Thread(target=self.__upper__).start()
+        threading.Thread(target=self.__upper__, daemon=True).start()
 
     def __upper__(self):
-        while True:
+        while self.running:
             self.window.lift()
             if self.player.balance >= self.need_money:
                 self.window.protocol("WM_DELETE_WINDOW", self.window.destroy)
                 self.window.after(5000, self.window.destroy)
-                break
+                self.running = False
             else:
                 self.window.protocol("WM_DELETE_WINDOW", const.nothing)
             time.sleep(1)
@@ -711,7 +714,7 @@ class Sell:
         if self.need_money is not None:
             self.l_enough = LEnough(self.player, self.need_money)
             self.window.protocol("WM_DELETE_WINDOW", const.nothing)
-            threading.Thread(target=self.__update__).start()
+            threading.Thread(target=self.__update__, daemon=True).start()
         else:
             self.l_enough = None
         self.buttons = []
@@ -730,10 +733,10 @@ class Sell:
     def __update__(self):
         while True:
             if self.player.balance >= self.need_money:
-                self.window.protocol("WM_DELETE_WINDOW", self.next_step)
+                self.window.protocol("WM_DELETE_WINDOW", self.window.destroy)
                 self.window.after(5000, self.next_step)
                 break
-            self.window.after(1000, const.nothing)
+            time.sleep(1)
 
     def __close__(self):
         if self.need_money is not None:

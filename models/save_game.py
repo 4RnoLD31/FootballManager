@@ -50,6 +50,7 @@ def save_game(autosave=True):
         data["Queue"] = const.queue
         data["Next Player"] = const.next_player
         data["Working Directory"] = const.working_directory
+        data["Number"] = const.number
         data["Game Loaded"] = True
         settings_file = configparser.ConfigParser()
         settings_file.read(f"{const.working_directory}/settings.ini")

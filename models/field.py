@@ -62,6 +62,7 @@ class Field:
         elif player.position == 24:
             if player.balance >= player.summary_check(1000000):
                 const.text_on_center(f"Игрок {player.name} наступил на налоговую. Штраф 1000000", font="MiSans 40")
+                player.withdrawal(1000000)
                 const.main_window.after(4000, Field.new_move)
             else:
                 const.text_on_center(f"Игрок {player.name} наступил на налоговую. Штраф 1000000\nОн не может выплатить штраф. Ему нехватает {player.summary_check(1000000) - player.balance}", font="MiSans 40")
@@ -85,7 +86,10 @@ class Field:
             const.text_on_center(f"{player.name} наступил на свой объект {object.name}", "MiSans 40")
             const.main_window.after(4000, Field.new_move)
         elif object.owner is None:
-            const.text_on_center(f"{player.name} наступил на свободный объект {object.name}. Хочешь купить его?", "MiSans 30")
+            if player.balance >= player.summary_check(object.price):
+                const.text_on_center(f"{player.name} наступил на свободный объект {object.name}. Хочешь купить его?", "MiSans 30")
+            else:
+                const.text_on_center(f"{player.name} наступил на свободный объект {object.name}. Недостаточно средств для покупки. Нужно еще {player.summary_check(object.price) - player.balance}. Хочешь купить его?", "MiSans 30")
             b_info = tk.Button(const.main_window, text="Информация о объекте", font="MiSans 30", command=lambda: info.Info(object))
             b_info.place(x=50, y=700)
             b_buy = tk.Button(const.main_window, text="Купить", font="MiSans 30", command=lambda: property.OtherBuy(player, object, lambda: Field.stepped_on(player, object)))
@@ -146,6 +150,8 @@ class Field:
             const.queue[0]()
             return
         player = None
+        if const.number is None:
+            const.number = random.randint(2, 12)
         save_game.save_game()
         if const.next_player == const.PL1:
             player = const.next_player
@@ -191,17 +197,18 @@ class Field:
                 elif element.owner == player:
                     element.flu -= 1
         const.clear()
-        number = random.randint(2, 12)
         # number = 2
-        player.numbers_thrown += number
+        player.numbers_thrown += const.number
         player.throws += 1
-        if player.position + number > 31:
-            player.position = player.position + number - 31
+        if player.position + const.number > 31:
+            player.position = player.position + const.number - 31
+            player.circle()
         else:
-            player.position += number
+            player.position += const.number
         const.text_on_center("Бросаю куб...", font="MiSans 50")
         const.main_window.after(2000, const.nothing)
-        const.text_on_center(f"Игрок {player.name} выбил {number} и наступил на клетку {player.position}", "MiSans 35")
+        const.text_on_center(f"Игрок {player.name} выбил {const.number} и наступил на клетку {player.position}", "MiSans 35")
+        const.number = None
         const.main_window.after(4000, Field.field, player)
 
     @staticmethod
@@ -222,7 +229,7 @@ class Field:
             const.bonuses["Vaccine"] = 2
             const.bonuses["Revive"] = 1
             const.bonuses["Charity Match"] = 1
-        chosen = random.choices(list(const.fines.keys()), weights=list(const.fines.values()))[0]
+        chosen = random.choices(list(const.bonuses.keys()), weights=list(const.bonuses.values()))[0]
         const.bonuses[chosen] -= 1
         if chosen == "Money":
             Money(player, type="Bonus")
