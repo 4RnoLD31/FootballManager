@@ -166,6 +166,10 @@ class Field:
         elif player.disqualified:
             player.disqualified = False
             player = const.next_player
+            if const.next_player == const.PL1:
+                const.next_player = const.PL2
+            elif const.next_player == const.PL2:
+                const.next_player = const.PL1
         if Field.clubs_with_cooldown():
             for element in Field.clubs_with_cooldown():
                 if element.cooldown == 1 and element.owner == player:

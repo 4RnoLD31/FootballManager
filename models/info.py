@@ -1,85 +1,10 @@
+import webbrowser
 import tkinter as tk
 import utils.constants as const
 import models.coach as coach
 import models.footballer as footballer
 import models.club as club
 import models.manager as manager
-
-"""class PlusButton:
-    def __init__(self, strings, color_font, w_info, canvas, y=0, personal=None):
-        self.strings = strings
-        self.color_font = color_font
-        self.w_info = w_info
-        self.canvas = canvas
-        self.y = y
-        self.personal = personal
-        self.list = []
-        self.list_outline = []
-        self.button = tk.Button(self.w_info, text="+", font=("MiSans Heavy", 30), fg="green", bg=self.color_font, command=self.clicked)
-        self.is_closed = True
-        for element in self.strings:
-            if "Владелец" in element:
-                if self.y == 0:
-                    self.stock_y = self.y = 115
-                self.stock_y = self.y
-                self.title_outline = self.canvas.create_text(405, self.y + 5, text="Основные сведения", font=("MiSans Heavy", 40), anchor="center", fill="black")
-                self.title = self.canvas.create_text(400, self.y, text="Основные сведения", font=("MiSans Heavy", 40), anchor="center", fill=self.color_font)
-                self.type = "Основные сведения"
-                self.button.place(x=720, y=self.y - 11, width=35, height=35)
-            elif "Футболист" in element:
-                if self.y == 0:
-                    self.stock_y = self.y = 175
-                self.stock_y = self.y
-                self.title_outline = self.canvas.create_text(405, self.y + 5, text="Персонал", font=("MiSans Heavy", 40), anchor="center", fill="black")
-                self.title = self.canvas.create_text(400, self.y, text="Персонал", font=("MiSans Heavy", 40), anchor="center", fill=self.color_font)
-                self.type = "Персонал"
-                self.button.place(x=720, y=self.y - 11, width=35, height=35)
-
-    def clicked(self):
-        if self.is_closed is True:
-            self.y = self.stock_y
-            self.button.configure(text="-", fg="red")
-            self.is_closed = False
-            self.img_rectangle = tk.PhotoImage(file="assets/rectangle.png")
-            self.image_rectangle = self.canvas.create_image(10, self.y + 35, anchor="nw", image=self.img_rectangle)
-            self.y += 55
-            self.y = self.y + 120 - (30 * (len(self.strings) + 1)) // 2
-            for element in self.strings:
-                self.list_outline.append(self.canvas.create_text(402, self.y + 2, text=element, font=("MiSans Heavy", 20), anchor="center", fill="black"))
-                self.list.append(self.canvas.create_text(400, self.y, text=element, font=("MiSans Heavy", 20), anchor="center", fill=self.color_font))
-                self.y += 32
-            if self.type == "Основные сведения":
-                self.personal.change_position(420)
-        else:
-            self.button.configure(text="+", fg="green")
-            self.is_closed = True
-            self.canvas.delete(self.image_rectangle)
-            for element in range(len(self.list)):
-                self.canvas.delete(self.list[element])
-                self.canvas.delete(self.list_outline[element])
-            self.canvas.delete(self.title)
-            self.canvas.delete(self.title_outline)
-            self.button.destroy()
-            if self.type == "Основные сведения":
-                self.personal.change_position(175)
-            self.__init__(self.strings, self.color_font, self.w_info, self.canvas, y=self.stock_y, personal=self.personal)
-
-    def change_position(self, y):
-        self.y = y
-        self.stock_y = self.y
-        self.button.place(x=720, y=self.y - 11, width=35, height=35)
-        self.canvas.coords(self.title_outline, 405, self.y + 5)
-        self.canvas.coords(self.title, 400, self.y)
-        try:
-            self.canvas.coords(self.image_rectangle, 10, self.y + 35)
-        except:
-            pass
-        self.y += 55
-        self.y = self.y + 120 - (30 * (len(self.strings) + 1)) // 2
-        for element in range(len(self.list)):
-            self.canvas.coords(self.list_outline[element], 402, self.y + 2)
-            self.canvas.coords(self.list[element], 400, self.y)
-            self.y += 32"""
 
 
 class AllClubs:
@@ -91,34 +16,36 @@ class AllClubs:
             self.buttons.append(tk.Button(self.window, text=const.clubs[element].name))
             self.buttons[self.i].pack()
             self.i += 1
-        self.buttons[0].configure(command=lambda: InfoClub(const.clubs["Manchester City"]))
-        self.buttons[1].configure(command=lambda: InfoClub(const.clubs["Arsenal"]))
-        self.buttons[2].configure(command=lambda: InfoClub(const.clubs["Liverpool"]))
-        self.buttons[3].configure(command=lambda: InfoClub(const.clubs["Barcelona"]))
-        self.buttons[4].configure(command=lambda: InfoClub(const.clubs["Real Madrid"]))
-        self.buttons[5].configure(command=lambda: InfoClub(const.clubs["Atletico Madrid"]))
-        self.buttons[6].configure(command=lambda: InfoClub(const.clubs["Inter"]))
-        self.buttons[7].configure(command=lambda: InfoClub(const.clubs["Milan"]))
-        self.buttons[8].configure(command=lambda: InfoClub(const.clubs["Juventus"]))
-        self.buttons[9].configure(command=lambda: InfoClub(const.clubs["Bayern"]))
-        self.buttons[10].configure(command=lambda: InfoClub(const.clubs["Borussia"]))
-        self.buttons[11].configure(command=lambda: InfoClub(const.clubs["Leipzig"]))
-        self.buttons[12].configure(command=lambda: InfoClub(const.clubs["Spartak Moscow"]))
-        self.buttons[13].configure(command=lambda: InfoClub(const.clubs["CSKA"]))
-        self.buttons[14].configure(command=lambda: InfoClub(const.clubs["Krasnodar"]))
+        self.buttons[0].configure(command=lambda: Club(const.clubs["Manchester City"]))
+        self.buttons[1].configure(command=lambda: Club(const.clubs["Arsenal"]))
+        self.buttons[2].configure(command=lambda: Club(const.clubs["Liverpool"]))
+        self.buttons[3].configure(command=lambda: Club(const.clubs["Barcelona"]))
+        self.buttons[4].configure(command=lambda: Club(const.clubs["Real Madrid"]))
+        self.buttons[5].configure(command=lambda: Club(const.clubs["Atletico Madrid"]))
+        self.buttons[6].configure(command=lambda: Club(const.clubs["Inter"]))
+        self.buttons[7].configure(command=lambda: Club(const.clubs["Milan"]))
+        self.buttons[8].configure(command=lambda: Club(const.clubs["Juventus"]))
+        self.buttons[9].configure(command=lambda: Club(const.clubs["Bayern"]))
+        self.buttons[10].configure(command=lambda: Club(const.clubs["Borussia"]))
+        self.buttons[11].configure(command=lambda: Club(const.clubs["Leipzig"]))
+        self.buttons[12].configure(command=lambda: Club(const.clubs["Spartak Moscow"]))
+        self.buttons[13].configure(command=lambda: Club(const.clubs["CSKA"]))
+        self.buttons[14].configure(command=lambda: Club(const.clubs["Krasnodar"]))
         self.window.mainloop()
 
 
 class Info:
     def __init__(self, object):
         self.object = object
-        if isinstance(self.object, club.Club):
-            InfoClub(self.object)
-        elif isinstance(self.object, coach.Coach) or isinstance(self.object, footballer.Footballer) or isinstance(self.object, manager):
-            InfoPersonal(self.object)
+        if self.object == "Build":
+            Build()
+        elif isinstance(self.object, club.Club):
+            Club(self.object)
+        elif isinstance(self.object, coach.Coach) or isinstance(self.object, footballer.Footballer) or isinstance(self.object, manager.Manager):
+            Personal(self.object)
 
 
-class InfoClub:
+class Club:
     def __init__(self, club):
         self.club = club
         self.y = 20
@@ -169,7 +96,7 @@ class InfoClub:
             self.y += 40
 
 
-class InfoPersonal:
+class Personal:
     def __init__(self, object):
         self.object = object
         self.y = 20
@@ -205,7 +132,7 @@ class InfoPersonal:
         if self.object.flu is None:
             self.strings_stats.append("Не болеет")
         else:
-            self.strings_stats.append(f"Более еще {self.object.flu} ходов")
+            self.strings_stats.append(f"Болеет еще {self.object.flu} ходов")
         if isinstance(self.object, coach.Coach) and self.object.strike is False:
             self.strings_stats.append("Нет забастовки")
         elif isinstance(self.object, coach.Coach):
@@ -216,3 +143,21 @@ class InfoPersonal:
             self.stats.append(tk.Label(self.w_info, text=self.strings_stats[element], font="MiSans 20"))
             self.stats[element].place(x=20, y=self.y)
             self.y += 40
+
+
+class Build:
+    def __init__(self):
+        self.window = tk.Toplevel()
+        self.window.geometry("300x170+0+0")
+        self.window.resizable(False, False)
+        self.window.title = "FOOTBALL MANAGER | Информация о версии"
+        self.title = tk.Label(self.window, text=f"FOOTBALL MANAGER", font=("Agency FB", "30"))
+        self.title.place(x=150 - self.title.winfo_reqwidth() / 2, y=0)
+        self.version = tk.Label(self.window, text=f"Version: {const.version}", font=("Agency FB", "30"))
+        self.version.place(x=2, y=45)
+        self.date_of_build = tk.Label(self.window, text=f"Date of build: {const.date_of_build}", font=("Agency FB", "20"))
+        self.date_of_build.place(x=2, y=90)
+        self.github = tk.Label(self.window, text="Github: ", font=("Agency FB", "30"))
+        self.github.place(x=2, y=120)
+        self.github_link = tk.Button(self.window, text="CLICK", command=lambda: webbrowser.open_new("https://github.com/4RnoLD31/FootballManager"), font=("Agency FB", "30"))
+        self.github_link.place(x=(300 - self.github.winfo_reqwidth()) / 2 - self.github_link.winfo_reqwidth() / 2 + self.github.winfo_reqwidth(), y=125, height=40, width=72)

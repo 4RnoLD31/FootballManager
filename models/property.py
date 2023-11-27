@@ -163,9 +163,13 @@ class Transfer:
     def __show__(self, event):
         if event == "found":
             self.picked_item = self.cb_found.get()
+            if self.picked_item == "":
+                return
             self.__cb_found__()
         elif event == "clubs":
             self.picked_club = self.cb_clubs.get()
+            if self.picked_club == "":
+                return
             self.__cb_clubs__()
 
     def __cb_found__(self):
@@ -261,7 +265,7 @@ class Transfer:
         self.l_logo.configure(text="Выберите клуб", font="MiSans 30")
         self.l_logo.place(x=250 - self.l_logo.winfo_reqwidth() / 2, y=0)
         self.cb_clubs = ttk.Combobox(self.window, values=self.name_clubs, font="MiSans 20", state="readonly")
-        self.cb_clubs.bind("<<ComboboxSelected>>", lambda event, type="const.clubs": self.__show__(type))
+        self.cb_clubs.bind("<<ComboboxSelected>>", lambda event, type="clubs": self.__show__(type))
         self.cb_clubs.place(x=50, y=640, height=50, width=400)
         self.b_confirm = tk.Button(self.window, text="Подтвердить", font="MiSans 30", command=self.__are_you_sure__)
         self.b_confirm.place(x=250 - (self.b_confirm.winfo_reqwidth() / 2), y=700)
@@ -270,11 +274,6 @@ class Transfer:
 
     def __are_you_sure__(self):
         self.window.protocol("WM_DELETE_WINDOW", const.nothing)
-        try:
-            if self.picked_club == "":
-                return
-        except:
-            return
         for element in self.window.winfo_children():
             if element != self.l_logo:
                 element.destroy()

@@ -71,7 +71,7 @@ class Club:
             messagebox.showerror(title="Ошибка 1", message=self.text)
             return
         self.price_sold = self.owner.deposit(round(self.price // 100000 // self.transfer_market) * 100000)
-        self.owner.withdrawal(self.income, "Income")
+        self.owner.withdrawal(self.income, type="Income")
         print(hg.successful(f"{self.name} was sold by {self.owner.name} | {self.price_sold}"))
         self.owner = None
         return self.price_sold

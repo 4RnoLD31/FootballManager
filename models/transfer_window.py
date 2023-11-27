@@ -33,14 +33,17 @@ class TransferWindow:
         self.b_buy.place(x=100, y=290, width=1400, height=100)
         self.b_transfer = tk.Button(const.main_window, text="Переместить", font="MiSans 40", command=lambda: property.Transfer(self.player, self.__back__))
         self.b_transfer.place(x=100, y=410, width=1400, height=100)
-        self.b_next_step = tk.Button(const.main_window, text="Закончить трансферное окно", font="MiSans 40", command=self.__stop__)
-        self.b_next_step.place(x=100, y=410, width=1400, height=100)
         if self.first_time and not self.bonus:
             if self.player == self.first_player:
                 self.b_player = tk.Button(const.main_window, text="Следующий игрок", font="MiSans 40", command=self.__next_player__)
             else:
                 self.b_player = tk.Button(const.main_window, text="Предыдущий игрок", font="MiSans 40", command=self.__next_player__)
             self.b_player.place(x=100, y=530, width=1400, height=100)
+            self.b_next_step = tk.Button(const.main_window, text="Закончить трансферное окно", font="MiSans 40", command=self.__stop__)
+            self.b_next_step.place(x=100, y=650, width=1400, height=100)
+        elif not self.bonus:
+            self.b_next_step = tk.Button(const.main_window, text="Закончить трансферное окно", font="MiSans 40", command=self.__stop__)
+            self.b_next_step.place(x=100, y=530, width=1400, height=100)
 
     def __stop__(self):
         if self.queue:

@@ -1,3 +1,5 @@
+import random
+import datetime
 import tkinter as tk
 import utils.constants as const
 import models.field as field
@@ -58,8 +60,8 @@ def process(*args):
         print(hg.info(f"Player 2: Name {const.PL2.name} | Balance {const.PL2.balance} | Income {const.PL2.income}"))
         l_first = tk.Label(const.main_window, text="Первым бросает игрок: ....", font="MiSans 50")
         l_first.place(x=800 - (l_first.winfo_reqwidth() / 2), y=400 - (l_first.winfo_reqheight() / 2))
-        choice = 0
-        if choice == 0:
+        choice = random.randint(1, 2)
+        if choice == 1:
             first = const.PL2
             l_first.config(text=f"Первым бросает игрок: {const.PL1.name}")
             const.next_player = const.PL1

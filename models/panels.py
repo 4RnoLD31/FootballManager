@@ -2,6 +2,7 @@ import os
 import sys
 import functools
 import tkinter as tk
+import models.info as info
 import models.property as property
 import utils.constants as const
 import models.load_game as load_game
@@ -143,6 +144,7 @@ def panels_initialize():
     objects_menu.add_command(label="Футболисты", command=lambda: debug.AllObjects("Footballers"))
     objects_menu.add_command(label="Тренеры", command=lambda: debug.AllObjects("Coaches"))
     objects_menu.add_command(label="Менеджеры", command=lambda: debug.AllObjects("Managers"))
+    file_menu.add_command(label="Информация о версии", command=lambda: info.Info("Build"))
     file_menu.add_cascade(label="Загрузить игру", menu=load_menu)
     file_menu.add_command(label="Выход", command=sys.exit)
     load_menu.add_command(label="Последнее сохранение", command=pre_load_game)

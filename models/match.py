@@ -186,8 +186,8 @@ class Match:
 
     def __l_first__(self):
         if self.won_club.current_win() <= self.lost_player.balance:
-            self.lost_player.withdrawal(self.first_club.current_win(), False)
-            self.won_player.deposit(self.first_club.current_win(), False)
+            self.lost_player.withdrawal(self.first_club.current_win(), economist=False)
+            self.won_player.deposit(self.first_club.current_win(), economist=False)
             try:
                 self.l_thrown.configure(text=f"Игрок {self.lost_player.name} перевел {self.won_club.current_win()} {self.won_player.name}")
                 self.l_thrown.place(x=800 - self.l_thrown.winfo_reqwidth() / 2, y=400 - self.l_thrown.winfo_reqheight() / 2)

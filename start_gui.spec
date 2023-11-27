@@ -1,30 +1,5 @@
 # -*- mode: python ; coding: utf-8 -*-
 
-added_files = [
-("configs/database.cfg", "configs/"),
-("models/charity_match.py", "models/"),
-("models/club.py", "models/"),
-("models/coach.py", "models/"),
-("models/debug.py", "models/"),
-("models/error.py", "models/"),
-("models/field.py", "models/"),
-("models/footballer.py", "models/"),
-("models/highlighting.py", "models/"),
-("models/info.py", "models/"),
-("models/load_game.py", "models/"),
-("models/manager.py", "models/"),
-("models/panels.py", "models/"),
-("models/player.py", "models/"),
-("models/property.py", "models/"),
-("models/revive.py", "models/"),
-("models/save_game.py", "models/"),
-("models/statistics.py", "models/"),
-("models/transfer_window.py", "models/"),
-("models/tv_company.py", "models/"),
-("models/vaccine.py", "models/"),
-("utils/constants.py", "utils/"),
-("utils/initialize.py", "utils/")]
-
 a = Analysis(
     ['start_gui.py'],
     pathex=["C:/Users/ARnoLD/Desktop/[0 GUI] Football Manager"],
