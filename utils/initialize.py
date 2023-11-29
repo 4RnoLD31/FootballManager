@@ -11,15 +11,20 @@ import os
 
 
 def initialize():
-    if not os.path.exists(const.path_to_settings):
-        settings_file = configparser.ConfigParser()
-        with open(const.path_to_settings, "w") as settings:
-            d_path = {"latest_autosave": ""}
-            settings_file["Settings"] = d_path
-            settings_file.write(settings)
-
+    const.PL1 = None
+    const.PL2 = None
+    const.next_player = None
+    const.number = None
+    const.queue = []
+    const.game_loaded = False
     if not os.path.exists(f"{const.working_directory}\\tmp"):
         os.mkdir(f"{const.working_directory}\\tmp")
+    if not os.path.exists(f"{const.working_directory}\\saves"):
+        os.mkdir(f"{const.working_directory}\\saves")
+    if not os.path.exists(f"{const.working_directory}\\saves\\manual"):
+        os.mkdir(f"{const.working_directory}\\saves\\manual")
+    if not os.path.exists(f"{const.working_directory}\\saves\\autosave"):
+        os.mkdir(f"{const.working_directory}\\saves\\autosave")
     try:
         database_file = configparser.ConfigParser()
         database_file.read(f"{const.working_directory}//configs//database.cfg")
@@ -40,7 +45,6 @@ def initialize():
         tv_name = database_file["TVs"]["name"].split(", ")
         for index in range(len(tv_name)):
             const.TVs[tv_name[index]] = tv.TVCompany(tv_name[index])
-        # Создайте словарь, разбивая каждую пару на ключ и значение
         for index in range(len(club_name)):
             const.clubs[club_name[index]] = club.Club(club_name[index], int(club_price[index]), club_league[index], club_color[index], club_codename[index])
         for element in database_file["Footballers"]["price_power"].split(", "):

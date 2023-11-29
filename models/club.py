@@ -10,10 +10,10 @@ class Club:
         self.league = league
         self.color_font = color_font
         self.codename = codename
-        self.income = round(self.price // 100000 // 10) * 100000
-        self.win_footballer = round(self.price // 100000 // 3) * 100000
-        self.win_coach = round(self.price // 100000 // 1.5) * 100000
-        self.win_manager = round(self.price // 100000 * 2) * 100000
+        self.income = self.price / 10
+        self.win_footballer = round(self.price / 100000 / 3) * 100000
+        self.win_coach = round(self.price / 100000 / 1.5) * 100000
+        self.win_manager = self.price * 2
         self.cooldown = None
         self.footballer = None
         self.coach = None

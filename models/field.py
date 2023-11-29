@@ -152,7 +152,10 @@ class Field:
         player = None
         if const.number is None:
             const.number = random.randint(2, 12)
-        save_game.save_game()
+        if const.after_saving:
+            const.after_saving = False
+        else:
+            save_game.save_game()
         if const.next_player == const.PL1:
             player = const.next_player
             const.next_player = const.PL2
@@ -275,6 +278,7 @@ class CharityMatch:
         self.player = player
         self.player.bonuses["Charity Match"] += 1
         const.text_on_center(f"{self.player.name} получил бонус благотворительного матча", "MiSans 40")
+        print(hg.info(f'{self.player.name} received the "Charity Match" bonus'))
         panels.panels_initialize()
         const.main_window.after(4000, Field.new_move)
 
@@ -284,6 +288,7 @@ class Revive:
         self.player = player
         self.player.bonuses["Revive"] += 1
         const.text_on_center(f"{self.player.name} получил бонус воскрешения", "MiSans 40")
+        print(hg.info(f'{self.player.name} received the "Revive" bonus'))
         panels.panels_initialize()
         const.main_window.after(4000, Field.new_move)
 
@@ -293,6 +298,7 @@ class Vaccine:
         self.player = player
         self.player.bonuses["Vaccine"] += 1
         const.text_on_center(f"{self.player.name} получил бонус вакцины", "MiSans 40")
+        print(hg.info(f'{self.player.name} received the "Vaccine" bonus'))
         panels.panels_initialize()
         const.main_window.after(4000, Field.new_move)
 
@@ -302,6 +308,7 @@ class TransferWindow:
         self.player = player
         self.player.bonuses["Transfer Window"] += 1
         const.text_on_center(f"{self.player.name} получил бонус трансферного окна", "MiSans 40")
+        print(hg.info(f'{self.player.name} received the "Transfer Window" bonus'))
         panels.panels_initialize()
         const.main_window.after(4000, Field.new_move)
 
@@ -310,30 +317,20 @@ class Dead:
     def __init__(self, player):
         self.player = player
         const.text_on_center(f'{self.player.name} выбил штраф "Смерть"', "MiSans 40")
+        print(hg.info(f'{self.player.name} received the "Dead" fine'))
         const.main_window.after(5000, self.__first__)
 
     def __first__(self):
         const.clear()
-        self.all_managers = self.player.search_bought_managers()
-        self.managers = []
-        for element in self.all_managers:
-            if element.flu is None:
-                self.managers.append(element)
+        self.managers = self.player.search_bought_managers()
         if not self.managers:
-            self.all_coaches = self.player.search_bought_coaches()
-            self.coaches = []
-            for element in self.all_coaches:
-                if element.flu is None:
-                    self.coaches.append(element)
+            self.coaches = self.player.search_bought_coaches()
             if not self.coaches:
-                self.all_footballers = self.player.search_bought_footballers()
-                self.footballers = []
-                for element in self.all_footballers:
-                    if element.flu is None:
-                        self.footballers.append(element)
+                self.footballers = self.player.search_bought_footballers()
                 if not self.footballers:
                     const.text_on_center("Нет персонала. Пропуск штрафа", "MiSans 50")
                     const.main_window.after(4000, Field.new_move)
+                    return
                 else:
                     const.text_on_center(f"У игрока {self.player.name} куплен только футболист", "MiSans 40")
                     self.items = self.footballers
@@ -376,16 +373,17 @@ class Money:
             const.money_bonuses[1000000] = 3
             const.money_bonuses[500000] = 4
         self.money = random.choices(list(self.money_list.keys()), weights=list(self.money_list.values()))[0]
-        """self.money = 500000"""
         self.clear_money = self.money
         if self.type == "Fine":
             const.money_fines[self.money] -= 1
             self.money = self.player.summary_check(self.money, type="Minus")
             self.text = f"{self.player.name} попал на денежный штраф в размере {self.clear_money}. К оплате {self.money}"
+            print(hg.info(f'{self.player.name} received the "Money {self.money}" fine'))
         else:
             const.money_bonuses[self.money] -= 1
             self.money = self.player.summary_check(self.money, type="Plus")
             self.text = f"{self.player.name} попал на денежный бонус в размере {self.clear_money}. К пополнению {self.money}"
+            print(hg.info(f'{self.player.name} received the "Money {self.money}" bonus'))
         const.text_on_center(self.text, "MiSans 30")
         const.main_window.after(4000, self.__apply__)
 
@@ -394,16 +392,13 @@ class Money:
             self.player.deposit(self.money, economist=False)
             const.text_on_center(f"Пополнение баланса. Баланс составляет {self.player.balance}", font="MiSans 40")
             const.main_window.after(4000, Field.new_move, self.player)
-            print(hg.info(f"Cash bonus processed +{self.money}"))
         else:
             if self.player.balance >= self.money:
                 self.player.withdrawal(self.money, economist=False)
                 const.text_on_center(f"{self.player.name} оплатил штраф. Его баланс составляет {self.player.balance}", "MiSans 40")
-                print(hg.successful(f"Cash fine processed -{self.money}"))
                 const.main_window.after(4000, Field.new_move, self.player)
             else:
                 const.text_on_center(f"{self.player.name} не смог оплатить штраф. Ему не хватает {self.money - self.player.balance}", "MiSans 40")
-                print(hg.failed(f"Cash fine has not been processed -{self.money}"))
                 const.main_window.after(2000, lambda: property.Sell(self.player, self.__apply__, need_money=self.money))
 
 
@@ -411,6 +406,7 @@ class Strike:
     def __init__(self, player):
         self.player = player
         const.text_on_center(f"{self.player.name} получил штраф забастовка", "MiSans 50")
+        print(hg.info(f'{self.player.name} received the "Strike" fine'))
         const.main_window.after(4000, self.__first__)
 
     def __first__(self):
@@ -452,6 +448,7 @@ class Coronavirus:
     def __init__(self, player):
         self.player = player
         const.text_on_center(f"{self.player.name} получил штраф коронавирус", "MiSans 50")
+        print(hg.info(f'{self.player.name} received the "Coronavirus" fine'))
         const.main_window.after(4000, self.__first__)
 
     def __first__(self):

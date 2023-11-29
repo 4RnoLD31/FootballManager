@@ -19,7 +19,7 @@ class Match:
         if self.first_club.available() and self.second_club is None:
             const.text_on_center(f"{self.first_club.name} доступен для игры", "MiSans 50")
         elif not self.first_club.available() and self.second_club is None:
-            const.text_on_center(f"{self.first_club.name} не доступен для игры", "MiSans 50")
+            const.text_on_center(f"{self.first_club.name} недоступен для игры", "MiSans 50")
         if self.second_club is not None and self.second_club is not False:
             self.__match__()
             return

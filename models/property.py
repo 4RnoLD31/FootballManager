@@ -103,16 +103,55 @@ class Transfer:
         const.clear()
         self.l_logo = tk.Label(const.main_window, text=f"Трансфер для игрока {self.player.name}", font="MiSans 40")
         self.l_logo.place(x=800 - self.l_logo.winfo_reqwidth() / 2, y=0)
-        self.b_manager = tk.Button(const.main_window, text="Менеджеры", font="MiSans 35", command=lambda: self.__window__("Manager"))
-        self.b_coach = tk.Button(const.main_window, text="Тренеры", font="MiSans 35", command=lambda: self.__window__("Coach"))
-        self.b_footballer = tk.Button(const.main_window, text="Футболисты", font="MiSans 35", command=lambda: self.__window__("Footballer"))
+        self.b_manager = tk.Button(const.main_window, text="Менеджеры", font="MiSans 35", command=self.__manager__)
+        self.b_coach = tk.Button(const.main_window, text="Тренеры", font="MiSans 35", command=self.__coach__)
+        self.b_footballer = tk.Button(const.main_window, text="Футболисты", font="MiSans 35", command=self.__footballer__)
         self.b_manager.place(x=100, y=170, width=452, height=100)
         self.b_coach.place(x=572, y=170, width=452, height=100)
         self.b_footballer.place(x=1044, y=170, width=452, height=100)
-        self.b_back = tk.Button(const.main_window, text="Назад", font="MiSans 20", command=self.back)
+        self.b_back = tk.Button(const.main_window, text="Назад", font="MiSans 20", command=self.__back__)
         self.b_back.place(x=20, y=730, height=50)
 
-    def __window__(self, type):
+    def __back__(self):
+        self.__destroy_sub__()
+        self.back()
+
+    def __manager__(self):
+        try:
+            self.manager.lift()
+        except:
+            self.manager = TransferItem(self.player, "Manager")
+
+    def __coach__(self):
+        try:
+            self.coach.lift()
+        except:
+            self.coach = TransferItem(self.player, "Coach")
+
+    def __footballer__(self):
+        try:
+            self.footballer.lift()
+        except:
+            self.footballer = TransferItem(self.player, "Footballer")
+
+    def __destroy_sub__(self):
+        try:
+            self.manager.destroy()
+        except:
+            pass
+        try:
+            self.coach.destroy()
+        except:
+            pass
+        try:
+            self.footballer.destroy()
+        except:
+            pass
+
+
+class TransferItem:
+    def __init__(self, player, type):
+        self.player = player
         self.type = type
         self.window = tk.Toplevel()
         self.window.resizable(False, False)
@@ -311,6 +350,12 @@ class Transfer:
         self.l_logo.place(x=250 - self.l_logo.winfo_reqwidth() / 2, y=400 - self.l_logo.winfo_reqheight() // 2)
         self.window.after(2000, self.window.destroy)
 
+    def lift(self):
+        self.window.lift()
+
+    def destroy(self):
+        self.window.destroy()
+
 
 class BuyItems:
     def __init__(self, type, player):
@@ -379,7 +424,6 @@ class BuyItems:
             self.b_former_footballer.place(x=20, y=250, width=460, height=80)
             self.b_economist = tk.Button(self.window, text="Экономисты", font="MiSans 40", command=lambda: self.menu("Economist"))
             self.b_economist.place(x=20, y=350, width=460, height=80)
-        self.window.mainloop()
 
     def menu(self, type, power=None):
         if type == "Footballer":
@@ -444,7 +488,7 @@ class BuyItems:
                 self.picked = None
 
     def buy(self):
-        if self.picked is None:
+        if self.picked is None or self.picked == "":
             return
         for widget in self.window.winfo_children():
             if widget != self.l_logo:
@@ -491,6 +535,12 @@ class BuyItems:
         self.available_clubs = []
         self.window.after(3000, self.window.destroy)
 
+    def lift(self):
+        self.window.lift()
+
+    def destroy(self):
+        self.window.destroy()
+
 
 class Buy:
     def __init__(self, player, next_step):
@@ -502,7 +552,7 @@ class Buy:
         self.window.title(
             "FOOTBALL MANAGER | Трансферное окно игрока " + self.player.name)
         self.l_logo = tk.Label(self.window, text="Трансферное окно игрока " + self.player.name, font="MiSans 35")
-        self.b_back = tk.Button(self.window, text="Назад", font="MiSans 20", command=next_step)
+        self.b_back = tk.Button(self.window, text="Назад", font="MiSans 20", command=self.__back__)
         self.b_back.place(x=20, y=730, height=50)
         self.l_logo.pack(side="top")
         self.buttons = []
@@ -512,13 +562,50 @@ class Buy:
             self.buttons.append(tk.Button(self.window, text=element, font="MiSans 35"))
             self.buttons[self.index].place(x=self.names[element], y=self.y, width=452, height=100)
             self.index += 1
-        self.buttons[0].configure(command=lambda: BuyItems("Manager", self.player))
-        self.buttons[1].configure(command=lambda: BuyItems("Coach", self.player))
-        self.buttons[2].configure(command=lambda: BuyItems("Footballer", self.player))
+        self.buttons[0].configure(command=self.__manager__)
+        self.buttons[1].configure(command=self.__coach__)
+        self.buttons[2].configure(command=self.__footballer__)
+
+    def __back__(self):
+        self.__destroy_sub__()
+        self.next_step()
+
+    def __manager__(self):
+        try:
+            self.manager.lift()
+        except:
+            self.manager = BuyItems("Manager", self.player)
+
+    def __coach__(self):
+        try:
+            self.coach.lift()
+        except:
+            self.coach = BuyItems("Coach", self.player)
+
+    def __footballer__(self):
+        try:
+            self.footballer.lift()
+        except:
+            self.footballer = BuyItems("Footballer", self.player)
 
     def __close__(self):
         self.window.destroy()
+        self.__destroy_sub__()
         const.main_window.after(1000, self.next_step)
+
+    def __destroy_sub__(self):
+        try:
+            self.manager.destroy()
+        except:
+            pass
+        try:
+            self.coach.destroy()
+        except:
+            pass
+        try:
+            self.footballer.destroy()
+        except:
+            pass
 
 
 class SellItems:
@@ -568,6 +655,7 @@ class SellItems:
             self.l_nothing = tk.Label(self.window, text="Пусто", font="MiSans 50")
             self.l_nothing.place(x=150 - (self.l_nothing.winfo_reqwidth() / 2),
                                  y=400 - (self.l_nothing.winfo_reqheight() / 2))
+            self.window.after(4000, self.window.destroy)
             return
         self.b_sell = tk.Button(self.window, text="Продать", font="MiSans 40", command=self.sell)
         self.b_sell.place(x=150 - (self.b_sell.winfo_reqwidth() / 2), y=800, height=80)
@@ -585,7 +673,6 @@ class SellItems:
             self.check_buttons[element].config(command=self.clicked)
             self.check_buttons[element].place(x=10, y=self.y, height=50)
             self.y += 35
-        self.window.mainloop()
 
     def sell(self):
         self.available = self.will_sell
@@ -671,6 +758,12 @@ class SellItems:
                 pass
         self.window.destroy()
 
+    def lift(self):
+        self.window.lift()
+
+    def destroy(self):
+        self.window.destroy()
+
 
 class Sell:
     def __init__(self, player, next_step, full_screen=True, transfer_market=None, need_money=None):
@@ -701,7 +794,7 @@ class Sell:
             self.l_logo = tk.Label(self.window,
                                    text="Продажа имущества игрока " + self.player.name + " во время трансферного окна",
                                    font="MiSans 35")
-            self.b_back = tk.Button(self.window, text="Назад", font="MiSans 20", command=next_step)
+            self.b_back = tk.Button(self.window, text="Назад", font="MiSans 20", command=self.__back__)
             self.b_back.place(x=20, y=730, height=50)
         else:
             self.window.title(
@@ -723,11 +816,45 @@ class Sell:
             self.buttons.append(tk.Button(self.window, text=element, font="MiSans 35"))
             self.buttons[self.index].place(x=self.names[element], y=self.y)
             self.index += 1
-        self.buttons[0].configure(command=lambda: SellItems("Club", self.player, self.transfer_market, self.need_money, self.l_enough))
-        self.buttons[1].configure(command=lambda: SellItems("TV", self.player, self.transfer_market, self.need_money, self.l_enough))
-        self.buttons[2].configure(command=lambda: SellItems("Manager", self.player, self.transfer_market, self.need_money, self.l_enough))
-        self.buttons[3].configure(command=lambda: SellItems("Coach", self.player, self.transfer_market, self.need_money, self.l_enough))
-        self.buttons[4].configure(command=lambda: SellItems("Footballer", self.player, self.transfer_market, self.need_money, self.l_enough))
+        self.buttons[0].configure(command=self.__club__)
+        self.buttons[1].configure(command=self.__tv__)
+        self.buttons[2].configure(command=self.__manager__)
+        self.buttons[3].configure(command=self.__coach__)
+        self.buttons[4].configure(command=self.__footballer__)
+
+    def __back__(self):
+        self.__destroy_sub__()
+        self.next_step()
+
+    def __club__(self):
+        try:
+            self.club.lift()
+        except:
+            self.club = SellItems("Club", self.player, self.transfer_market, self.need_money, self.l_enough)
+
+    def __tv__(self):
+        try:
+            self.tv.lift()
+        except:
+            self.tv = SellItems("TV", self.player, self.transfer_market, self.need_money, self.l_enough)
+
+    def __manager__(self):
+        try:
+            self.manager.lift()
+        except:
+            self.manager = SellItems("Manager", self.player, self.transfer_market, self.need_money, self.l_enough)
+
+    def __coach__(self):
+        try:
+            self.coach.lift()
+        except:
+            self.coach = SellItems("Coach", self.player, self.transfer_market, self.need_money, self.l_enough)
+
+    def __footballer__(self):
+        try:
+            self.footballer.lift()
+        except:
+            self.footballer = SellItems("Footballer", self.player, self.transfer_market, self.need_money, self.l_enough)
 
     def __update__(self):
         while True:
@@ -749,4 +876,27 @@ class Sell:
             self.l_enough.frame.destroy()
         except:
             pass
+        self.__destroy_sub__()
         const.main_window.after(1000, self.next_step)
+
+    def __destroy_sub__(self):
+        try:
+            self.club.destroy()
+        except:
+            pass
+        try:
+            self.tv.destroy()
+        except:
+            pass
+        try:
+            self.manager.destroy()
+        except:
+            pass
+        try:
+            self.coach.destroy()
+        except:
+            pass
+        try:
+            self.footballer.destroy()
+        except:
+            pass

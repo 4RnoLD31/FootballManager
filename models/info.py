@@ -31,7 +31,6 @@ class AllClubs:
         self.buttons[12].configure(command=lambda: Club(const.clubs["Spartak Moscow"]))
         self.buttons[13].configure(command=lambda: Club(const.clubs["CSKA"]))
         self.buttons[14].configure(command=lambda: Club(const.clubs["Krasnodar"]))
-        self.window.mainloop()
 
 
 class Info:

@@ -12,6 +12,7 @@ import models.transfer_window as ts
 import models.vaccine as vaccine
 import models.revive as revive
 import models.charity_match as cm
+import models.save_game as save_game
 from PIL import Image, ImageTk
 from tkinter import messagebox, filedialog
 
@@ -63,7 +64,6 @@ class ChangeAvatar:
         except:
             pass
         self.canvas.bind("<Configure>", lambda event: self.canvas.configure(scrollregion=self.canvas.bbox("all")))
-        self.window.mainloop()
 
     def __clicked__(self, path):
         self.path = path
@@ -110,11 +110,6 @@ class ChangeName:
         self.window.after(3000, self.window.destroy)
 
 
-def pre_load_game():
-    load_game.load_game()
-    panels_initialize()
-
-
 def panels_initialize():
     menu = tk.Menu(const.main_window, tearoff=0)
     file_menu = tk.Menu(const.main_window, tearoff=0)
@@ -145,9 +140,11 @@ def panels_initialize():
     objects_menu.add_command(label="Тренеры", command=lambda: debug.AllObjects("Coaches"))
     objects_menu.add_command(label="Менеджеры", command=lambda: debug.AllObjects("Managers"))
     file_menu.add_command(label="Информация о версии", command=lambda: info.Info("Build"))
+    file_menu.add_command(label="Сохранить игру в файл", command=pre_save_game)
     file_menu.add_cascade(label="Загрузить игру", menu=load_menu)
     file_menu.add_command(label="Выход", command=sys.exit)
-    load_menu.add_command(label="Последнее сохранение", command=pre_load_game)
+    load_menu.add_command(label="Последнее сохранение", command=lambda: pre_load_game(True))
+    load_menu.add_command(label="Выбрать файл сохранения", command=lambda: pre_load_game(False))
     if const.PL1 is not None:
         debug_menu.add_command(label="Изменить баланс", command=debug.ChangeBalance)
         statistic_menu.add_command(label="Баланс", command=statistics.ShowBalance)
@@ -222,3 +219,15 @@ def f_revive(player):
 def f_charity_match(player):
     const.queue.append(functools.partial(cm.CharityMatch, player))
     tk.messagebox.showinfo(title="Очередь", message="Задание благотворительный матч добавлено в очередь")
+
+
+def pre_save_game():
+    if const.PL1 is None:
+        return
+    const.queue.insert(0, functools.partial(save_game.save_game, False))
+    tk.messagebox.showinfo(title="Очередь", message="Задание сохранение игры добавлено в очередь")
+
+
+def pre_load_game(bool):
+    load_game.LoadGame(bool)
+    panels_initialize()

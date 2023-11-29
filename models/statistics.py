@@ -21,7 +21,6 @@ class Statistics:
         self.l_logo = tk.Label(self.window, text="Статистика", font="MiSans 40")
         self.l_logo.place(x=450 - (self.l_logo.winfo_reqwidth() / 2), y=1)
         self.__reshow__()
-        self.window.mainloop()
 
     def __reshow__(self):
         self.element_values_pl1 = [const.PL1.throws, const.PL1.numbers_thrown]

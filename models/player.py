@@ -9,7 +9,7 @@ class Player:
         self.balance = int(balance)
         self.income = income
         if self.income is None:
-            self.income = int(self.balance / 10)
+            self.income = 2000000
         else:
             self.income = int(income)
         self.payment_TVs_degree = 0
@@ -25,8 +25,7 @@ class Player:
         self.money_spent = 0
 
     def circle(self):
-        summary = self.deposit(2000000) + self.deposit(self.income, economist=False)
-        print(hg.successful(f"{self.name} has completed a round. Credited {summary}"))
+        print(hg.successful(f"{self.name} has completed a round. Credited {self.deposit(self.income, economist=False)}"))
 
     def personal_flu(self):
         self.result = []

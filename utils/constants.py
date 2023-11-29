@@ -32,13 +32,12 @@ PL1 = None
 PL2 = None
 next_player = None
 number = None
+after_saving = False
 working_directory = os.path.abspath(os.curdir).replace("utils", "")
-path_to_settings = f"{working_directory}\\settings.ini"
 used_in_video = {}
-main_window = None
 queue = []
-version = "0.0.3"
-date_of_build = "11/27/2023 4:19 PM"
+version = "0.0.4"
+date_of_build = "11/29/2023 2:44 PM"
 sum = 0
 
 errorcodes = {0: "Значение превышает 20 символов или равно 0",
@@ -49,7 +48,9 @@ errorcodes = {0: "Значение превышает 20 символов или
               5: "Нет доступных клубов",
               6: "Битое сохранение",
               7: "Невозможно загрузить сохранение во время игры",
-              8: "Файл configs/database.cfg битый"}
+              8: "Файл configs/database.cfg битый",
+              9: "Нет файлов сохранения",
+              10: "Неверный путь сохранения"}
 
 gradual_income = [300000, 500000, 1000000, 2000000]
 
@@ -59,8 +60,6 @@ bonuses = {"Money": 9, "Transfer Window": 2, "Vaccine": 2, "Revive": 1, "Charity
 money_fines = {3000000: 2, 1500000: 3, 750000: 4}
 money_bonuses = {1500000: 2, 1000000: 3, 500000: 4}
 
-managers_price = 1000000
-managers_count = 10
 clubs = {}
 TVs = {}
 footballers = {}
