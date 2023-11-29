@@ -187,11 +187,13 @@ def resize():
     main_window.custom_geometry(f"{int(main_window.winfo_screenwidth() * 0.83)}x{int(main_window.winfo_screenheight() * 0.74)}+{int(main_window.winfo_screenwidth() * 0.083)}+{int(main_window.winfo_screenheight() * 0.1064)}")
 
 
-def font(string: str, misans=True):
-    if misans:
-        size = int(string.replace("MiSans ", ""))
+def font(object):
+    if type(object) == str:
+        size = int(object.replace("MiSans ", ""))
         size = int(size * main_window.winfo_screenwidth() / 1920)
         return f"MiSans {size}"
+    else:
+        return (object[0], int(int(object[1]) * main_window.winfo_screenwidth() / 1920))
 
 
 def width(size):
@@ -237,8 +239,8 @@ after_saving = False
 working_directory = os.path.abspath(os.curdir).replace("utils", "")
 used_in_video = {}
 queue = []
-version = "Artem Build"
-date_of_build = "11/29/2023 6:28 PM"
+version = "0.0.5 ALPHA"
+date_of_build = "11/29/2023 9:22 PM"
 sum = 0
 
 errorcodes = {0: "Значение превышает 20 символов или равно 0",
