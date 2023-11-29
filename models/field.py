@@ -90,12 +90,12 @@ class Field:
                 const.text_on_center(f"{player.name} наступил на свободный объект {object.name}. Хочешь купить его?", "MiSans 30")
             else:
                 const.text_on_center(f"{player.name} наступил на свободный объект {object.name}. Недостаточно средств для покупки. Нужно еще {player.summary_check(object.price) - player.balance}. Хочешь купить его?", "MiSans 30")
-            b_info = tk.Button(const.main_window, text="Информация о объекте", font="MiSans 30", command=lambda: info.Info(object))
-            b_info.place(x=50, y=700)
-            b_buy = tk.Button(const.main_window, text="Купить", font="MiSans 30", command=lambda: property.OtherBuy(player, object, lambda: Field.stepped_on(player, object)))
-            b_buy.place(x=800 - (b_buy.winfo_reqwidth() / 2), y=700)
-            b_next_step = tk.Button(const.main_window, text="Следующий ход", font="MiSans 30", command=lambda: Field.new_move())
-            b_next_step.place(x=1200, y=700)
+            b_info = const.Button(const.main_window, text="Информация о объекте", font="MiSans 30", command=lambda: info.Info(object))
+            b_info.custom_place(x=50, y=700)
+            b_buy = const.Button(const.main_window, text="Купить", font="MiSans 30", command=lambda: property.OtherBuy(player, object, lambda: Field.stepped_on(player, object)))
+            b_buy.custom_place(x=800 - (b_buy.winfo_reqwidth() / 2), y=700)
+            b_next_step = const.Button(const.main_window, text="Следующий ход", font="MiSans 30", command=lambda: Field.new_move())
+            b_next_step.custom_place(x=1200, y=700)
         else:
             if isinstance(object, club.Club):
                 const.text_on_center(f"{player.name} наступил на клуб {object.name}. Им владеет {object.owner.name}", "MiSans 40")
@@ -346,10 +346,10 @@ class Dead:
         self.picked = random.choice(self.items)
         self.picked.die()
         const.text_on_center(f"Умер персонал {self.picked.name}", "MiSans 40")
-        self.b_info_personal = tk.Button(const.main_window, text="Информация о персонале", font="MiSans 30", command=lambda: info.Info(self.picked))
-        self.b_info_personal.place(x=400 - (self.b_info_personal.winfo_reqwidth() / 2), y=700)
-        self.b_next_step = tk.Button(const.main_window, text="Следующий ход", font="MiSans 30", command=Field.new_move)
-        self.b_next_step.place(x=1200 - self.b_next_step.winfo_reqwidth() / 2, y=700)
+        self.b_info_personal = const.Button(const.main_window, text="Информация о персонале", font="MiSans 30", command=lambda: info.Info(self.picked))
+        self.b_info_personal.custom_place(x=400 - (self.b_info_personal.winfo_reqwidth() / 2), y=700)
+        self.b_next_step = const.Button(const.main_window, text="Следующий ход", font="MiSans 30", command=Field.new_move)
+        self.b_next_step.custom_place(x=1200 - self.b_next_step.winfo_reqwidth() / 2, y=700)
 
 
 class Money:
@@ -418,14 +418,14 @@ class Strike:
                 self.coaches.append(element)
         if self.coaches:
             self.y = 100
-            self.l_name = tk.Label(const.main_window, text=f"{self.player.name} выберите тренера для забастовки", font="MiSans 40")
-            self.l_name.place(x=800 - self.l_name.winfo_reqwidth() / 2, y=0)
+            self.l_name = const.Label(const.main_window, text=f"{self.player.name} выберите тренера для забастовки", font="MiSans 40")
+            self.l_name.custom_place(x=800 - self.l_name.winfo_reqwidth() / 2, y=0)
             self.radio_coaches = []
             self.var = tk.IntVar()
             self.var.set(-1)
             for element in range(0, len(self.coaches)):
-                self.radio_coaches.append(tk.Radiobutton(text=self.coaches[element].name, variable=self.var, value=element, command=self.__second__, font="MiSans 30"))
-                self.radio_coaches[element].place(x=20, y=self.y)
+                self.radio_coaches.append(const.Radiobutton(text=self.coaches[element].name, variable=self.var, value=element, command=self.__second__, font="MiSans 30"))
+                self.radio_coaches[element].custom_place(x=20, y=self.y)
                 self.y += 55
         else:
             const.text_on_center("Нет доступных тренеров. Пропуск", "MiSans 40")
@@ -433,10 +433,10 @@ class Strike:
 
     def __second__(self):
         self.picked_coach = self.coaches[self.var.get()]
-        self.b_info_about_coach = tk.Button(const.main_window, text="Информация о тренере", font="MiSans 30", command=lambda: info.Info(self.picked_coach))
-        self.b_info_about_coach.place(x=400 - self.b_info_about_coach.winfo_reqwidth() / 2, y=600)
-        self.b_continue = tk.Button(const.main_window, text="Продолжить", font="MiSans 30", command=self.__third__)
-        self.b_continue.place(x=1200 - self.b_continue.winfo_reqwidth() / 2, y=600)
+        self.b_info_about_coach = const.Button(const.main_window, text="Информация о тренере", font="MiSans 30", command=lambda: info.Info(self.picked_coach))
+        self.b_info_about_coach.custom_place(x=400 - self.b_info_about_coach.winfo_reqwidth() / 2, y=600)
+        self.b_continue = const.Button(const.main_window, text="Продолжить", font="MiSans 30", command=self.__third__)
+        self.b_continue.custom_place(x=1200 - self.b_continue.winfo_reqwidth() / 2, y=600)
 
     def __third__(self):
         self.picked_coach.strike = 10
@@ -473,31 +473,32 @@ class Coronavirus:
                 if not self.footballers:
                     const.text_on_center("Нет персонала. Пропуск штрафа", "MiSans 50")
                     const.main_window.after(4000, Field.new_move)
+                    return
                 else:
-                    self.l_name = tk.Label(const.main_window, text=f"{self.player.name} выберите футболиста для болезни", font="MiSans 40")
+                    self.l_name = const.Label(const.main_window, text=f"{self.player.name} выберите футболиста для болезни", font="MiSans 40")
                     self.items = self.footballers
             else:
-                self.l_name = tk.Label(const.main_window, text=f"{self.player.name} выберите тренера для болезни", font="MiSans 40")
+                self.l_name = const.Label(const.main_window, text=f"{self.player.name} выберите тренера для болезни", font="MiSans 40")
                 self.items = self.coaches
         else:
-            self.l_name = tk.Label(const.main_window, text=f"{self.player.name} выберите менеджера для болезни", font="MiSans 40")
+            self.l_name = const.Label(const.main_window, text=f"{self.player.name} выберите менеджера для болезни", font="MiSans 40")
             self.items = self.managers
         self.y = 100
-        self.l_name.place(x=800 - self.l_name.winfo_reqwidth() / 2, y=0)
+        self.l_name.custom_place(x=800 - self.l_name.winfo_reqwidth() / 2, y=0)
         self.radio = []
         self.var = tk.IntVar()
         self.var.set(-1)
         for element in range(0, len(self.items)):
-            self.radio.append(tk.Radiobutton(text=self.items[element].name, variable=self.var, value=element, command=self.__second__, font="MiSans 30"))
-            self.radio[element].place(x=20, y=self.y)
+            self.radio.append(const.Radiobutton(text=self.items[element].name, variable=self.var, value=element, command=self.__second__, font="MiSans 30"))
+            self.radio[element].custom_place(x=20, y=self.y)
             self.y += 55
 
     def __second__(self):
         self.picked = self.items[self.var.get()]
-        self.b_info_about = tk.Button(const.main_window, text="Информация о персонале", font="MiSans 30", command=lambda: info.Info(self.picked))
-        self.b_info_about.place(x=400 - self.b_info_about.winfo_reqwidth() / 2, y=600)
-        self.b_continue = tk.Button(const.main_window, text="Продолжить", font="MiSans 30", command=self.__third__)
-        self.b_continue.place(x=1200 - self.b_continue.winfo_reqwidth() / 2, y=600)
+        self.b_info_about = const.Button(const.main_window, text="Информация о персонале", font="MiSans 30", command=lambda: info.Info(self.picked))
+        self.b_info_about.custom_place(x=400 - self.b_info_about.winfo_reqwidth() / 2, y=600)
+        self.b_continue = const.Button(const.main_window, text="Продолжить", font="MiSans 30", command=self.__third__)
+        self.b_continue.custom_place(x=1200 - self.b_continue.winfo_reqwidth() / 2, y=600)
 
     def __third__(self):
         self.picked.flu = 10

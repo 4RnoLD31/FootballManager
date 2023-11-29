@@ -12,15 +12,10 @@ import utils.initialize as initialize
 
 
 def create_main_window():
-    try:
-        const.main_window.destroy()
-    except:
-        pass
-    const.main_window = tk.Tk()
-    const.main_window.geometry("1600x800+160+115")
-    const.main_window.resizable(width=False, height=False)
+    const.main_window.custom_geometry("1600x800+160+115")
+    const.main_window.resizable(True, True)
     const.main_window.title("FOOTBALL MANAGER")
-    l_logo = tk.Label(const.main_window, text="FOOTBALL MANAGER", font="MiSans 50")
+    l_logo = const.Label(const.main_window, text="FOOTBALL MANAGER", font="MiSans 50")
     l_logo.pack(side="top")
     panels.panels_initialize()
     cascade()
@@ -29,17 +24,17 @@ def create_main_window():
 
 def cascade():
     global f_PL1, f_PL2
-    l_PL1 = tk.Label(const.main_window, text="Имя первого игрока:", font="MiSans 40")
-    l_PL1.place(x=50, y=250)
-    f_PL1 = tk.Entry(const.main_window, font="MiSans 30")
-    f_PL1.place(x=800, y=265, width=500)
-    l_PL2 = tk.Label(const.main_window, text="Имя второго игрока:", font="MiSans 40")
-    l_PL2.place(x=53, y=350)
-    f_PL2 = tk.Entry(const.main_window, font="MiSans 30")
-    f_PL2.place(x=800, y=362, width=500)
-    b_start = tk.Button(const.main_window, text="НАЧАТЬ ИГРУ", font="MiSans 40", command=process)
+    l_PL1 = const.Label(const.main_window, text="Имя первого игрока:", font="MiSans 40")
+    l_PL1.custom_place(x=50, y=250)
+    f_PL1 = const.Entry(const.main_window, font="MiSans 30")
+    f_PL1.custom_place(x=800, y=265, width=500)
+    l_PL2 = const.Label(const.main_window, text="Имя второго игрока:", font="MiSans 40")
+    l_PL2.custom_place(x=53, y=350)
+    f_PL2 = const.Entry(const.main_window, font="MiSans 30")
+    f_PL2.custom_place(x=800, y=362, width=500)
+    b_start = const.Button(const.main_window, text="НАЧАТЬ ИГРУ", font="MiSans 40", command=process)
     const.main_window.bind("<Return>", process)
-    b_start.place(x=600, y=700, width=400, height=80)
+    b_start.custom_place(x=600, y=700, width=400, height=80)
 
 
 def process(*args):
@@ -59,8 +54,7 @@ def process(*args):
         const.PL2 = player.Player(PL2_name, 10000000)
         print(hg.info(f"Player 1: Name {const.PL1.name} | Balance {const.PL1.balance} | Income {const.PL1.income}"))
         print(hg.info(f"Player 2: Name {const.PL2.name} | Balance {const.PL2.balance} | Income {const.PL2.income}"))
-        l_first = tk.Label(const.main_window, text="Первым бросает игрок: ....", font="MiSans 50")
-        l_first.place(x=800 - (l_first.winfo_reqwidth() / 2), y=400 - (l_first.winfo_reqheight() / 2))
+        l_first = const.Label(const.main_window, text="Первым бросает игрок: ....", font="MiSans 50")
         choice = random.randint(1, 2)
         if choice == 1:
             first = const.PL2
@@ -70,7 +64,7 @@ def process(*args):
             first = const.PL1
             l_first.config(text=f"Первым бросает игрок: {const.PL2.name}")
             const.next_player = const.PL2
-        l_first.place(x=800 - (l_first.winfo_reqwidth() / 2), y=400 - (l_first.winfo_reqheight() / 2))
+        l_first.custom_place(relx=0.5, rely=0.5, anchor="center")
         const.main_window.after(2000, field.Field.new_move, first)
     panels.panels_initialize()
 

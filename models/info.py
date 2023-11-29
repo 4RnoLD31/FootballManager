@@ -9,11 +9,11 @@ import models.manager as manager
 
 class AllClubs:
     def __init__(self):
-        self.window = tk.Toplevel()
+        self.window = const.Toplevel()
         self.buttons = []
         self.i = 0
         for element in const.clubs.keys():
-            self.buttons.append(tk.Button(self.window, text=const.clubs[element].name))
+            self.buttons.append(const.Button(self.window, text=const.clubs[element].name))
             self.buttons[self.i].pack()
             self.i += 1
         self.buttons[0].configure(command=lambda: Club(const.clubs["Manchester City"]))
@@ -48,8 +48,8 @@ class Club:
     def __init__(self, club):
         self.club = club
         self.y = 20
-        self.w_info = tk.Toplevel()
-        self.w_info.geometry("800x800+560+115")
+        self.w_info = const.Toplevel()
+        self.w_info.custom_geometry("800x800+560+115")
         self.w_info.resizable(width=False, height=False)
         self.w_info.title(f"FOOTBALL MANAGER | Информация о клубе {self.club.name}")
         self.stats = []
@@ -90,8 +90,8 @@ class Club:
             self.strings_stats.append("Тренер: Отсутствует")
             self.strings_stats.append("Менеджер: Отсутствует")
         for element in range(0, len(self.strings_stats)):
-            self.stats.append(tk.Label(self.w_info, text=self.strings_stats[element], font="MiSans 20"))
-            self.stats[element].place(x=20, y=self.y)
+            self.stats.append(const.Label(self.w_info, text=self.strings_stats[element], font="MiSans 20"))
+            self.stats[element].custom_place(x=20, y=self.y)
             self.y += 40
 
 
@@ -99,8 +99,8 @@ class Personal:
     def __init__(self, object):
         self.object = object
         self.y = 20
-        self.w_info = tk.Toplevel()
-        self.w_info.geometry("800x800+560+115")
+        self.w_info = const.Toplevel()
+        self.w_info.custom_geometry("800x800+560+115")
         self.w_info.resizable(width=False, height=False)
         self.w_info.title(f"FOOTBALL MANAGER | Информация о персонале {self.object.name}")
         self.stats = []
@@ -139,24 +139,24 @@ class Personal:
         if self.object.dead:
             self.strings_stats.append("Мертв")
         for element in range(0, len(self.strings_stats)):
-            self.stats.append(tk.Label(self.w_info, text=self.strings_stats[element], font="MiSans 20"))
-            self.stats[element].place(x=20, y=self.y)
+            self.stats.append(const.Label(self.w_info, text=self.strings_stats[element], font="MiSans 20"))
+            self.stats[element].custom_place(x=20, y=self.y)
             self.y += 40
 
 
 class Build:
     def __init__(self):
-        self.window = tk.Toplevel()
-        self.window.geometry("300x170+0+0")
+        self.window = const.Toplevel()
+        self.window.custom_geometry("300x170+0+0")
         self.window.resizable(False, False)
         self.window.title = "FOOTBALL MANAGER | Информация о версии"
-        self.title = tk.Label(self.window, text=f"FOOTBALL MANAGER", font=("Agency FB", "30"))
-        self.title.place(x=150 - self.title.winfo_reqwidth() / 2, y=0)
-        self.version = tk.Label(self.window, text=f"Version: {const.version}", font=("Agency FB", "30"))
-        self.version.place(x=2, y=45)
-        self.date_of_build = tk.Label(self.window, text=f"Date of build: {const.date_of_build}", font=("Agency FB", "20"))
-        self.date_of_build.place(x=2, y=90)
-        self.github = tk.Label(self.window, text="Github: ", font=("Agency FB", "30"))
-        self.github.place(x=2, y=120)
-        self.github_link = tk.Button(self.window, text="CLICK", command=lambda: webbrowser.open_new("https://github.com/4RnoLD31/FootballManager"), font=("Agency FB", "30"))
-        self.github_link.place(x=(300 - self.github.winfo_reqwidth()) / 2 - self.github_link.winfo_reqwidth() / 2 + self.github.winfo_reqwidth(), y=125, height=40, width=72)
+        self.title = const.Label(self.window, text=f"FOOTBALL MANAGER", font=("Agency FB", "30"))
+        self.title.custom_place(x=150 - self.title.winfo_reqwidth() / 2, y=0)
+        self.version = const.Label(self.window, text=f"Version: {const.version}", font=("Agency FB", "30"))
+        self.version.custom_place(x=2, y=45)
+        self.date_of_build = const.Label(self.window, text=f"Date of build: {const.date_of_build}", font=("Agency FB", "20"))
+        self.date_of_build.custom_place(x=2, y=90)
+        self.github = const.Label(self.window, text="Github: ", font=("Agency FB", "30"))
+        self.github.custom_place(x=2, y=120)
+        self.github_link = const.Button(self.window, text="CLICK", command=lambda: webbrowser.open_new("https://github.com/4RnoLD31/FootballManager"), font=("Agency FB", "30"))
+        self.github_link.custom_place(x=(300 - self.github.winfo_reqwidth()) / 2 - self.github_link.winfo_reqwidth() / 2 + self.github.winfo_reqwidth(), y=125, height=40, width=72)

@@ -25,25 +25,25 @@ class TransferWindow:
 
     def __main__(self):
         const.clear()
-        self.l_title = tk.Label(const.main_window, text=f"Что вы хотите сделать, {self.player.name}?", font="MiSans 50")
-        self.l_title.place(x=800 - self.l_title.winfo_reqwidth() / 2, y=0)
-        self.b_sell = tk.Button(const.main_window, text="Продать", font="MiSans 40", command=lambda: property.Sell(self.player, self.__back__, True, True))
-        self.b_sell.place(x=100, y=170, width=1400, height=100)
-        self.b_buy = tk.Button(const.main_window, text="Купить", font="MiSans 40", command=lambda: property.Buy(self.player, self.__back__))
-        self.b_buy.place(x=100, y=290, width=1400, height=100)
-        self.b_transfer = tk.Button(const.main_window, text="Переместить", font="MiSans 40", command=lambda: property.Transfer(self.player, self.__back__))
-        self.b_transfer.place(x=100, y=410, width=1400, height=100)
+        self.l_title = const.Label(const.main_window, text=f"Что вы хотите сделать, {self.player.name}?", font="MiSans 50")
+        self.l_title.custom_place(x=800 - self.l_title.winfo_reqwidth() / 2, y=0)
+        self.b_sell = const.Button(const.main_window, text="Продать", font="MiSans 40", command=lambda: property.Sell(self.player, self.__back__, True, True))
+        self.b_sell.custom_place(x=100, y=170, width=1400, height=100)
+        self.b_buy = const.Button(const.main_window, text="Купить", font="MiSans 40", command=lambda: property.Buy(self.player, self.__back__))
+        self.b_buy.custom_place(x=100, y=290, width=1400, height=100)
+        self.b_transfer = const.Button(const.main_window, text="Переместить", font="MiSans 40", command=lambda: property.Transfer(self.player, self.__back__))
+        self.b_transfer.custom_place(x=100, y=410, width=1400, height=100)
         if self.first_time and not self.bonus:
             if self.player == self.first_player:
-                self.b_player = tk.Button(const.main_window, text="Следующий игрок", font="MiSans 40", command=self.__next_player__)
+                self.b_player = const.Button(const.main_window, text="Следующий игрок", font="MiSans 40", command=self.__next_player__)
             else:
-                self.b_player = tk.Button(const.main_window, text="Предыдущий игрок", font="MiSans 40", command=self.__next_player__)
-            self.b_player.place(x=100, y=530, width=1400, height=100)
-            self.b_next_step = tk.Button(const.main_window, text="Закончить трансферное окно", font="MiSans 40", command=self.__stop__)
-            self.b_next_step.place(x=100, y=650, width=1400, height=100)
+                self.b_player = const.Button(const.main_window, text="Предыдущий игрок", font="MiSans 40", command=self.__next_player__)
+            self.b_player.custom_place(x=100, y=530, width=1400, height=100)
+            self.b_next_step = const.Button(const.main_window, text="Закончить трансферное окно", font="MiSans 40", command=self.__stop__)
+            self.b_next_step.custom_place(x=100, y=650, width=1400, height=100)
         elif not self.bonus:
-            self.b_next_step = tk.Button(const.main_window, text="Закончить трансферное окно", font="MiSans 40", command=self.__stop__)
-            self.b_next_step.place(x=100, y=530, width=1400, height=100)
+            self.b_next_step = const.Button(const.main_window, text="Закончить трансферное окно", font="MiSans 40", command=self.__stop__)
+            self.b_next_step.custom_place(x=100, y=530, width=1400, height=100)
 
     def __stop__(self):
         if self.queue:

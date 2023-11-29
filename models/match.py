@@ -55,23 +55,23 @@ class Match:
     def __cc_first__(self):
         const.clear()
         self.y = 100
-        self.l_name = tk.Label(const.main_window, text=f"{self.second_player.name} выберите клуб для игры", font="MiSans 40")
-        self.l_name.place(x=800 - self.l_name.winfo_reqwidth() / 2, y=0)
+        self.l_name = const.Label(const.main_window, text=f"{self.second_player.name} выберите клуб для игры", font="MiSans 40")
+        self.l_name.custom_place(x=800 - self.l_name.winfo_reqwidth() / 2, y=0)
         self.clubs = self.second_player.available_clubs()
         self.radio_clubs = []
         self.var = tk.IntVar()
         self.var.set(-1)
         for element in range(0, len(self.clubs)):
-            self.radio_clubs.append(tk.Radiobutton(text=self.clubs[element].name, variable=self.var, value=element, command=self.__cc_second__, font="MiSans 30"))
-            self.radio_clubs[element].place(x=20, y=self.y)
+            self.radio_clubs.append(const.Radiobutton(text=self.clubs[element].name, variable=self.var, value=element, command=self.__cc_second__, font="MiSans 30"))
+            self.radio_clubs[element].custom_place(x=20, y=self.y)
             self.y += 55
 
     def __cc_second__(self):
         self.second_club = self.clubs[self.var.get()]
-        self.b_info_about_club = tk.Button(const.main_window, text="Информация о клубе", font="MiSans 30", command=lambda: info.Info(self.second_club))
-        self.b_info_about_club.place(x=400 - self.b_info_about_club.winfo_reqwidth() / 2, y=600)
-        self.b_continue = tk.Button(const.main_window, text="Продолжить", font="MiSans 30", command=self.__match__)
-        self.b_continue.place(x=1200 - self.b_continue.winfo_reqwidth() / 2, y=600)
+        self.b_info_about_club = const.Button(const.main_window, text="Информация о клубе", font="MiSans 30", command=lambda: info.Info(self.second_club))
+        self.b_info_about_club.custom_place(x=400 - self.b_info_about_club.winfo_reqwidth() / 2, y=600)
+        self.b_continue = const.Button(const.main_window, text="Продолжить", font="MiSans 30", command=self.__match__)
+        self.b_continue.custom_place(x=1200 - self.b_continue.winfo_reqwidth() / 2, y=600)
 
     def __match__(self):
         if self.first_club.available():
@@ -88,18 +88,18 @@ class Match:
     def __m_first__(self):
         const.clear()
         self.statistic_list = []
-        self.statistic_list.append(tk.Label(const.main_window, text=self.first_club.name, font="MiSans 30"))
-        self.statistic_list[0].place(x=400 - self.statistic_list[0].winfo_reqwidth() / 2, y=40)
-        self.statistic_list.append(tk.Label(const.main_window, text=self.second_club.name, font="MiSans 30"))
-        self.statistic_list[1].place(x=1200 - self.statistic_list[1].winfo_reqwidth() / 2, y=40)
-        self.statistic_list.append(tk.Label(const.main_window, text=f"Общая мощность: {self.first_club.power()}", font="MiSans 20"))
-        self.statistic_list[2].place(x=400 - self.statistic_list[2].winfo_reqwidth() / 2, y=100)
-        self.statistic_list.append(tk.Label(const.main_window, text=f"Общая мощность: {self.second_club.power()}", font="MiSans 20"))
-        self.statistic_list[3].place(x=1200 - self.statistic_list[3].winfo_reqwidth() / 2, y=100)
-        self.l_throw = tk.Label(const.main_window, text=f"Бросает {self.first_player.name}", font="MiSans 40")
-        self.l_throw.place(x=800 - self.l_throw.winfo_reqwidth() / 2, y=400)
-        self.b_throw = tk.Button(const.main_window, text="Бросить", font="MiSans 30", command=lambda: self.__throw__(self.first_player))
-        self.b_throw.place(x=800 - self.b_throw.winfo_reqwidth() / 2, y=500)
+        self.statistic_list.append(const.Label(const.main_window, text=self.first_club.name, font="MiSans 30"))
+        self.statistic_list[0].custom_place(x=400 - self.statistic_list[0].winfo_reqwidth() / 2, y=40)
+        self.statistic_list.append(const.Label(const.main_window, text=self.second_club.name, font="MiSans 30"))
+        self.statistic_list[1].custom_place(x=1200 - self.statistic_list[1].winfo_reqwidth() / 2, y=40)
+        self.statistic_list.append(const.Label(const.main_window, text=f"Общая мощность: {self.first_club.power()}", font="MiSans 20"))
+        self.statistic_list[2].custom_place(x=400 - self.statistic_list[2].winfo_reqwidth() / 2, y=100)
+        self.statistic_list.append(const.Label(const.main_window, text=f"Общая мощность: {self.second_club.power()}", font="MiSans 20"))
+        self.statistic_list[3].custom_place(x=1200 - self.statistic_list[3].winfo_reqwidth() / 2, y=100)
+        self.l_throw = const.Label(const.main_window, text=f"Бросает {self.first_player.name}", font="MiSans 40")
+        self.l_throw.custom_place(x=800 - self.l_throw.winfo_reqwidth() / 2, y=400)
+        self.b_throw = const.Button(const.main_window, text="Бросить", font="MiSans 30", command=lambda: self.__throw__(self.first_player))
+        self.b_throw.custom_place(x=800 - self.b_throw.winfo_reqwidth() / 2, y=500)
 
     def __throw__(self, player):
         self.player = player
@@ -108,25 +108,25 @@ class Match:
         self.picked = random.randint(1, 6)
         self.summary += self.picked
         const.clear(self.statistic_list)
-        self.l_thrown = tk.Label(const.main_window, text=f"{self.player.name} бросает первый куб.....", font="MiSans 40")
-        self.l_thrown.place(x=800 - self.l_thrown.winfo_reqwidth() / 2, y=400)
+        self.l_thrown = const.Label(const.main_window, text=f"{self.player.name} бросает первый куб.....", font="MiSans 40")
+        self.l_thrown.custom_place(x=800 - self.l_thrown.winfo_reqwidth() / 2, y=400)
         const.main_window.after(2000, self.__t_first__)
 
     def __t_first__(self):
         self.l_thrown.configure(text=f"{self.player.name} бросает первый куб..... {self.picked}")
-        self.l_thrown.place(x=800 - self.l_thrown.winfo_reqwidth() / 2, y=400)
+        self.l_thrown.custom_place(x=800 - self.l_thrown.winfo_reqwidth() / 2, y=400)
         const.main_window.after(2000, self.__t_second__)
 
     def __t_second__(self):
         self.picked = random.randint(1, 6)
         self.summary += self.picked
         self.l_thrown.configure(text=f"{self.player.name} бросает второй куб.....")
-        self.l_thrown.place(x=800 - self.l_thrown.winfo_reqwidth() / 2, y=400)
+        self.l_thrown.custom_place(x=800 - self.l_thrown.winfo_reqwidth() / 2, y=400)
         const.main_window.after(2000, self.__t_third__)
 
     def __t_third__(self):
         self.l_thrown.configure(text=f"{self.player.name} бросает второй куб..... {self.picked}")
-        self.l_thrown.place(x=800 - self.l_thrown.winfo_reqwidth() / 2, y=400)
+        self.l_thrown.custom_place(x=800 - self.l_thrown.winfo_reqwidth() / 2, y=400)
         const.main_window.after(2000, self.__t_forth__)
 
     def __t_forth__(self):
@@ -134,19 +134,19 @@ class Match:
         if self.player == self.first_player:
             self.first_player_summary = self.summary
             self.first_player_all = self.first_club.power() + self.first_player_summary
-            self.statistic_list.append(tk.Label(const.main_window, text=f"Выбито чисел: {self.first_player_summary}", font="MiSans 20"))
-            self.statistic_list[4].place(x=400 - self.statistic_list[4].winfo_reqwidth() / 2, y=160)
-            self.statistic_list.append(tk.Label(const.main_window, text=f"Всего: {self.first_club.power()} + {self.first_player_summary} = {self.first_player_all}", font="MiSans 20"))
-            self.statistic_list[5].place(x=400 - self.statistic_list[5].winfo_reqwidth() / 2, y=220)
-            self.b_throw = tk.Button(const.main_window, text=f"{self.second_player.name} бросить", font="MiSans 30", command=lambda: self.__throw__(self.second_player))
-            self.b_throw.place(x=800 - self.b_throw.winfo_reqwidth() / 2, y=500)
+            self.statistic_list.append(const.Label(const.main_window, text=f"Выбито чисел: {self.first_player_summary}", font="MiSans 20"))
+            self.statistic_list[4].custom_place(x=400 - self.statistic_list[4].winfo_reqwidth() / 2, y=160)
+            self.statistic_list.append(const.Label(const.main_window, text=f"Всего: {self.first_club.power()} + {self.first_player_summary} = {self.first_player_all}", font="MiSans 20"))
+            self.statistic_list[5].custom_place(x=400 - self.statistic_list[5].winfo_reqwidth() / 2, y=220)
+            self.b_throw = const.Button(const.main_window, text=f"{self.second_player.name} бросить", font="MiSans 30", command=lambda: self.__throw__(self.second_player))
+            self.b_throw.custom_place(x=800 - self.b_throw.winfo_reqwidth() / 2, y=500)
         else:
             self.second_player_summary = self.summary
             self.second_player_all = self.second_club.power() + self.second_player_summary
-            self.statistic_list.append(tk.Label(const.main_window, text=f"Выбито чисел: {self.second_player_summary}", font="MiSans 20"))
-            self.statistic_list[6].place(x=1200 - self.statistic_list[6].winfo_reqwidth() / 2, y=160)
-            self.statistic_list.append(tk.Label(const.main_window, text=f"Всего: {self.second_club.power()} + {self.second_player_summary} = {self.second_player_all}", font="MiSans 20"))
-            self.statistic_list[7].place(x=1200 - self.statistic_list[7].winfo_reqwidth() / 2, y=220)
+            self.statistic_list.append(const.Label(const.main_window, text=f"Выбито чисел: {self.second_player_summary}", font="MiSans 20"))
+            self.statistic_list[6].custom_place(x=1200 - self.statistic_list[6].winfo_reqwidth() / 2, y=160)
+            self.statistic_list.append(const.Label(const.main_window, text=f"Всего: {self.second_club.power()} + {self.second_player_summary} = {self.second_player_all}", font="MiSans 20"))
+            self.statistic_list[7].custom_place(x=1200 - self.statistic_list[7].winfo_reqwidth() / 2, y=220)
             const.main_window.after(4000, self.__t_fifth__)
 
     def __t_fifth__(self):
@@ -154,7 +154,7 @@ class Match:
         self.second_club.cooldown = 10
         if self.first_player_all > self.second_player_all:
             self.l_thrown.configure(text=f"Победил игрок {self.first_player.name} с разницей в {self.first_player_all - self.second_player_all}")
-            self.l_thrown.place(x=800 - self.l_thrown.winfo_reqwidth() / 2, y=400 - self.l_thrown.winfo_reqheight() / 2)
+            self.l_thrown.custom_place(x=800 - self.l_thrown.winfo_reqwidth() / 2, y=400 - self.l_thrown.winfo_reqheight() / 2)
             self.lost_player = self.second_player
             self.lost_club = self.second_club
             self.won_player = self.first_player
@@ -163,7 +163,7 @@ class Match:
         elif self.second_player_all > self.first_player_all:
             if self.first_club.available:
                 self.l_thrown.configure(text=f"Победил игрок {self.second_player.name} с разницей в {self.second_player_all - self.first_player_all}")
-                self.l_thrown.place(x=800 - self.l_thrown.winfo_reqwidth() / 2, y=400 - self.l_thrown.winfo_reqheight() / 2)
+                self.l_thrown.custom_place(x=800 - self.l_thrown.winfo_reqwidth() / 2, y=400 - self.l_thrown.winfo_reqheight() / 2)
             else:
                 const.text_on_center(f"Победил игрок {self.second_player.name}, так как клуб {self.first_club.name} недоступен", "MiSans 40")
             self.lost_player = self.first_player
@@ -173,13 +173,13 @@ class Match:
             const.main_window.after(4000, self.__lose__)
         else:
             self.l_thrown.configure(text=f"Ничья. Оба игрока набрали {self.first_player_all}")
-            self.l_thrown.place(x=800 - self.l_thrown.winfo_reqwidth() / 2, y=400 - self.l_thrown.winfo_reqheight() / 2)
+            self.l_thrown.custom_place(x=800 - self.l_thrown.winfo_reqwidth() / 2, y=400 - self.l_thrown.winfo_reqheight() / 2)
             const.main_window.after(4000, field.Field.new_move)
 
     def __lose__(self):
         try:
             self.l_thrown.configure(text=f"Игрок {self.lost_player.name} должен выплатить {self.won_club.current_win()}")
-            self.l_thrown.place(x=800 - self.l_thrown.winfo_reqwidth() / 2, y=400 - self.l_thrown.winfo_reqheight() / 2)
+            self.l_thrown.custom_place(x=800 - self.l_thrown.winfo_reqwidth() / 2, y=400 - self.l_thrown.winfo_reqheight() / 2)
         except:
             const.text_on_center(f"Игрок {self.lost_player.name} должен выплатить {self.won_club.current_win()}", "MiSans 40")
         const.main_window.after(3000, self.__l_first__)
@@ -190,14 +190,14 @@ class Match:
             self.won_player.deposit(self.first_club.current_win(), economist=False)
             try:
                 self.l_thrown.configure(text=f"Игрок {self.lost_player.name} перевел {self.won_club.current_win()} {self.won_player.name}")
-                self.l_thrown.place(x=800 - self.l_thrown.winfo_reqwidth() / 2, y=400 - self.l_thrown.winfo_reqheight() / 2)
+                self.l_thrown.custom_place(x=800 - self.l_thrown.winfo_reqwidth() / 2, y=400 - self.l_thrown.winfo_reqheight() / 2)
             except:
                 const.text_on_center(f"Игрок {self.lost_player.name} перевел {self.won_club.current_win()} {self.won_player.name}", "MiSans 40")
             const.main_window.after(4000, field.Field.new_move)
         else:
             try:
                 self.l_thrown.configure(text=f"Игроку {self.lost_player.name} не хватает денег. Необходимо еще {self.won_club.current_win() - self.lost_player.balance}")
-                self.l_thrown.place(x=800 - self.l_thrown.winfo_reqwidth() / 2, y=400 - self.l_thrown.winfo_reqheight() / 2)
+                self.l_thrown.custom_place(x=800 - self.l_thrown.winfo_reqwidth() / 2, y=400 - self.l_thrown.winfo_reqheight() / 2)
             except:
                 const.text_on_center(f"Игроку {self.lost_player.name} не хватает денег. Необходимо еще {self.won_club.current_win() - self.lost_player.balance}", "MiSans 40")
             const.main_window.after(4000, lambda: property.Sell(self.lost_player, self.__lose__, need_money=self.won_club.current_win()))

@@ -1,11 +1,209 @@
 import os
+import re
 import tkinter as tk
+from tkinter import ttk
 
-main_window = None
+
+class Toplevel(tk.Toplevel):
+    def __init__(self):
+        super().__init__()
+
+    def custom_geometry(self, string):
+        numbers = re.findall(r"\d+", string)
+        index = 0
+        while index < len(numbers):
+            if index == 0 or index == 2:
+                numbers[index] = int(width(numbers[index]))
+            else:
+                numbers[index] = int(height(numbers[index]))
+            index += 1
+        if len(numbers) == 2:
+            super().geometry(f"{numbers[0]}x{numbers[1]}")
+        elif len(numbers) == 4:
+            super().geometry(f"{numbers[0]}x{numbers[1]}+{numbers[2]}+{numbers[3]}")
+
+
+class Tk(tk.Tk):
+    def __init__(self):
+        super().__init__()
+
+    def custom_geometry(self, string):
+        numbers = re.findall(r"\d+", string)
+        index = 0
+        while index < len(numbers):
+            if index == 0 or index == 2:
+                numbers[index] = int(width(numbers[index]))
+            else:
+                numbers[index] = int(height(numbers[index]))
+            index += 1
+        if len(numbers) == 2:
+            super().geometry(f"{numbers[0]}x{numbers[1]}")
+        elif len(numbers) == 4:
+            super().geometry(f"{numbers[0]}x{numbers[1]}+{numbers[2]}+{numbers[3]}")
+
+
+class Canvas(tk.Canvas):
+    def __init__(self, window, **kwargs):
+        kwargs["font"] = font(kwargs["font"])
+        if "width" in kwargs:
+            kwargs["width"] = width(kwargs["width"])
+        if "height" in kwargs:
+            kwargs["height"] = width(kwargs["height"])
+        if "wraplength" in kwargs:
+            kwargs["wraplength"] = width(kwargs["wraplength"])
+        if "wrapheight" in kwargs:
+            kwargs["wrapheight"] = height(kwargs["wrapheight"])
+        super().__init__(window, kwargs)
+
+
+class Checkbutton(tk.Checkbutton):
+    def __init__(self, window, **kwargs):
+        kwargs["font"] = font(kwargs["font"])
+        if "wraplength" in kwargs:
+            kwargs["wraplength"] = width(kwargs["wraplength"])
+        if "wrapheight" in kwargs:
+            kwargs["wrapheight"] = height(kwargs["wrapheight"])
+        super().__init__(window, kwargs)
+
+    def custom_place(self, **kwargs):
+        if "x" in kwargs:
+            kwargs["x"] = width(kwargs["x"])
+        if "y" in kwargs:
+            kwargs["y"] = height(kwargs["y"])
+        if "width" in kwargs:
+            kwargs["width"] = width(kwargs["width"])
+        if "height" in kwargs:
+            kwargs["height"] = width(kwargs["height"])
+        super().place(kwargs)
+
+
+class Combobox(ttk.Combobox):
+    def __init__(self, window, **kwargs):
+        kwargs["font"] = font(kwargs["font"])
+        if "wraplength" in kwargs:
+            kwargs["wraplength"] = width(kwargs["wraplength"])
+        if "wrapheight" in kwargs:
+            kwargs["wrapheight"] = height(kwargs["wrapheight"])
+        super().__init__(window, kwargs)
+
+    def custom_place(self, **kwargs):
+        if "x" in kwargs:
+            kwargs["x"] = width(kwargs["x"])
+        if "y" in kwargs:
+            kwargs["y"] = height(kwargs["y"])
+        if "width" in kwargs:
+            kwargs["width"] = width(kwargs["width"])
+        if "height" in kwargs:
+            kwargs["height"] = width(kwargs["height"])
+        super().place(kwargs)
+
+
+class Radiobutton(tk.Radiobutton):
+    def __init__(self, window, **kwargs):
+        kwargs["font"] = font(kwargs["font"])
+        if "wraplength" in kwargs:
+            kwargs["wraplength"] = width(kwargs["wraplength"])
+        if "wrapheight" in kwargs:
+            kwargs["wrapheight"] = height(kwargs["wrapheight"])
+        super().__init__(window, kwargs)
+
+    def custom_place(self, **kwargs):
+        if "x" in kwargs:
+            kwargs["x"] = width(kwargs["x"])
+        if "y" in kwargs:
+            kwargs["y"] = height(kwargs["y"])
+        if "width" in kwargs:
+            kwargs["width"] = width(kwargs["width"])
+        if "height" in kwargs:
+            kwargs["height"] = width(kwargs["height"])
+        super().place(kwargs)
+
+
+class Button(tk.Button):
+    def __init__(self, window, **kwargs):
+        kwargs["font"] = font(kwargs["font"])
+        if "wraplength" in kwargs:
+            kwargs["wraplength"] = width(kwargs["wraplength"])
+        if "wrapheight" in kwargs:
+            kwargs["wrapheight"] = height(kwargs["wrapheight"])
+        super().__init__(window, kwargs)
+
+    def custom_place(self, **kwargs):
+        if "x" in kwargs:
+            kwargs["x"] = width(kwargs["x"])
+        if "y" in kwargs:
+            kwargs["y"] = height(kwargs["y"])
+        if "width" in kwargs:
+            kwargs["width"] = width(kwargs["width"])
+        if "height" in kwargs:
+            kwargs["height"] = width(kwargs["height"])
+        super().place(kwargs)
+
+
+class Entry(tk.Entry):
+    def __init__(self, window, **kwargs):
+        kwargs["font"] = font(kwargs["font"])
+        if "wraplength" in kwargs:
+            kwargs["wraplength"] = width(kwargs["wraplength"])
+        if "wrapheight" in kwargs:
+            kwargs["wrapheight"] = height(kwargs["wrapheight"])
+        super().__init__(window, kwargs)
+
+    def custom_place(self, **kwargs):
+        if "x" in kwargs:
+            kwargs["x"] = width(kwargs["x"])
+        if "y" in kwargs:
+            kwargs["y"] = height(kwargs["y"])
+        if "width" in kwargs:
+            kwargs["width"] = width(kwargs["width"])
+        if "height" in kwargs:
+            kwargs["height"] = width(kwargs["height"])
+        super().place(kwargs)
+
+
+class Label(tk.Label):
+    def __init__(self, window, **kwargs):
+        kwargs["font"] = font(kwargs["font"])
+        if "wraplength" in kwargs:
+            kwargs["wraplength"] = width(kwargs["wraplength"])
+            print(1)
+        if "wrapheight" in kwargs:
+            kwargs["wrapheight"] = height(kwargs["wrapheight"])
+        super().__init__(window, kwargs)
+
+    def custom_place(self, **kwargs):
+        if "x" in kwargs:
+            kwargs["x"] = width(kwargs["x"])
+        if "y" in kwargs:
+            kwargs["y"] = height(kwargs["y"])
+        if "width" in kwargs:
+            kwargs["width"] = width(kwargs["width"])
+        if "height" in kwargs:
+            kwargs["height"] = width(kwargs["height"])
+        super().place(kwargs)
+
+
+def resize():
+    main_window.custom_geometry(f"{int(main_window.winfo_screenwidth() * 0.83)}x{int(main_window.winfo_screenheight() * 0.74)}+{int(main_window.winfo_screenwidth() * 0.083)}+{int(main_window.winfo_screenheight() * 0.1064)}")
+
+
+def font(string: str, misans=True):
+    if misans:
+        size = int(string.replace("MiSans ", ""))
+        size = int(size * main_window.winfo_screenwidth() / 1920)
+        return f"MiSans {size}"
+
+
+def width(size):
+    return int(size) * main_window.winfo_screenwidth() / 1920
+
+
+def height(size):
+    return int(size) * main_window.winfo_screenheight() / 1080
 
 
 def nothing():
-    return f"\033[1m\033[37m[FAILED]\033[0m   \033[37mNothing\033[0m"
+    return None
 
 
 def clear(list=None):
@@ -20,10 +218,13 @@ def clear(list=None):
             pass
 
 
+main_window = Tk()
+
+
 def text_on_center(text, font, window=main_window):
     clear()
-    label = tk.Label(window, text=text, font=font, wraplength=1600)
-    label.place(x=800 - (label.winfo_reqwidth() / 2), y=400 - (label.winfo_reqheight() / 2))
+    label = Label(window, text=text, font=font, wraplength=1600)
+    label.custom_place(relx=0.5, rely=0.5, anchor="center")
     return label
 
 
@@ -36,8 +237,8 @@ after_saving = False
 working_directory = os.path.abspath(os.curdir).replace("utils", "")
 used_in_video = {}
 queue = []
-version = "0.0.4"
-date_of_build = "11/29/2023 2:44 PM"
+version = "Artem Build"
+date_of_build = "11/29/2023 6:28 PM"
 sum = 0
 
 errorcodes = {0: "Значение превышает 20 символов или равно 0",
