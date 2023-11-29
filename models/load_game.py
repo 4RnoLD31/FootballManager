@@ -1,4 +1,5 @@
 import os
+import re
 import pickle
 import datetime
 from tkinter import filedialog as fd
@@ -34,11 +35,12 @@ class LoadGame:
         while self.dates:
             self.latest_folder = max(self.dates)
             self.files = os.listdir(f"{const.working_directory}\\saves\\autosave\\{self.latest_folder}")
+            self.max_file = max(self.files, key=lambda x: int(re.search(r'\d+', x).group()))
             while self.files:
-                if f"{const.working_directory}\\saves\\autosave\\{self.latest_folder}\\{max(self.files)}" in self.exceptions:
-                    self.files.remove(max(self.files))
+                if f"{const.working_directory}\\saves\\autosave\\{self.latest_folder}\\{self.max_file}" in self.exceptions:
+                    self.files.remove(self.max_file)
                     continue
-                return f"{const.working_directory}\\saves\\autosave\\{self.latest_folder}\\{max(self.files)}"
+                return f"{const.working_directory}\\saves\\autosave\\{self.latest_folder}\\{self.max_file}"
             else:
                 self.dates.remove(self.latest_folder)
         else:
@@ -68,7 +70,6 @@ class LoadGame:
             const.PL2 = self.data["PL2"]
             const.queue = self.data["Queue"]
             const.next_player = self.data["Next Player"]
-            const.working_directory = self.data["Working Directory"]
             const.number = self.data["Number"]
             const.game_loaded = True
             const.after_saving = True
